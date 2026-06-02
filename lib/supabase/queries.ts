@@ -1,4 +1,5 @@
 import { supabase } from "./server";
+import { designers as sampleDesigners } from "@/lib/data/designers";
 import type { Designer } from "@/lib/types";
 
 // Row shape returned by Supabase (snake_case columns)
@@ -43,6 +44,8 @@ function toDesigner(row: DesignerRow): Designer {
 }
 
 export async function getAllDesigners(): Promise<Designer[]> {
+  if (!supabase) return sampleDesigners;
+
   const { data, error } = await supabase
     .from("designers")
     .select("*")
@@ -53,6 +56,10 @@ export async function getAllDesigners(): Promise<Designer[]> {
 }
 
 export async function getDesignerBySlug(slug: string): Promise<Designer | null> {
+  if (!supabase) {
+    return sampleDesigners.find((d) => d.slug === slug) ?? null;
+  }
+
   const { data, error } = await supabase
     .from("designers")
     .select("*")
