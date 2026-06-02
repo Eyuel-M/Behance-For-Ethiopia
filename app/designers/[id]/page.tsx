@@ -1,13 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { designers } from "@/lib/data/designers";
+import { getDesignerBySlug } from "@/lib/supabase/queries";
 import type { Designer, PortfolioItem } from "@/lib/types";
 
-// ─── Static params ─────────────────────────────────────────────────────────────
-
-export function generateStaticParams() {
-  return designers.map((d) => ({ id: d.slug }));
-}
+export const dynamic = "force-dynamic";
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
 
@@ -70,7 +66,7 @@ type Props = { params: Promise<{ id: string }> };
 
 export default async function DesignerProfilePage({ params }: Props) {
   const { id } = await params;
-  const designer = designers.find((d) => d.slug === id);
+  const designer = await getDesignerBySlug(id);
   if (!designer) notFound();
 
   return (
