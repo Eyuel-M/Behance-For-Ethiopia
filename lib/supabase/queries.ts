@@ -46,13 +46,18 @@ function toDesigner(row: DesignerRow): Designer {
 export async function getAllDesigners(): Promise<Designer[]> {
   if (!supabase) return sampleDesigners;
 
-  const { data, error } = await supabase
-    .from("designers")
-    .select("*")
-    .order("name");
+  try {
+    const { data, error } = await supabase
+      .from("designers")
+      .select("*")
+      .order("name");
 
-  if (error) throw new Error(`Failed to fetch designers: ${error.message}`);
-  return (data as DesignerRow[]).map(toDesigner);
+    if (error) throw error;
+    return (data as DesignerRow[]).map(toDesigner);
+  } catch {
+    console.warn("[getAllDesigners] Supabase unavailable, using sample data.");
+    return sampleDesigners;
+  }
 }
 
 export async function getDesignerBySlug(slug: string): Promise<Designer | null> {
@@ -60,15 +65,20 @@ export async function getDesignerBySlug(slug: string): Promise<Designer | null> 
     return sampleDesigners.find((d) => d.slug === slug) ?? null;
   }
 
-  const { data, error } = await supabase
-    .from("designers")
-    .select("*")
-    .eq("slug", slug)
-    .single();
+  try {
+    const { data, error } = await supabase
+      .from("designers")
+      .select("*")
+      .eq("slug", slug)
+      .single();
 
-  if (error) {
-    if (error.code === "PGRST116") return null; // row not found
-    throw new Error(`Failed to fetch designer: ${error.message}`);
+    if (error) {
+      if (error.code === "PGRST116") return null; // row not found
+      throw error;
+    }
+    return toDesigner(data as DesignerRow);
+  } catch {
+    console.warn("[getDesignerBySlug] Supabase unavailable, using sample data.");
+    return sampleDesigners.find((d) => d.slug === slug) ?? null;
   }
-  return toDesigner(data as DesignerRow);
 }
