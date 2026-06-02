@@ -21,7 +21,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${dmSans.variable} h-full`}>
+    <html lang="en" className={`${dmSans.variable} h-full`} suppressHydrationWarning>
       <body className="min-h-full flex flex-col bg-stone-50 text-stone-900 antialiased">
         <Navbar />
         <main className="flex-1">{children}</main>
