@@ -1,3 +1,10 @@
+export type PortfolioItem = {
+  id: string;
+  title: string;
+  category: string;
+  gradient: string; // tailwind gradient utility classes
+};
+
 export type Designer = {
   id: string;
   name: string;
@@ -11,6 +18,7 @@ export type Designer = {
   reviewCount: number;
   bio: string;
   available: boolean;
+  portfolio: PortfolioItem[];
   photoUrl?: string; // optional — initials shown as fallback
   avatarColor: string; // tailwind bg class
   avatarText: string; // tailwind text class
