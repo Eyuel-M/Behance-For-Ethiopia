@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { DM_Sans } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
@@ -15,17 +13,11 @@ export const metadata: Metadata = {
   description: "Connect your business with vetted Ethiopian designers.",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${dmSans.variable} h-full`} suppressHydrationWarning>
       <body className="min-h-full flex flex-col bg-stone-50 text-stone-900 antialiased">
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        {children}
       </body>
     </html>
   );
