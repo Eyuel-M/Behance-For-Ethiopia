@@ -1,17 +1,51 @@
+import InquiryForm from "@/components/InquiryForm";
+
 export default function ContactPage() {
   return (
-    <section className="max-w-2xl mx-auto px-4 py-16">
-      <div className="mb-10">
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-          Get in Touch
-        </h1>
-        <p className="mt-2 text-gray-500">
-          Tell us about your project and we&apos;ll match you with the right designer.
-        </p>
+    <div className="min-h-screen bg-stone-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16 grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+
+        {/* Left — copy */}
+        <div className="lg:sticky lg:top-24">
+          <p className="text-xs font-semibold uppercase tracking-widest text-amber-700 mb-4">
+            Get in Touch
+          </p>
+          <h1 className="text-4xl font-bold tracking-tight text-stone-900 leading-tight">
+            Tell us about your project
+          </h1>
+          <p className="mt-4 text-stone-500 text-base leading-relaxed max-w-md">
+            Fill in the form and we&apos;ll match you with the right vetted
+            Ethiopian designer within 48 hours.
+          </p>
+
+          {/* Trust points */}
+          <ul className="mt-10 space-y-4">
+            {[
+              ["Matched in 48 hours", "We review every inquiry and respond fast."],
+              ["No agency fees", "Direct access to independent designers."],
+              ["Vetted talent only", "Every designer is manually reviewed before listing."],
+            ].map(([title, body]) => (
+              <li key={title} className="flex gap-3">
+                <span className="mt-0.5 h-5 w-5 rounded-full bg-amber-100 flex items-center justify-center shrink-0">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#92400e" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </span>
+                <div>
+                  <p className="text-sm font-semibold text-stone-800">{title}</p>
+                  <p className="text-sm text-stone-400">{body}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Right — form */}
+        <div className="bg-white rounded-2xl border border-stone-200 shadow-sm p-8">
+          <InquiryForm />
+        </div>
+
       </div>
-      <div className="space-y-4">
-        <p className="text-sm text-gray-400">Contact form will appear here.</p>
-      </div>
-    </section>
+    </div>
   );
 }
