@@ -139,19 +139,19 @@ export default function DigitalAssetsPage() {
   });
 
   return (
-    <div className="min-h-screen bg-zinc-950">
+    <div className="min-h-screen bg-zinc-50">
 
       {/* Hero */}
-      <div className="bg-zinc-950 border-b border-zinc-800 py-14">
+      <div className="bg-white border-b border-zinc-100 py-14">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <Link href="/resources" className="inline-flex items-center gap-1.5 text-zinc-500 hover:text-zinc-300 text-sm transition-colors duration-150 cursor-pointer mb-8">
+          <Link href="/resources" className="inline-flex items-center gap-1.5 text-zinc-400 hover:text-zinc-700 text-sm transition-colors duration-150 cursor-pointer mb-8">
             <ArrowLeftIcon /> All Resources
           </Link>
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-green-400 mb-3">Digital Assets</p>
-              <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">The Designer&apos;s Toolkit</h1>
-              <p className="mt-3 text-zinc-400 text-base max-w-xl leading-relaxed">
+              <p className="text-xs font-semibold uppercase tracking-widest text-green-600 mb-3">Digital Assets</p>
+              <h1 className="text-4xl sm:text-5xl font-extrabold text-zinc-900 tracking-tight">The Designer&apos;s Toolkit</h1>
+              <p className="mt-3 text-zinc-500 text-base max-w-xl leading-relaxed">
                 {resources.length}+ curated resources across mockups, 3D assets, icons, fonts, UI kits and more.
                 Filtered to save you hours of searching.
               </p>
@@ -163,12 +163,12 @@ export default function DigitalAssetsPage() {
                   onClick={() => setActivePricing(p)}
                   className={`px-3.5 py-1.5 rounded-full text-xs font-semibold capitalize transition-all duration-150 cursor-pointer border ${
                     activePricing === p
-                      ? "bg-white text-zinc-900 border-white"
-                      : "border-zinc-700 text-zinc-400 hover:border-zinc-500 hover:text-zinc-200"
+                      ? "bg-zinc-900 text-white border-zinc-900"
+                      : "border-zinc-200 text-zinc-500 hover:border-zinc-400 hover:text-zinc-700"
                   }`}
                 >
                   {p === "all" ? "All pricing" : p}
-                </button>
+              </button>
               ))}
             </div>
           </div>
@@ -176,7 +176,7 @@ export default function DigitalAssetsPage() {
       </div>
 
       {/* Category filter */}
-      <div className="sticky top-[4.5rem] z-30 bg-zinc-950/95 backdrop-blur-sm border-b border-zinc-800">
+      <div className="sticky top-[4.5rem] z-30 bg-white/95 backdrop-blur-sm border-b border-zinc-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="flex gap-1 overflow-x-auto py-3 scrollbar-none">
             {categories.map((cat) => (
@@ -186,7 +186,7 @@ export default function DigitalAssetsPage() {
                 className={`whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-150 cursor-pointer shrink-0 ${
                   activeCategory === cat
                     ? "bg-green-500 text-black"
-                    : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800"
+                    : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100"
                 }`}
               >
                 {cat}
@@ -201,8 +201,8 @@ export default function DigitalAssetsPage() {
         {Object.entries(grouped).map(([category, items]) => (
           <section key={category} aria-labelledby={`cat-${category}`}>
             <div className="flex items-center gap-3 mb-5">
-              <h2 id={`cat-${category}`} className="text-lg font-extrabold text-white">{category}</h2>
-              <span className="text-xs text-zinc-500 tabular-nums">{items.length} resources</span>
+              <h2 id={`cat-${category}`} className="text-lg font-extrabold text-zinc-900">{category}</h2>
+              <span className="text-xs text-zinc-400 tabular-nums">{items.length} resources</span>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
               {items.map((r) => {
@@ -213,24 +213,24 @@ export default function DigitalAssetsPage() {
                     href={r.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group flex flex-col rounded-xl border border-zinc-800 bg-zinc-900 hover:border-zinc-600 hover:bg-zinc-800/80 transition-all duration-150 cursor-pointer p-4 gap-3"
+                    className="group flex flex-col rounded-xl border border-zinc-200 bg-white hover:border-zinc-300 hover:shadow-md transition-all duration-150 cursor-pointer p-4 gap-3"
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-1.5">
-                        <p className="text-sm font-bold text-white group-hover:text-green-400 transition-colors duration-150">
+                        <p className="text-sm font-bold text-zinc-900 group-hover:text-green-600 transition-colors duration-150">
                           {r.name}
                         </p>
                         {r.hot && (
-                          <span className="flex items-center gap-0.5 text-orange-400 text-xs font-semibold">
+                          <span className="flex items-center gap-0.5 text-orange-500 text-xs font-semibold">
                             <FireIcon /> Hot
                           </span>
                         )}
                       </div>
-                      <span className="text-zinc-600 group-hover:text-zinc-300 shrink-0 mt-0.5 transition-colors duration-150">
+                      <span className="text-zinc-300 group-hover:text-zinc-500 shrink-0 mt-0.5 transition-colors duration-150">
                         <ExternalLinkIcon />
                       </span>
                     </div>
-                    <p className="text-xs text-zinc-400 leading-relaxed flex-1">{r.description}</p>
+                    <p className="text-xs text-zinc-500 leading-relaxed flex-1">{r.description}</p>
                     <span className={`self-start px-2.5 py-0.5 rounded-full text-xs font-medium ${badge.classes}`}>
                       {badge.label}
                     </span>
@@ -246,7 +246,7 @@ export default function DigitalAssetsPage() {
             <p className="text-zinc-500">No resources match this filter combination.</p>
             <button
               onClick={() => { setActiveCategory("All"); setActivePricing("all"); }}
-              className="mt-3 text-sm text-green-400 hover:text-green-300 cursor-pointer transition-colors"
+              className="mt-3 text-sm font-semibold text-green-700 hover:text-green-900 cursor-pointer transition-colors"
             >
               Clear filters
             </button>

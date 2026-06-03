@@ -189,40 +189,49 @@ export default function CoursesPage() {
               <span className="text-xs text-zinc-400 tabular-nums">{d.courses.length} picks</span>
             </div>
 
-            {/* Course cards */}
-            <div className="space-y-3">
+            {/* Course cards — box grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {d.courses.map((c) => (
                 <a
                   key={c.name}
                   href={c.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex flex-col sm:flex-row sm:items-start gap-4 rounded-2xl border border-zinc-100 bg-zinc-50 hover:border-zinc-300 hover:bg-white hover:shadow-sm transition-all duration-150 cursor-pointer p-5"
+                  className="group flex flex-col rounded-2xl border border-zinc-100 bg-white hover:border-zinc-300 hover:shadow-md transition-all duration-150 cursor-pointer overflow-hidden"
                 >
-                  {/* Left accent bar */}
-                  <div className={`hidden sm:block w-1 self-stretch rounded-full ${d.color} shrink-0`} />
+                  {/* Discipline colour strip */}
+                  <div className={`h-1.5 ${d.color} shrink-0`} />
 
-                  {/* Content */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex flex-wrap items-start gap-2 mb-1">
-                      <p className="text-sm font-bold text-zinc-900 group-hover:text-zinc-700">{c.name}</p>
+                  {/* Card body */}
+                  <div className="flex flex-col flex-1 gap-3 p-5">
+                    {/* Name + highlight */}
+                    <div>
+                      <div className="flex items-start justify-between gap-2 mb-1">
+                        <p className="text-sm font-bold text-zinc-900 leading-snug">{c.name}</p>
+                        <span className="text-zinc-300 group-hover:text-zinc-500 shrink-0 mt-0.5 transition-colors">
+                          <ExternalLinkIcon />
+                        </span>
+                      </div>
+                      <p className="text-xs font-medium text-zinc-400">
+                        {c.provider}{c.duration ? ` · ${c.duration}` : ""}
+                      </p>
+                    </div>
+
+                    {/* Description */}
+                    <p className="text-xs text-zinc-500 leading-relaxed flex-1">{c.description}</p>
+
+                    {/* Footer badges */}
+                    <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-zinc-100">
+                      <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${levelColor[c.level]}`}>
+                        {c.level}
+                      </span>
+                      <span className={`text-xs ${pricingColor[c.pricing]}`}>{c.pricing}</span>
                       {c.highlight && (
-                        <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${d.lightColor}`}>
+                        <span className={`ml-auto px-2 py-0.5 rounded-full text-xs font-semibold ${d.lightColor}`}>
                           {c.highlight}
                         </span>
                       )}
                     </div>
-                    <p className="text-xs font-medium text-zinc-400 mb-2">{c.provider}{c.duration ? ` · ${c.duration}` : ""}</p>
-                    <p className="text-sm text-zinc-500 leading-relaxed">{c.description}</p>
-                  </div>
-
-                  {/* Right meta */}
-                  <div className="flex sm:flex-col items-center sm:items-end gap-2 shrink-0">
-                    <span className={`px-2.5 py-0.5 rounded-full text-xs ${levelColor[c.level]}`}>{c.level}</span>
-                    <span className={`text-xs ${pricingColor[c.pricing]}`}>{c.pricing}</span>
-                    <span className="text-zinc-300 group-hover:text-zinc-500 transition-colors sm:mt-auto">
-                      <ExternalLinkIcon />
-                    </span>
                   </div>
                 </a>
               ))}
