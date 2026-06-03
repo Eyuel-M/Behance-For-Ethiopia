@@ -3,7 +3,10 @@ import DesignersGrid from "@/components/DesignersGrid";
 
 export const dynamic = "force-dynamic";
 
-export default async function DesignersPage() {
+type Props = { searchParams: Promise<{ q?: string; location?: string }> };
+
+export default async function DesignersPage({ searchParams }: Props) {
+  const { q = "", location = "" } = await searchParams;
   const designers = await getAllDesigners();
 
   return (
@@ -21,7 +24,7 @@ export default async function DesignersPage() {
         </div>
       </div>
 
-      <DesignersGrid designers={designers} />
+      <DesignersGrid designers={designers} initialQuery={q} initialLocation={location} />
     </div>
   );
 }

@@ -23,12 +23,22 @@ function XIcon() {
   );
 }
 
-export default function DesignersGrid({ designers }: { designers: Designer[] }) {
-  const [query, setQuery] = useState("");
+export default function DesignersGrid({
+  designers,
+  initialQuery = "",
+  initialLocation = "",
+}: {
+  designers: Designer[];
+  initialQuery?: string;
+  initialLocation?: string;
+}) {
+  const [query, setQuery] = useState(initialQuery);
+  const [locationFilter, setLocationFilter] = useState(initialLocation);
   const [activeCategory, setActiveCategory] = useState("All");
 
   const filtered = useMemo(() => {
     const q = query.toLowerCase().trim();
+    const loc = locationFilter.toLowerCase().trim();
     return designers.filter((d) => {
       const matchesCategory =
         activeCategory === "All" || d.category === activeCategory;
@@ -38,9 +48,13 @@ export default function DesignersGrid({ designers }: { designers: Designer[] }) 
         d.category.toLowerCase().includes(q) ||
         d.skills.some((s) => s.toLowerCase().includes(q)) ||
         d.location.toLowerCase().includes(q);
-      return matchesCategory && matchesQuery;
+      const matchesLocation =
+        !loc || loc === "remote"
+          ? !loc || d.location.toLowerCase().includes(loc)
+          : d.location.toLowerCase().includes(loc);
+      return matchesCategory && matchesQuery && matchesLocation;
     });
-  }, [query, activeCategory, designers]);
+  }, [query, locationFilter, activeCategory, designers]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
@@ -85,7 +99,7 @@ export default function DesignersGrid({ designers }: { designers: Designer[] }) 
             Try adjusting your search or clearing the filters.
           </p>
           <button
-            onClick={() => { setQuery(""); setActiveCategory("All"); }}
+            onClick={() => { setQuery(""); setLocationFilter(""); setActiveCategory("All"); }}
             className="mt-4 text-sm font-semibold text-green-700 hover:text-green-900 transition-colors cursor-pointer"
           >
             Clear filters

@@ -1,6 +1,24 @@
 import Link from "next/link";
 
-// ─── SVG Icons (stroke-based, 20×20, strokeWidth 1.5) ─────────────────────────
+// ─── SVG Icons ────────────────────────────────────────────────────────────────
+
+function SearchIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="11" cy="11" r="8" />
+      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+    </svg>
+  );
+}
+
+function MapPinSmIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+      <circle cx="12" cy="10" r="3" />
+    </svg>
+  );
+}
 
 function AwardIcon() {
   return (
@@ -189,6 +207,26 @@ const stats = [
   { value: "48h", label: "Avg. match time" },
 ];
 
+const trustedBy = [
+  "Ethiopian Airlines",
+  "Ethio Telecom",
+  "Awash Bank",
+  "CBE",
+  "Safaricom ET",
+  "HelloCash",
+];
+
+const popularSearches = ["Brand Identity", "UI/UX Design", "Motion Graphics", "Web Design"];
+
+const locations = [
+  "Addis Ababa",
+  "Dire Dawa",
+  "Mekelle",
+  "Hawassa",
+  "Bahir Dar",
+  "Remote",
+];
+
 // ─── Page ──────────────────────────────────────────────────────────────────────
 
 export default function HomePage() {
@@ -196,6 +234,8 @@ export default function HomePage() {
     <>
       <HeroSection />
       <StatsBar />
+      <TrustedSection />
+      <ForSection />
       <WhySection />
       <FeaturedSection />
       <CategoriesSection />
@@ -217,7 +257,7 @@ function HeroSection() {
         </div>
 
         {/* Headline */}
-        <h1 className="text-5xl sm:text-7xl lg:text-8xl font-extrabold tracking-tight text-black leading-[0.95] max-w-4xl mb-6">
+        <h1 className="text-5xl sm:text-7xl lg:text-8xl font-extrabold tracking-tight text-black leading-[0.95] max-w-4xl mb-5">
           The fastest way to hire Ethiopia&apos;s best designers
         </h1>
 
@@ -227,25 +267,71 @@ function HeroSection() {
           creative work, transparent pricing, zero agency markup.
         </p>
 
-        {/* CTAs */}
-        <div className="flex flex-col sm:flex-row gap-3 mb-10">
-          <Link
-            href="/designers"
-            className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-black text-white text-sm font-semibold hover:bg-zinc-800 transition-colors duration-150 cursor-pointer"
+        {/* Search bar — plain HTML form, GET navigates to /designers */}
+        <div className="w-full max-w-2xl">
+          <form
+            action="/designers"
+            method="get"
+            className="flex items-center gap-0 bg-white rounded-2xl shadow-lg overflow-hidden"
           >
-            Browse Designers
-            <ArrowRightIcon />
-          </Link>
-          <Link
-            href="/contact"
-            className="inline-flex items-center justify-center px-7 py-3.5 rounded-full border-2 border-black/60 text-black text-sm font-semibold hover:bg-black/10 transition-colors duration-150 cursor-pointer"
-          >
-            Talk to Us
-          </Link>
+            {/* Keyword input */}
+            <label htmlFor="hero-search" className="sr-only">Search designers by name, skill, or category</label>
+            <div className="flex items-center gap-2.5 flex-1 px-4 py-1 min-w-0">
+              <span className="text-zinc-400 shrink-0"><SearchIcon /></span>
+              <input
+                id="hero-search"
+                type="text"
+                name="q"
+                placeholder="Designer name, skill, or category…"
+                className="flex-1 bg-transparent text-sm text-zinc-900 placeholder-zinc-400 outline-none py-3 min-w-0"
+              />
+            </div>
+
+            {/* Divider */}
+            <div className="w-px h-10 bg-zinc-200 shrink-0" />
+
+            {/* Location select */}
+            <label htmlFor="hero-location" className="sr-only">Filter by location</label>
+            <div className="flex items-center gap-2 px-4 shrink-0">
+              <span className="text-zinc-400"><MapPinSmIcon /></span>
+              <select
+                id="hero-location"
+                name="location"
+                className="bg-transparent text-sm text-zinc-600 outline-none cursor-pointer py-3 pr-1 appearance-none"
+              >
+                <option value="">All Locations</option>
+                {locations.map((loc) => (
+                  <option key={loc} value={loc}>{loc}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Search button */}
+            <button
+              type="submit"
+              className="m-1.5 px-6 py-3 rounded-xl bg-green-500 text-black text-sm font-semibold hover:bg-green-400 transition-colors duration-150 cursor-pointer shrink-0"
+            >
+              Search
+            </button>
+          </form>
+
+          {/* Popular searches */}
+          <div className="flex flex-wrap items-center gap-1.5 mt-3 text-xs text-black/70">
+            <span className="font-medium">Popular:</span>
+            {popularSearches.map((term) => (
+              <a
+                key={term}
+                href={`/designers?q=${encodeURIComponent(term)}`}
+                className="underline underline-offset-2 hover:text-black transition-colors"
+              >
+                {term}
+              </a>
+            ))}
+          </div>
         </div>
 
         {/* Social proof */}
-        <div className="flex items-center gap-2.5 text-sm text-black/70">
+        <div className="flex items-center gap-2.5 text-sm text-black/70 mt-8">
           <div className="flex -space-x-2">
             {["AB", "SM", "YT", "KD"].map((init) => (
               <span
@@ -284,9 +370,91 @@ function StatsBar() {
   );
 }
 
+function TrustedSection() {
+  return (
+    <div className="bg-white border-b border-zinc-100 py-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <p className="text-xs font-semibold uppercase tracking-widest text-zinc-400 text-center mb-7">
+          Trusted by leading businesses &amp; startups
+        </p>
+        <div className="flex flex-wrap justify-center items-center gap-x-10 gap-y-4">
+          {trustedBy.map((name) => (
+            <span
+              key={name}
+              className="text-zinc-300 font-extrabold text-lg tracking-tight select-none"
+            >
+              {name}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ForSection() {
+  return (
+    <section className="bg-zinc-50 py-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 sm:grid-cols-2 gap-5">
+
+        {/* For Businesses */}
+        <div className="relative rounded-3xl bg-green-50 border border-green-100 p-10 overflow-hidden">
+          {/* Decorative circles */}
+          <div aria-hidden className="absolute -right-10 -bottom-10 w-48 h-48 rounded-full bg-green-200/40" />
+          <div aria-hidden className="absolute -right-2 -bottom-2 w-28 h-28 rounded-full bg-green-300/30" />
+
+          <p className="relative text-xs font-semibold uppercase tracking-widest text-green-700 mb-4">
+            For Businesses
+          </p>
+          <h3 className="relative text-2xl sm:text-3xl font-extrabold text-zinc-900 leading-tight mb-3 max-w-xs">
+            Find the right designer for your project
+          </h3>
+          <p className="relative text-zinc-500 text-sm leading-relaxed mb-8 max-w-sm">
+            Browse 100+ vetted Ethiopian designers across all disciplines.
+            Post your brief and get matched within 48 hours — no upfront fees.
+          </p>
+          <Link
+            href="/designers"
+            className="relative inline-flex items-center gap-2 px-6 py-3 rounded-full bg-green-500 text-black text-sm font-semibold hover:bg-green-400 transition-colors duration-150 cursor-pointer"
+          >
+            Browse Designers
+            <ArrowRightIcon />
+          </Link>
+        </div>
+
+        {/* For Designers */}
+        <div className="relative rounded-3xl bg-zinc-900 p-10 overflow-hidden">
+          {/* Decorative circles */}
+          <div aria-hidden className="absolute -right-10 -bottom-10 w-48 h-48 rounded-full bg-green-500/10" />
+          <div aria-hidden className="absolute -right-2 -bottom-2 w-28 h-28 rounded-full bg-green-500/15" />
+
+          <p className="relative text-xs font-semibold uppercase tracking-widest text-green-400 mb-4">
+            For Designers
+          </p>
+          <h3 className="relative text-2xl sm:text-3xl font-extrabold text-white leading-tight mb-3 max-w-xs">
+            Get discovered by top businesses
+          </h3>
+          <p className="relative text-zinc-400 text-sm leading-relaxed mb-8 max-w-sm">
+            Join our curated network of Ethiopian designers. Build your profile,
+            upload your portfolio, and connect with clients who value your craft.
+          </p>
+          <Link
+            href="/apply"
+            className="relative inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-zinc-900 text-sm font-semibold hover:bg-zinc-100 transition-colors duration-150 cursor-pointer"
+          >
+            Upload Your Portfolio
+            <ArrowRightIcon />
+          </Link>
+        </div>
+
+      </div>
+    </section>
+  );
+}
+
 function WhySection() {
   return (
-    <section className="bg-zinc-50 py-24">
+    <section className="bg-zinc-50 pt-4 pb-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="mb-14">
           <p className="text-xs font-semibold uppercase tracking-widest text-green-600 mb-3">
@@ -350,7 +518,6 @@ function FeaturedSection() {
               href={`/designers/${d.slug}`}
               className="group rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm hover:shadow-xl hover:border-green-200 transition-all duration-200 cursor-pointer"
             >
-              {/* Avatar + name */}
               <div className="flex items-center gap-3 mb-5">
                 <div
                   className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-sm ${d.bg} ${d.text}`}
@@ -358,16 +525,11 @@ function FeaturedSection() {
                   {d.initials}
                 </div>
                 <div>
-                  <p className="font-bold text-zinc-900 text-sm leading-tight">
-                    {d.name}
-                  </p>
-                  <p className="text-xs text-zinc-400 mt-0.5">
-                    {d.specialty}
-                  </p>
+                  <p className="font-bold text-zinc-900 text-sm leading-tight">{d.name}</p>
+                  <p className="text-xs text-zinc-400 mt-0.5">{d.specialty}</p>
                 </div>
               </div>
 
-              {/* Tags */}
               <div className="flex flex-wrap gap-1.5 mb-5">
                 {d.tags.map((tag) => (
                   <span
@@ -379,11 +541,8 @@ function FeaturedSection() {
                 ))}
               </div>
 
-              {/* Footer row */}
               <div className="flex items-center justify-between border-t border-zinc-100 pt-4">
-                <span className="text-sm font-bold text-zinc-900">
-                  {d.rate}
-                </span>
+                <span className="text-sm font-bold text-zinc-900">{d.rate}</span>
                 <div className="flex items-center gap-1 text-green-600 text-xs font-semibold">
                   <StarIcon />
                   <span>{d.rating.toFixed(1)}</span>
@@ -433,9 +592,7 @@ function CategoriesSection() {
               <span className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-zinc-100 text-zinc-600 group-hover:bg-green-100 group-hover:text-green-700 transition-colors duration-200">
                 <Icon />
               </span>
-              <span className="text-xs font-bold text-zinc-800 leading-snug">
-                {label}
-              </span>
+              <span className="text-xs font-bold text-zinc-800 leading-snug">{label}</span>
               <span className="text-xs text-zinc-400">{count} designers</span>
             </Link>
           ))}
