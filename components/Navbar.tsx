@@ -1,4 +1,5 @@
 import Link from "next/link";
+import NavResourcesDropdown from "@/components/NavResourcesDropdown";
 
 const navLinks = [
   { href: "/designers", label: "Browse Designers" },
@@ -17,7 +18,7 @@ function ArrowRightIcon() {
 export default function Navbar() {
   return (
     <header className="sticky top-0 z-40 w-full bg-white/90 backdrop-blur-md">
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 h-18 flex items-center justify-between gap-8" style={{ height: "4.5rem" }}>
+      <nav className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between gap-8" style={{ height: "4.5rem" }}>
 
         {/* Logo mark + wordmark */}
         <Link
@@ -45,6 +46,9 @@ export default function Navbar() {
               </Link>
             </li>
           ))}
+          <li>
+            <NavResourcesDropdown />
+          </li>
         </ul>
 
         {/* Right: secondary text link + CTA pill */}
