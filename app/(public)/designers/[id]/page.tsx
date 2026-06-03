@@ -72,11 +72,16 @@ export default async function DesignerProfilePage({ params }: Props) {
   return (
     <div className="min-h-screen bg-zinc-50">
       <HeroSection designer={designer} />
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-14 space-y-16">
+
+      {/* Narrow content: bio + skills */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-14 pb-8 space-y-14">
         <BioSection designer={designer} />
         <SkillsSection designer={designer} />
-        <PortfolioSection portfolio={designer.portfolio} />
       </div>
+
+      {/* Full-width portfolio showcase */}
+      <PortfolioSection portfolio={designer.portfolio} />
+
       <ContactCta designer={designer} />
     </div>
   );
@@ -95,7 +100,6 @@ function HeroSection({ designer }: { designer: Designer }) {
 
   return (
     <div className="relative bg-zinc-900 overflow-hidden">
-      {/* Subtle green glow */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
@@ -106,7 +110,6 @@ function HeroSection({ designer }: { designer: Designer }) {
       />
 
       <div className="relative max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
-        {/* Back link */}
         <Link
           href="/designers"
           className="inline-flex items-center gap-1.5 text-zinc-400 hover:text-zinc-200 text-sm transition-colors duration-150 cursor-pointer mb-8"
@@ -116,14 +119,12 @@ function HeroSection({ designer }: { designer: Designer }) {
         </Link>
 
         <div className="flex flex-col sm:flex-row gap-6 sm:items-end">
-          {/* Avatar */}
           <div
             className={`w-20 h-20 rounded-2xl flex items-center justify-center text-xl font-bold shrink-0 ${avatarColor} ${avatarText}`}
           >
             {initials}
           </div>
 
-          {/* Name block */}
           <div className="flex-1">
             <div className="flex flex-wrap items-center gap-2 mb-1">
               <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
@@ -145,7 +146,6 @@ function HeroSection({ designer }: { designer: Designer }) {
             </div>
             <p className="text-green-400 font-semibold text-sm">{category}</p>
 
-            {/* Meta row */}
             <div className="flex flex-wrap items-center gap-4 mt-3 text-sm text-zinc-400">
               <span className="flex items-center gap-1.5">
                 <MapPinIcon />
@@ -158,7 +158,6 @@ function HeroSection({ designer }: { designer: Designer }) {
             </div>
           </div>
 
-          {/* Stats card */}
           <div className="flex sm:flex-col gap-5 sm:gap-3 shrink-0 rounded-xl border border-zinc-700 bg-zinc-800/60 backdrop-blur-sm px-5 py-4">
             <div className="text-center">
               <div className="flex items-center justify-center gap-1 text-green-400 mb-0.5">
@@ -212,38 +211,81 @@ function SkillsSection({ designer }: { designer: Designer }) {
   );
 }
 
+// ─── Portfolio (full-width, Behance-style editorial grid) ─────────────────────
+
 function PortfolioSection({ portfolio }: { portfolio: PortfolioItem[] }) {
+  if (!portfolio.length) return null;
+
   return (
-    <section aria-labelledby="portfolio-heading">
-      <h2 id="portfolio-heading" className="text-xs font-semibold uppercase tracking-widest text-green-600 mb-6">
-        Portfolio
-      </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {portfolio.map((item) => (
-          <PortfolioCard key={item.id} item={item} />
-        ))}
+    <section aria-labelledby="portfolio-heading" className="bg-white py-16 border-t border-zinc-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="flex items-baseline justify-between mb-10">
+          <h2
+            id="portfolio-heading"
+            className="text-xs font-semibold uppercase tracking-widest text-green-600"
+          >
+            Portfolio
+          </h2>
+          <span className="text-xs text-zinc-400 tabular-nums">{portfolio.length} works</span>
+        </div>
+
+        {/*
+          Editorial grid layout:
+          — Item 0 (hero):    full width,    very tall
+          — Items 1–2:        2 columns,     medium tall
+          — Items 3–5:        3 columns,     standard
+        */}
+        <div className="grid grid-cols-1 sm:grid-cols-6 gap-4 sm:gap-5">
+          {portfolio.map((item, i) => {
+            const isHero = i === 0;
+            const isMid = i === 1 || i === 2;
+
+            const colClass = isHero
+              ? "sm:col-span-6"
+              : isMid
+              ? "sm:col-span-3"
+              : "sm:col-span-2";
+
+            const heightClass = isHero
+              ? "h-64 sm:h-[30rem]"
+              : isMid
+              ? "h-56 sm:h-80"
+              : "h-48 sm:h-60";
+
+            return (
+              <div key={item.id} className={`group ${colClass}`}>
+                {/* Gradient artwork block */}
+                <div className={`relative ${heightClass} rounded-2xl overflow-hidden cursor-default`}>
+                  {/* Gradient fills and zooms on hover */}
+                  <div
+                    className={`absolute inset-0 bg-gradient-to-br ${item.gradient} transition-transform duration-500 ease-out group-hover:scale-105`}
+                  />
+                  {/* Dark overlay on hover */}
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
+                  {/* Category chip — always visible */}
+                  <div className="absolute top-3 left-3">
+                    <span className="px-2.5 py-1 rounded-full bg-black/40 text-white text-xs font-medium backdrop-blur-sm">
+                      {item.category}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Title below the artwork — always visible, Behance style */}
+                <div className="mt-3 px-0.5">
+                  <p className="font-semibold text-zinc-900 text-sm leading-snug group-hover:text-green-700 transition-colors duration-150">
+                    {item.title}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
 }
 
-function PortfolioCard({ item }: { item: PortfolioItem }) {
-  return (
-    <div className="group relative rounded-2xl overflow-hidden border border-zinc-200 bg-white shadow-sm hover:shadow-md transition-shadow duration-200 cursor-default">
-      {/* Gradient preview */}
-      <div className={`h-44 bg-gradient-to-br ${item.gradient}`} />
-
-      {/* Hover overlay */}
-      <div className="absolute inset-0 bg-zinc-900/0 group-hover:bg-zinc-900/40 transition-colors duration-200 rounded-2xl" />
-
-      {/* Info footer */}
-      <div className="px-4 py-3 border-t border-zinc-100">
-        <p className="text-sm font-semibold text-zinc-900 truncate">{item.title}</p>
-        <p className="text-xs text-zinc-400 mt-0.5">{item.category}</p>
-      </div>
-    </div>
-  );
-}
+// ─── Contact CTA ──────────────────────────────────────────────────────────────
 
 function ContactCta({ designer }: { designer: Designer }) {
   return (
