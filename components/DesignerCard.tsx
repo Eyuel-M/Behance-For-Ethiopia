@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { useState } from "react";
 import type { Designer } from "@/lib/types";
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
@@ -39,7 +42,121 @@ function CheckBadgeIcon() {
   );
 }
 
-// ─── Component ────────────────────────────────────────────────────────────────
+function ChevronLeftIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <polyline points="15 18 9 12 15 6" />
+    </svg>
+  );
+}
+
+function ChevronRightIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <polyline points="9 18 15 12 9 6" />
+    </svg>
+  );
+}
+
+// ─── Portfolio Carousel ────────────────────────────────────────────────────────
+
+function PortfolioCarousel({ items }: { items: Designer["portfolio"] }) {
+  const [current, setCurrent] = useState(0);
+
+  if (!items.length) return <div className="h-52 bg-zinc-100 flex-shrink-0" />;
+
+  function handlePrev(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrent((c) => (c - 1 + items.length) % items.length);
+  }
+
+  function handleNext(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrent((c) => (c + 1) % items.length);
+  }
+
+  function handleDot(index: number, e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrent(index);
+  }
+
+  return (
+    <div className="relative h-52 flex-shrink-0 overflow-hidden bg-zinc-100">
+      {/* Slides — crossfade via opacity */}
+      {items.map((item, i) => (
+        <div
+          key={item.id}
+          aria-hidden={i !== current}
+          className={`absolute inset-0 bg-gradient-to-br ${item.gradient} transition-opacity duration-200 ${
+            i === current ? "opacity-100" : "opacity-0 pointer-events-none"
+          }`}
+        >
+          {/* Bottom text overlay */}
+          <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/75 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 px-3 pb-8">
+            <p className="text-white text-xs font-semibold leading-snug truncate drop-shadow-sm">
+              {item.title}
+            </p>
+            <p className="text-white/70 text-xs leading-snug mt-0.5">{item.category}</p>
+          </div>
+        </div>
+      ))}
+
+      {/* Counter badge */}
+      <div className="absolute top-2.5 right-2.5 z-10 px-2 py-0.5 rounded-full bg-black/50 text-white text-xs font-medium tabular-nums">
+        {current + 1}/{items.length}
+      </div>
+
+      {/* Prev / Next arrows — always visible at 70%, full on card hover */}
+      {items.length > 1 && (
+        <>
+          <button
+            type="button"
+            onClick={handlePrev}
+            aria-label="Previous portfolio item"
+            className="absolute left-2 top-1/2 -translate-y-1/2 z-10 h-8 w-8 flex items-center justify-center rounded-full bg-white/85 text-zinc-800 shadow-sm hover:bg-white hover:scale-105 transition-all duration-150 cursor-pointer opacity-70 group-hover:opacity-100"
+          >
+            <ChevronLeftIcon />
+          </button>
+          <button
+            type="button"
+            onClick={handleNext}
+            aria-label="Next portfolio item"
+            className="absolute right-2 top-1/2 -translate-y-1/2 z-10 h-8 w-8 flex items-center justify-center rounded-full bg-white/85 text-zinc-800 shadow-sm hover:bg-white hover:scale-105 transition-all duration-150 cursor-pointer opacity-70 group-hover:opacity-100"
+          >
+            <ChevronRightIcon />
+          </button>
+        </>
+      )}
+
+      {/* Dot indicators */}
+      {items.length > 1 && (
+        <div className="absolute bottom-2 left-0 right-0 flex justify-center items-center gap-1 z-10">
+          {items.map((item, i) => (
+            <button
+              key={item.id}
+              type="button"
+              onClick={(e) => handleDot(i, e)}
+              aria-label={`Go to portfolio item ${i + 1}`}
+              className={`h-5 flex items-center justify-center px-0.5 cursor-pointer`}
+            >
+              <span
+                className={`block h-1.5 rounded-full transition-all duration-200 ${
+                  i === current ? "w-4 bg-white shadow-sm" : "w-1.5 bg-white/55 hover:bg-white/80"
+                }`}
+              />
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Designer Card ─────────────────────────────────────────────────────────────
 
 export default function DesignerCard({ designer }: { designer: Designer }) {
   const {
@@ -56,6 +173,7 @@ export default function DesignerCard({ designer }: { designer: Designer }) {
     photoUrl,
     avatarColor,
     avatarText,
+    portfolio,
   } = designer;
 
   const initials = name
@@ -71,6 +189,9 @@ export default function DesignerCard({ designer }: { designer: Designer }) {
       className="group flex flex-col rounded-2xl border border-zinc-200 bg-white shadow-sm hover:shadow-lg hover:border-green-200 transition-all duration-200 cursor-pointer overflow-hidden"
       aria-label={`View ${name}'s profile`}
     >
+      {/* Portfolio carousel */}
+      <PortfolioCarousel items={portfolio} />
+
       {/* Card header */}
       <div className="relative p-5 pb-4">
         {/* Availability indicator */}
@@ -100,11 +221,11 @@ export default function DesignerCard({ designer }: { designer: Designer }) {
                 alt={name}
                 width={52}
                 height={52}
-                className="w-13 h-13 rounded-full object-cover"
+                className="rounded-full object-cover"
               />
             ) : (
               <div
-                className={`w-13 h-13 rounded-full flex items-center justify-center text-sm font-semibold ${avatarColor} ${avatarText}`}
+                className={`rounded-full flex items-center justify-center text-sm font-semibold ${avatarColor} ${avatarText}`}
                 style={{ width: 52, height: 52 }}
               >
                 {initials}
@@ -118,16 +239,13 @@ export default function DesignerCard({ designer }: { designer: Designer }) {
               <p className="font-semibold text-zinc-900 text-sm truncate">
                 {name}
               </p>
-              {/* Vetted badge */}
               <span className="shrink-0 text-green-500" title="Vetted designer">
                 <CheckBadgeIcon />
               </span>
             </div>
 
-            {/* Category */}
             <p className="text-xs text-zinc-500 mt-0.5">{category}</p>
 
-            {/* Location + experience */}
             <div className="flex items-center gap-3 mt-2 text-xs text-zinc-400">
               <span className="flex items-center gap-1">
                 <MapPinIcon />
@@ -161,7 +279,6 @@ export default function DesignerCard({ designer }: { designer: Designer }) {
 
       {/* Footer */}
       <div className="mt-auto border-t border-zinc-100 px-5 py-3.5 flex items-center justify-between">
-        {/* Rating */}
         <div className="flex items-center gap-1.5 text-xs text-zinc-500">
           <span className="text-green-500">
             <StarIcon />
@@ -170,7 +287,6 @@ export default function DesignerCard({ designer }: { designer: Designer }) {
           <span>({reviewCount})</span>
         </div>
 
-        {/* Rate */}
         <div className="text-sm font-bold text-zinc-900">
           ${rate}
           <span className="text-xs font-normal text-zinc-400"> / hr</span>
