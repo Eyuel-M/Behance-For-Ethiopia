@@ -56,7 +56,7 @@ export default function Navbar() {
             Post a Job
           </Link>
           <Link
-            href="/designers"
+            href="/get-started"
             className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-zinc-900 text-white text-sm font-semibold hover:bg-zinc-700 transition-colors duration-150 cursor-pointer"
           >
             Get Started
