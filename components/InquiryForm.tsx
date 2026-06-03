@@ -86,14 +86,14 @@ export default function InquiryForm() {
         <span className="text-emerald-500">
           <CheckCircleIcon />
         </span>
-        <h2 className="text-xl font-bold text-stone-900">Inquiry received!</h2>
-        <p className="text-stone-500 max-w-sm text-sm leading-relaxed">
+        <h2 className="text-xl font-bold text-zinc-900">Inquiry received!</h2>
+        <p className="text-zinc-500 max-w-sm text-sm leading-relaxed">
           Thanks for reaching out. We&apos;ll review your project and get back
           to you within 48 hours.
         </p>
         <button
           onClick={() => { setForm(EMPTY); setSubmitted(false); }}
-          className="mt-2 text-sm font-medium text-amber-700 hover:text-amber-900 transition-colors cursor-pointer"
+          className="mt-2 text-sm font-medium text-green-700 hover:text-green-900 transition-colors cursor-pointer"
         >
           Submit another inquiry
         </button>
@@ -175,13 +175,13 @@ export default function InquiryForm() {
       <button
         type="submit"
         disabled={isPending}
-        className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-amber-600 text-white text-sm font-semibold hover:bg-amber-500 disabled:opacity-60 disabled:cursor-not-allowed transition-colors duration-150 cursor-pointer shadow-sm"
+        className="w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-green-500 text-black text-sm font-semibold hover:bg-green-400 disabled:opacity-60 disabled:cursor-not-allowed transition-colors duration-150 cursor-pointer"
       >
         {isPending && <SpinnerIcon />}
         {isPending ? "Sending…" : "Send Inquiry"}
       </button>
 
-      <p className="text-xs text-center text-stone-400">
+      <p className="text-xs text-center text-zinc-400">
         We typically respond within 48 hours. No spam, ever.
       </p>
     </form>
@@ -192,12 +192,12 @@ export default function InquiryForm() {
 
 function inputClass(hasError: boolean) {
   return [
-    "w-full rounded-xl border bg-white px-4 py-2.5 text-sm text-stone-900",
-    "placeholder-stone-400 outline-none transition-all duration-150",
-    "focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500",
+    "w-full rounded-xl border bg-white px-4 py-2.5 text-sm text-zinc-900",
+    "placeholder-zinc-400 outline-none transition-all duration-150",
+    "focus:ring-2 focus:ring-green-500/20 focus:border-green-500",
     hasError
       ? "border-red-400 focus:border-red-400 focus:ring-red-400/20"
-      : "border-stone-200",
+      : "border-zinc-200",
   ].join(" ");
 }
 
@@ -214,7 +214,7 @@ function Field({
 }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-sm font-medium text-stone-700">
+      <label className="text-sm font-medium text-zinc-700">
         {label}
         {required && <span className="ml-0.5 text-red-500" aria-hidden="true">*</span>}
       </label>

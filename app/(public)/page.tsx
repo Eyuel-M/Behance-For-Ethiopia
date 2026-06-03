@@ -145,8 +145,8 @@ const featured = [
     tags: ["Figma", "Branding", "Systems"],
     rate: "$25 / hr",
     rating: 4.9,
-    bg: "bg-amber-100",
-    text: "text-amber-800",
+    bg: "bg-green-100",
+    text: "text-green-800",
     slug: "abebe-dereje",
   },
   {
@@ -156,8 +156,8 @@ const featured = [
     tags: ["UX Research", "Prototyping", "Figma"],
     rate: "$30 / hr",
     rating: 5.0,
-    bg: "bg-stone-200",
-    text: "text-stone-800",
+    bg: "bg-zinc-200",
+    text: "text-zinc-800",
     slug: "sara-mulugeta",
   },
   {
@@ -167,8 +167,8 @@ const featured = [
     tags: ["After Effects", "Illustration", "3D"],
     rate: "$28 / hr",
     rating: 4.8,
-    bg: "bg-orange-100",
-    text: "text-orange-800",
+    bg: "bg-emerald-100",
+    text: "text-emerald-800",
     slug: "yonas-tesfaye",
   },
 ];
@@ -208,73 +208,49 @@ export default function HomePage() {
 
 function HeroSection() {
   return (
-    <section className="relative overflow-hidden bg-stone-900">
-      {/* Radial gradient atmosphere */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse 80% 60% at 50% -10%, rgba(161,98,7,0.25) 0%, transparent 70%)",
-        }}
-      />
-      {/* Subtle dot grid */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-20"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle, #78716c 1px, transparent 1px)",
-          backgroundSize: "32px 32px",
-        }}
-      />
-
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-28 sm:py-36 flex flex-col items-center text-center gap-7">
+    <section className="bg-green-500">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-20 sm:pt-28 pb-16 sm:pb-24">
         {/* Badge */}
-        <div className="inline-flex items-center gap-2 rounded-full border border-stone-700 bg-stone-800/60 px-4 py-1.5 text-xs font-medium text-stone-300 backdrop-blur-sm">
-          <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" />
+        <div className="inline-flex items-center gap-2 rounded-full border border-black/20 bg-black/10 px-4 py-1.5 text-xs font-semibold text-black/80 mb-8">
+          <span className="h-1.5 w-1.5 rounded-full bg-black/60 animate-pulse" />
           Now matching businesses — get connected in 48 hours
         </div>
 
         {/* Headline */}
-        <h1 className="max-w-3xl text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[1.1]">
-          The fastest way to hire{" "}
-          <span className="text-amber-400">
-            Ethiopia&apos;s best
-          </span>{" "}
-          designers
+        <h1 className="text-5xl sm:text-7xl lg:text-8xl font-extrabold tracking-tight text-black leading-[0.95] max-w-4xl mb-6">
+          The fastest way to hire Ethiopia&apos;s best designers
         </h1>
 
         {/* Subheadline */}
-        <p className="max-w-xl text-base sm:text-lg text-stone-400 leading-relaxed">
+        <p className="max-w-lg text-base sm:text-lg text-black/75 leading-relaxed mb-8">
           A curated marketplace of vetted Ethiopian designers. Senior-level
           creative work, transparent pricing, zero agency markup.
         </p>
 
         {/* CTAs */}
-        <div className="flex flex-col sm:flex-row gap-3 mt-1">
+        <div className="flex flex-col sm:flex-row gap-3 mb-10">
           <Link
             href="/designers"
-            className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-amber-600 text-white text-sm font-semibold hover:bg-amber-500 transition-colors duration-150 cursor-pointer shadow-lg shadow-amber-900/30"
+            className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-black text-white text-sm font-semibold hover:bg-zinc-800 transition-colors duration-150 cursor-pointer"
           >
             Browse Designers
             <ArrowRightIcon />
           </Link>
           <Link
             href="/contact"
-            className="inline-flex items-center justify-center px-6 py-3 rounded-lg border border-stone-600 bg-stone-800/50 text-stone-200 text-sm font-medium hover:bg-stone-700/60 hover:border-stone-500 transition-colors duration-150 cursor-pointer backdrop-blur-sm"
+            className="inline-flex items-center justify-center px-7 py-3.5 rounded-full border-2 border-black/60 text-black text-sm font-semibold hover:bg-black/10 transition-colors duration-150 cursor-pointer"
           >
             Talk to Us
           </Link>
         </div>
 
-        {/* Social proof strip */}
-        <div className="mt-4 flex items-center gap-2 text-sm text-stone-400">
+        {/* Social proof */}
+        <div className="flex items-center gap-2.5 text-sm text-black/70">
           <div className="flex -space-x-2">
             {["AB", "SM", "YT", "KD"].map((init) => (
               <span
                 key={init}
-                className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-stone-700 border-2 border-stone-900 text-xs font-medium text-stone-200"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-black/20 border-2 border-green-500 text-xs font-semibold text-black"
               >
                 {init}
               </span>
@@ -282,7 +258,7 @@ function HeroSection() {
           </div>
           <span>
             Trusted by{" "}
-            <span className="text-stone-200 font-medium">50+ businesses</span>{" "}
+            <span className="font-bold text-black">50+ businesses</span>{" "}
             across Ethiopia
           </span>
         </div>
@@ -293,14 +269,16 @@ function HeroSection() {
 
 function StatsBar() {
   return (
-    <div className="bg-white border-y border-stone-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5 grid grid-cols-2 sm:grid-cols-4 gap-4">
-        {stats.map(({ value, label }) => (
-          <div key={label} className="flex flex-col items-center gap-0.5 py-1">
-            <span className="text-2xl font-bold text-stone-900">{value}</span>
-            <span className="text-xs text-stone-500">{label}</span>
-          </div>
-        ))}
+    <div className="bg-white border-b border-zinc-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-zinc-100">
+          {stats.map(({ value, label }) => (
+            <div key={label} className="flex flex-col items-center py-10 gap-1">
+              <span className="text-4xl sm:text-5xl font-extrabold text-zinc-900">{value}</span>
+              <span className="text-xs sm:text-sm text-zinc-400 font-medium">{label}</span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -308,16 +286,16 @@ function StatsBar() {
 
 function WhySection() {
   return (
-    <section className="bg-stone-50 py-24">
+    <section className="bg-zinc-50 py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="text-center mb-14">
-          <p className="text-xs font-semibold uppercase tracking-widest text-amber-700 mb-3">
+        <div className="mb-14">
+          <p className="text-xs font-semibold uppercase tracking-widest text-green-600 mb-3">
             Why Ethiopia
           </p>
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-stone-900">
+          <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-zinc-900">
             The smarter way to hire design talent
           </h2>
-          <p className="mt-3 text-stone-500 max-w-lg mx-auto text-base leading-relaxed">
+          <p className="mt-4 text-zinc-500 max-w-lg text-base leading-relaxed">
             Ethiopian designers bring a rare combination of craft, value, and
             professionalism that fast-growing businesses need.
           </p>
@@ -327,24 +305,15 @@ function WhySection() {
           {reasons.map(({ Icon, title, body }) => (
             <div
               key={title}
-              className="group relative rounded-2xl border border-stone-200 bg-white p-6 shadow-sm hover:shadow-md hover:border-stone-300 transition-all duration-200 cursor-default"
+              className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm hover:shadow-md hover:border-green-200 transition-all duration-200 cursor-default"
             >
-              {/* Glass shimmer on hover */}
-              <div
-                aria-hidden
-                className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                style={{
-                  background:
-                    "linear-gradient(135deg, rgba(255,255,255,0.6) 0%, transparent 60%)",
-                }}
-              />
-              <span className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-amber-50 text-amber-700 mb-4">
+              <span className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-green-100 text-green-700 mb-4">
                 <Icon />
               </span>
-              <h3 className="font-semibold text-stone-900 text-base mb-2">
+              <h3 className="font-bold text-zinc-900 text-base mb-2">
                 {title}
               </h3>
-              <p className="text-sm text-stone-500 leading-relaxed">{body}</p>
+              <p className="text-sm text-zinc-500 leading-relaxed">{body}</p>
             </div>
           ))}
         </div>
@@ -359,16 +328,16 @@ function FeaturedSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex items-end justify-between mb-12">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-amber-700 mb-3">
+            <p className="text-xs font-semibold uppercase tracking-widest text-green-600 mb-3">
               Featured
             </p>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-stone-900">
+            <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-zinc-900">
               Meet a few of our designers
             </h2>
           </div>
           <Link
             href="/designers"
-            className="hidden sm:inline-flex items-center gap-1.5 text-sm font-medium text-stone-600 hover:text-stone-900 transition-colors duration-150 cursor-pointer"
+            className="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold text-zinc-600 hover:text-zinc-900 transition-colors duration-150 cursor-pointer"
           >
             View all <ArrowRightIcon />
           </Link>
@@ -379,57 +348,45 @@ function FeaturedSection() {
             <Link
               key={d.slug}
               href={`/designers/${d.slug}`}
-              className="group relative rounded-2xl border border-stone-200 bg-white p-6 shadow-sm hover:shadow-lg hover:border-stone-300 transition-all duration-200 cursor-pointer overflow-hidden"
+              className="group rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm hover:shadow-xl hover:border-green-200 transition-all duration-200 cursor-pointer"
             >
-              {/* Ambient gradient on hover */}
-              <div
-                aria-hidden
-                className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                style={{
-                  background:
-                    "linear-gradient(135deg, rgba(251,243,219,0.5) 0%, transparent 70%)",
-                }}
-              />
+              {/* Avatar + name */}
+              <div className="flex items-center gap-3 mb-5">
+                <div
+                  className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-sm ${d.bg} ${d.text}`}
+                >
+                  {d.initials}
+                </div>
+                <div>
+                  <p className="font-bold text-zinc-900 text-sm leading-tight">
+                    {d.name}
+                  </p>
+                  <p className="text-xs text-zinc-400 mt-0.5">
+                    {d.specialty}
+                  </p>
+                </div>
+              </div>
 
-              <div className="relative">
-                {/* Avatar + name */}
-                <div className="flex items-center gap-3 mb-5">
-                  <div
-                    className={`w-12 h-12 rounded-full flex items-center justify-center font-semibold text-sm ${d.bg} ${d.text}`}
+              {/* Tags */}
+              <div className="flex flex-wrap gap-1.5 mb-5">
+                {d.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="px-2.5 py-0.5 rounded-full bg-green-50 text-green-700 text-xs font-medium border border-green-100"
                   >
-                    {d.initials}
-                  </div>
-                  <div>
-                    <p className="font-semibold text-stone-900 text-sm leading-tight">
-                      {d.name}
-                    </p>
-                    <p className="text-xs text-stone-400 mt-0.5">
-                      {d.specialty}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Tags */}
-                <div className="flex flex-wrap gap-1.5 mb-5">
-                  {d.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="px-2.5 py-0.5 rounded-full bg-stone-100 text-stone-600 text-xs font-medium"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Footer row */}
-                <div className="flex items-center justify-between border-t border-stone-100 pt-4">
-                  <span className="text-sm font-semibold text-stone-900">
-                    {d.rate}
+                    {tag}
                   </span>
-                  <div className="flex items-center gap-1 text-amber-500 text-xs font-medium">
-                    <StarIcon />
-                    <span>{d.rating.toFixed(1)}</span>
-                  </div>
+                ))}
+              </div>
+
+              {/* Footer row */}
+              <div className="flex items-center justify-between border-t border-zinc-100 pt-4">
+                <span className="text-sm font-bold text-zinc-900">
+                  {d.rate}
+                </span>
+                <div className="flex items-center gap-1 text-green-600 text-xs font-semibold">
+                  <StarIcon />
+                  <span>{d.rating.toFixed(1)}</span>
                 </div>
               </div>
             </Link>
@@ -439,7 +396,7 @@ function FeaturedSection() {
         <div className="mt-8 text-center sm:hidden">
           <Link
             href="/designers"
-            className="text-sm font-medium text-stone-700 hover:text-stone-900 cursor-pointer"
+            className="text-sm font-semibold text-zinc-700 hover:text-zinc-900 cursor-pointer"
           >
             View all designers →
           </Link>
@@ -451,16 +408,16 @@ function FeaturedSection() {
 
 function CategoriesSection() {
   return (
-    <section className="bg-stone-50 py-24">
+    <section className="bg-zinc-50 py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="text-center mb-12">
-          <p className="text-xs font-semibold uppercase tracking-widest text-amber-700 mb-3">
+        <div className="mb-12">
+          <p className="text-xs font-semibold uppercase tracking-widest text-green-600 mb-3">
             Categories
           </p>
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-stone-900">
+          <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-zinc-900">
             Find the right skill set
           </h2>
-          <p className="mt-3 text-stone-500 max-w-md mx-auto text-base">
+          <p className="mt-4 text-zinc-500 max-w-md text-base">
             Browse designers by discipline and find the exact expertise your
             project needs.
           </p>
@@ -471,15 +428,15 @@ function CategoriesSection() {
             <Link
               key={label}
               href="/designers"
-              className="group flex flex-col items-center gap-3 rounded-2xl border border-stone-200 bg-white p-5 text-center shadow-sm hover:shadow-md hover:border-amber-200 hover:bg-amber-50/30 transition-all duration-200 cursor-pointer"
+              className="group flex flex-col items-center gap-3 rounded-2xl border border-zinc-200 bg-white p-5 text-center shadow-sm hover:shadow-md hover:border-green-300 hover:bg-green-50 transition-all duration-200 cursor-pointer"
             >
-              <span className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-stone-100 text-stone-600 group-hover:bg-amber-100 group-hover:text-amber-700 transition-colors duration-200">
+              <span className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-zinc-100 text-zinc-600 group-hover:bg-green-100 group-hover:text-green-700 transition-colors duration-200">
                 <Icon />
               </span>
-              <span className="text-xs font-semibold text-stone-800 leading-snug">
+              <span className="text-xs font-bold text-zinc-800 leading-snug">
                 {label}
               </span>
-              <span className="text-xs text-stone-400">{count} designers</span>
+              <span className="text-xs text-zinc-400">{count} designers</span>
             </Link>
           ))}
         </div>
@@ -490,38 +447,29 @@ function CategoriesSection() {
 
 function CtaSection() {
   return (
-    <section className="relative overflow-hidden bg-stone-900 py-24">
-      {/* Amber glow */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse 60% 80% at 50% 110%, rgba(161,98,7,0.3) 0%, transparent 65%)",
-        }}
-      />
-      <div className="relative max-w-3xl mx-auto px-4 sm:px-6 text-center flex flex-col items-center gap-6">
-        <p className="text-xs font-semibold uppercase tracking-widest text-amber-500">
+    <section className="bg-zinc-900 py-24">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center flex flex-col items-center gap-6">
+        <p className="text-xs font-semibold uppercase tracking-widest text-green-400">
           Ready to hire?
         </p>
-        <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white leading-tight">
+        <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-white leading-tight">
           Work with exceptional designers — matched in 48 hours
         </h2>
-        <p className="text-stone-400 text-base max-w-xl leading-relaxed">
+        <p className="text-zinc-400 text-base max-w-xl leading-relaxed">
           Tell us about your project and we&apos;ll connect you with the right
           vetted Ethiopian designer. No upfront fees, no agency overhead.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 mt-1">
           <Link
             href="/designers"
-            className="inline-flex items-center justify-center gap-2 px-7 py-3 rounded-lg bg-amber-600 text-white text-sm font-semibold hover:bg-amber-500 transition-colors duration-150 cursor-pointer shadow-lg shadow-amber-900/40"
+            className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-green-500 text-black text-sm font-semibold hover:bg-green-400 transition-colors duration-150 cursor-pointer"
           >
             Browse Designers
             <ArrowRightIcon />
           </Link>
           <Link
             href="/contact"
-            className="inline-flex items-center justify-center px-7 py-3 rounded-lg border border-stone-600 text-stone-200 text-sm font-medium hover:bg-stone-800 hover:border-stone-500 transition-colors duration-150 cursor-pointer"
+            className="inline-flex items-center justify-center px-7 py-3.5 rounded-full border-2 border-zinc-600 text-white text-sm font-semibold hover:bg-zinc-800 hover:border-zinc-500 transition-colors duration-150 cursor-pointer"
           >
             Get Matched
           </Link>

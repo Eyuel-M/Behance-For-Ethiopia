@@ -33,7 +33,7 @@ function StarIcon() {
 function CheckBadgeIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" fill="currentColor" stroke="none" className="text-amber-500" />
+      <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" fill="currentColor" stroke="none" className="text-green-500" />
       <polyline points="9 12 11 14 15 10" stroke="white" strokeWidth="2" fill="none" />
     </svg>
   );
@@ -68,7 +68,7 @@ export default function DesignerCard({ designer }: { designer: Designer }) {
   return (
     <Link
       href={`/designers/${slug}`}
-      className="group flex flex-col rounded-2xl border border-stone-200 bg-white shadow-sm hover:shadow-md hover:border-stone-300 transition-all duration-200 cursor-pointer overflow-hidden"
+      className="group flex flex-col rounded-2xl border border-zinc-200 bg-white shadow-sm hover:shadow-lg hover:border-green-200 transition-all duration-200 cursor-pointer overflow-hidden"
       aria-label={`View ${name}'s profile`}
     >
       {/* Card header */}
@@ -78,13 +78,13 @@ export default function DesignerCard({ designer }: { designer: Designer }) {
           <span
             className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${
               available
-                ? "bg-emerald-50 text-emerald-700"
-                : "bg-stone-100 text-stone-400"
+                ? "bg-green-50 text-green-700"
+                : "bg-zinc-100 text-zinc-400"
             }`}
           >
             <span
               className={`h-1.5 w-1.5 rounded-full ${
-                available ? "bg-emerald-500" : "bg-stone-400"
+                available ? "bg-green-500" : "bg-zinc-400"
               }`}
             />
             {available ? "Available" : "Booked"}
@@ -115,20 +115,20 @@ export default function DesignerCard({ designer }: { designer: Designer }) {
           {/* Name + meta */}
           <div className="min-w-0 flex-1 pr-16">
             <div className="flex items-center gap-1.5">
-              <p className="font-semibold text-stone-900 text-sm truncate">
+              <p className="font-semibold text-zinc-900 text-sm truncate">
                 {name}
               </p>
               {/* Vetted badge */}
-              <span className="shrink-0 text-amber-500" title="Vetted designer">
+              <span className="shrink-0 text-green-500" title="Vetted designer">
                 <CheckBadgeIcon />
               </span>
             </div>
 
             {/* Category */}
-            <p className="text-xs text-stone-500 mt-0.5">{category}</p>
+            <p className="text-xs text-zinc-500 mt-0.5">{category}</p>
 
             {/* Location + experience */}
-            <div className="flex items-center gap-3 mt-2 text-xs text-stone-400">
+            <div className="flex items-center gap-3 mt-2 text-xs text-zinc-400">
               <span className="flex items-center gap-1">
                 <MapPinIcon />
                 {location}
@@ -147,33 +147,33 @@ export default function DesignerCard({ designer }: { designer: Designer }) {
         {skills.slice(0, 3).map((skill) => (
           <span
             key={skill}
-            className="px-2.5 py-0.5 rounded-full bg-stone-100 text-stone-600 text-xs font-medium"
+            className="px-2.5 py-0.5 rounded-full bg-green-50 text-green-700 text-xs font-medium border border-green-100"
           >
             {skill}
           </span>
         ))}
         {skills.length > 3 && (
-          <span className="px-2.5 py-0.5 rounded-full bg-stone-100 text-stone-400 text-xs">
+          <span className="px-2.5 py-0.5 rounded-full bg-zinc-100 text-zinc-400 text-xs">
             +{skills.length - 3}
           </span>
         )}
       </div>
 
       {/* Footer */}
-      <div className="mt-auto border-t border-stone-100 px-5 py-3.5 flex items-center justify-between">
+      <div className="mt-auto border-t border-zinc-100 px-5 py-3.5 flex items-center justify-between">
         {/* Rating */}
-        <div className="flex items-center gap-1.5 text-xs text-stone-500">
-          <span className="text-amber-400">
+        <div className="flex items-center gap-1.5 text-xs text-zinc-500">
+          <span className="text-green-500">
             <StarIcon />
           </span>
-          <span className="font-medium text-stone-900">{rating.toFixed(1)}</span>
+          <span className="font-semibold text-zinc-900">{rating.toFixed(1)}</span>
           <span>({reviewCount})</span>
         </div>
 
         {/* Rate */}
-        <div className="text-sm font-semibold text-stone-900">
+        <div className="text-sm font-bold text-zinc-900">
           ${rate}
-          <span className="text-xs font-normal text-stone-400"> / hr</span>
+          <span className="text-xs font-normal text-zinc-400"> / hr</span>
         </div>
       </div>
     </Link>

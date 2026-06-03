@@ -54,7 +54,7 @@ function ArrowRightIcon() {
 function CheckBadgeIcon() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-      <circle cx="12" cy="12" r="10" fill="#d97706" />
+      <circle cx="12" cy="12" r="10" fill="#22c55e" />
       <polyline points="9 12 11 14 15 10" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
     </svg>
   );
@@ -70,7 +70,7 @@ export default async function DesignerProfilePage({ params }: Props) {
   if (!designer) notFound();
 
   return (
-    <div className="min-h-screen bg-stone-50">
+    <div className="min-h-screen bg-zinc-50">
       <HeroSection designer={designer} />
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-14 space-y-16">
         <BioSection designer={designer} />
@@ -94,14 +94,14 @@ function HeroSection({ designer }: { designer: Designer }) {
   const initials = name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
 
   return (
-    <div className="relative bg-stone-900 overflow-hidden">
-      {/* Ambient glow */}
+    <div className="relative bg-zinc-900 overflow-hidden">
+      {/* Subtle green glow */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse 70% 80% at 0% 50%, rgba(161,98,7,0.2) 0%, transparent 60%)",
+            "radial-gradient(ellipse 70% 80% at 0% 50%, rgba(34,197,94,0.12) 0%, transparent 60%)",
         }}
       />
 
@@ -109,7 +109,7 @@ function HeroSection({ designer }: { designer: Designer }) {
         {/* Back link */}
         <Link
           href="/designers"
-          className="inline-flex items-center gap-1.5 text-stone-400 hover:text-stone-200 text-sm transition-colors duration-150 cursor-pointer mb-8"
+          className="inline-flex items-center gap-1.5 text-zinc-400 hover:text-zinc-200 text-sm transition-colors duration-150 cursor-pointer mb-8"
         >
           <ArrowLeftIcon />
           All designers
@@ -126,7 +126,7 @@ function HeroSection({ designer }: { designer: Designer }) {
           {/* Name block */}
           <div className="flex-1">
             <div className="flex flex-wrap items-center gap-2 mb-1">
-              <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
                 {name}
               </h1>
               <span title="Vetted designer">
@@ -135,18 +135,18 @@ function HeroSection({ designer }: { designer: Designer }) {
               <span
                 className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium ${
                   available
-                    ? "bg-emerald-900/60 text-emerald-300"
-                    : "bg-stone-800 text-stone-400"
+                    ? "bg-green-900/60 text-green-300"
+                    : "bg-zinc-800 text-zinc-400"
                 }`}
               >
-                <span className={`h-1.5 w-1.5 rounded-full ${available ? "bg-emerald-400" : "bg-stone-500"}`} />
+                <span className={`h-1.5 w-1.5 rounded-full ${available ? "bg-green-400" : "bg-zinc-500"}`} />
                 {available ? "Available" : "Booked"}
               </span>
             </div>
-            <p className="text-amber-400 font-medium text-sm">{category}</p>
+            <p className="text-green-400 font-semibold text-sm">{category}</p>
 
             {/* Meta row */}
-            <div className="flex flex-wrap items-center gap-4 mt-3 text-sm text-stone-400">
+            <div className="flex flex-wrap items-center gap-4 mt-3 text-sm text-zinc-400">
               <span className="flex items-center gap-1.5">
                 <MapPinIcon />
                 {location}
@@ -159,18 +159,18 @@ function HeroSection({ designer }: { designer: Designer }) {
           </div>
 
           {/* Stats card */}
-          <div className="flex sm:flex-col gap-5 sm:gap-3 shrink-0 rounded-xl border border-stone-700 bg-stone-800/60 backdrop-blur-sm px-5 py-4">
+          <div className="flex sm:flex-col gap-5 sm:gap-3 shrink-0 rounded-xl border border-zinc-700 bg-zinc-800/60 backdrop-blur-sm px-5 py-4">
             <div className="text-center">
-              <div className="flex items-center justify-center gap-1 text-amber-400 mb-0.5">
+              <div className="flex items-center justify-center gap-1 text-green-400 mb-0.5">
                 <StarIcon />
                 <span className="text-white font-bold">{rating.toFixed(1)}</span>
               </div>
-              <p className="text-xs text-stone-400">{reviewCount} reviews</p>
+              <p className="text-xs text-zinc-400">{reviewCount} reviews</p>
             </div>
-            <div className="hidden sm:block h-px bg-stone-700" />
+            <div className="hidden sm:block h-px bg-zinc-700" />
             <div className="text-center">
-              <p className="text-white font-bold">${rate}<span className="text-stone-400 text-xs font-normal">/hr</span></p>
-              <p className="text-xs text-stone-400">Hourly rate</p>
+              <p className="text-white font-bold">${rate}<span className="text-zinc-400 text-xs font-normal">/hr</span></p>
+              <p className="text-xs text-zinc-400">Hourly rate</p>
             </div>
           </div>
         </div>
@@ -182,10 +182,10 @@ function HeroSection({ designer }: { designer: Designer }) {
 function BioSection({ designer }: { designer: Designer }) {
   return (
     <section aria-labelledby="bio-heading">
-      <h2 id="bio-heading" className="text-xs font-semibold uppercase tracking-widest text-amber-700 mb-4">
+      <h2 id="bio-heading" className="text-xs font-semibold uppercase tracking-widest text-green-600 mb-4">
         About
       </h2>
-      <p className="text-stone-600 text-base leading-relaxed max-w-3xl">
+      <p className="text-zinc-600 text-base leading-relaxed max-w-3xl">
         {designer.bio}
       </p>
     </section>
@@ -195,14 +195,14 @@ function BioSection({ designer }: { designer: Designer }) {
 function SkillsSection({ designer }: { designer: Designer }) {
   return (
     <section aria-labelledby="skills-heading">
-      <h2 id="skills-heading" className="text-xs font-semibold uppercase tracking-widest text-amber-700 mb-4">
+      <h2 id="skills-heading" className="text-xs font-semibold uppercase tracking-widest text-green-600 mb-4">
         Skills
       </h2>
       <div className="flex flex-wrap gap-2">
         {designer.skills.map((skill) => (
           <span
             key={skill}
-            className="px-4 py-2 rounded-xl bg-white border border-stone-200 text-stone-700 text-sm font-medium shadow-sm"
+            className="px-4 py-2 rounded-full bg-white border border-zinc-200 text-zinc-700 text-sm font-medium shadow-sm"
           >
             {skill}
           </span>
@@ -215,7 +215,7 @@ function SkillsSection({ designer }: { designer: Designer }) {
 function PortfolioSection({ portfolio }: { portfolio: PortfolioItem[] }) {
   return (
     <section aria-labelledby="portfolio-heading">
-      <h2 id="portfolio-heading" className="text-xs font-semibold uppercase tracking-widest text-amber-700 mb-6">
+      <h2 id="portfolio-heading" className="text-xs font-semibold uppercase tracking-widest text-green-600 mb-6">
         Portfolio
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -229,17 +229,17 @@ function PortfolioSection({ portfolio }: { portfolio: PortfolioItem[] }) {
 
 function PortfolioCard({ item }: { item: PortfolioItem }) {
   return (
-    <div className="group relative rounded-2xl overflow-hidden border border-stone-200 bg-white shadow-sm hover:shadow-md transition-shadow duration-200 cursor-default">
+    <div className="group relative rounded-2xl overflow-hidden border border-zinc-200 bg-white shadow-sm hover:shadow-md transition-shadow duration-200 cursor-default">
       {/* Gradient preview */}
       <div className={`h-44 bg-gradient-to-br ${item.gradient}`} />
 
       {/* Hover overlay */}
-      <div className="absolute inset-0 bg-stone-900/0 group-hover:bg-stone-900/40 transition-colors duration-200 rounded-2xl" />
+      <div className="absolute inset-0 bg-zinc-900/0 group-hover:bg-zinc-900/40 transition-colors duration-200 rounded-2xl" />
 
       {/* Info footer */}
-      <div className="px-4 py-3 border-t border-stone-100">
-        <p className="text-sm font-semibold text-stone-900 truncate">{item.title}</p>
-        <p className="text-xs text-stone-400 mt-0.5">{item.category}</p>
+      <div className="px-4 py-3 border-t border-zinc-100">
+        <p className="text-sm font-semibold text-zinc-900 truncate">{item.title}</p>
+        <p className="text-xs text-zinc-400 mt-0.5">{item.category}</p>
       </div>
     </div>
   );
@@ -247,23 +247,15 @@ function PortfolioCard({ item }: { item: PortfolioItem }) {
 
 function ContactCta({ designer }: { designer: Designer }) {
   return (
-    <div className="relative overflow-hidden bg-stone-900 py-20">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse 60% 80% at 50% 120%, rgba(161,98,7,0.25) 0%, transparent 65%)",
-        }}
-      />
-      <div className="relative max-w-2xl mx-auto px-4 sm:px-6 text-center flex flex-col items-center gap-5">
-        <p className="text-xs font-semibold uppercase tracking-widest text-amber-500">
+    <div className="bg-zinc-900 py-20">
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 text-center flex flex-col items-center gap-5">
+        <p className="text-xs font-semibold uppercase tracking-widest text-green-400">
           Ready to work together?
         </p>
-        <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+        <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
           Hire {designer.name.split(" ")[0]} for your next project
         </h2>
-        <p className="text-stone-400 text-base max-w-md leading-relaxed">
+        <p className="text-zinc-400 text-base max-w-md leading-relaxed">
           {designer.available
             ? `${designer.name.split(" ")[0]} is currently available and taking on new clients.`
             : `${designer.name.split(" ")[0]} is currently booked but you can get in touch to discuss future availability.`}
@@ -271,14 +263,14 @@ function ContactCta({ designer }: { designer: Designer }) {
         <div className="flex flex-col sm:flex-row gap-3">
           <Link
             href="/contact"
-            className="inline-flex items-center justify-center gap-2 px-7 py-3 rounded-lg bg-amber-600 text-white text-sm font-semibold hover:bg-amber-500 transition-colors duration-150 cursor-pointer shadow-lg shadow-amber-900/30"
+            className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-green-500 text-black text-sm font-semibold hover:bg-green-400 transition-colors duration-150 cursor-pointer"
           >
             Get in Touch
             <ArrowRightIcon />
           </Link>
           <Link
             href="/designers"
-            className="inline-flex items-center justify-center px-7 py-3 rounded-lg border border-stone-600 text-stone-300 text-sm font-medium hover:bg-stone-800 transition-colors duration-150 cursor-pointer"
+            className="inline-flex items-center justify-center px-7 py-3.5 rounded-full border-2 border-zinc-600 text-zinc-300 text-sm font-semibold hover:bg-zinc-800 transition-colors duration-150 cursor-pointer"
           >
             Browse Other Designers
           </Link>

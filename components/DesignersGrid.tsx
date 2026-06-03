@@ -50,10 +50,10 @@ export default function DesignersGrid({ designers }: { designers: Designer[] }) 
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}
-            className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-150 cursor-pointer ${
+            className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all duration-150 cursor-pointer ${
               activeCategory === cat
-                ? "bg-stone-900 text-white shadow-sm"
-                : "bg-white border border-stone-200 text-stone-600 hover:border-stone-400 hover:text-stone-900"
+                ? "bg-zinc-900 text-white shadow-sm"
+                : "bg-white border border-zinc-200 text-zinc-600 hover:border-zinc-400 hover:text-zinc-900"
             }`}
           >
             {cat}
@@ -62,7 +62,7 @@ export default function DesignersGrid({ designers }: { designers: Designer[] }) 
       </div>
 
       {/* Results count */}
-      <p className="text-xs text-stone-400 mb-5">
+      <p className="text-xs text-zinc-400 mb-5">
         {filtered.length === designers.length
           ? `${designers.length} designers`
           : `${filtered.length} of ${designers.length} designers`}
@@ -77,16 +77,16 @@ export default function DesignersGrid({ designers }: { designers: Designer[] }) 
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center py-24 text-center">
-          <div className="w-12 h-12 rounded-full bg-stone-100 flex items-center justify-center mb-4 text-stone-400">
+          <div className="w-12 h-12 rounded-full bg-zinc-100 flex items-center justify-center mb-4 text-zinc-400">
             <SearchIcon />
           </div>
-          <p className="font-medium text-stone-700">No designers found</p>
-          <p className="text-sm text-stone-400 mt-1">
+          <p className="font-semibold text-zinc-700">No designers found</p>
+          <p className="text-sm text-zinc-400 mt-1">
             Try adjusting your search or clearing the filters.
           </p>
           <button
             onClick={() => { setQuery(""); setActiveCategory("All"); }}
-            className="mt-4 text-sm font-medium text-amber-700 hover:text-amber-900 transition-colors cursor-pointer"
+            className="mt-4 text-sm font-semibold text-green-700 hover:text-green-900 transition-colors cursor-pointer"
           >
             Clear filters
           </button>
@@ -105,7 +105,7 @@ export function SearchBar({
 }) {
   return (
     <div className="relative max-w-md">
-      <span className="pointer-events-none absolute inset-y-0 left-3.5 flex items-center text-stone-400">
+      <span className="pointer-events-none absolute inset-y-0 left-3.5 flex items-center text-zinc-400">
         <SearchIcon />
       </span>
       <input
@@ -114,13 +114,13 @@ export function SearchBar({
         onChange={(e) => onChange(e.target.value)}
         placeholder="Search by name, skill, or location…"
         aria-label="Search designers"
-        className="w-full rounded-xl border border-stone-200 bg-white py-2.5 pl-10 pr-10 text-sm text-stone-900 placeholder-stone-400 shadow-sm outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-150"
+        className="w-full rounded-full border border-zinc-200 bg-white py-2.5 pl-10 pr-10 text-sm text-zinc-900 placeholder-zinc-400 shadow-sm outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/20 transition-all duration-150"
       />
       {value && (
         <button
           onClick={() => onChange("")}
           aria-label="Clear search"
-          className="absolute inset-y-0 right-3 flex items-center text-stone-400 hover:text-stone-600 transition-colors cursor-pointer"
+          className="absolute inset-y-0 right-3 flex items-center text-zinc-400 hover:text-zinc-600 transition-colors cursor-pointer"
         >
           <XIcon />
         </button>

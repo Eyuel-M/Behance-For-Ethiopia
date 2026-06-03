@@ -18,19 +18,19 @@ const links = {
 
 export default function Footer() {
   return (
-    <footer className="border-t border-gray-100 bg-white">
+    <footer className="bg-zinc-900 border-t border-zinc-800">
       <div className="max-w-6xl mx-auto px-4 py-14 grid grid-cols-2 md:grid-cols-4 gap-8">
         <div className="col-span-2 md:col-span-1">
-          <span className="font-semibold text-gray-900 text-sm">
+          <span className="font-extrabold text-white text-sm">
             Hire Ethiopia&apos;s Best
           </span>
-          <p className="mt-2 text-sm text-gray-400 leading-relaxed max-w-xs">
+          <p className="mt-2 text-sm text-zinc-500 leading-relaxed max-w-xs">
             Connecting businesses with vetted Ethiopian designers since 2024.
           </p>
         </div>
         {Object.entries(links).map(([group, items]) => (
           <div key={group}>
-            <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">
+            <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-3">
               {group}
             </p>
             <ul className="space-y-2">
@@ -38,7 +38,7 @@ export default function Footer() {
                 <li key={item.label}>
                   <Link
                     href={item.href}
-                    className="text-sm text-gray-500 hover:text-gray-900 transition-colors"
+                    className="text-sm text-zinc-400 hover:text-white transition-colors"
                   >
                     {item.label}
                   </Link>
@@ -48,7 +48,7 @@ export default function Footer() {
           </div>
         ))}
       </div>
-      <div className="border-t border-gray-100 py-5 text-center text-xs text-gray-400">
+      <div className="border-t border-zinc-800 py-5 text-center text-xs text-zinc-600">
         © {new Date().getFullYear()} Hire Ethiopia&apos;s Best Designers. All rights reserved.
       </div>
     </footer>
