@@ -1,0 +1,297 @@
+"use client";
+
+import Link from "next/link";
+import Image from "next/image";
+import { useState } from "react";
+import type { Designer } from "@/lib/types";
+
+// ─── Icons ────────────────────────────────────────────────────────────────────
+
+function MapPinIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+      <circle cx="12" cy="10" r="3" />
+    </svg>
+  );
+}
+
+function BriefcaseIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+      <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+    </svg>
+  );
+}
+
+function StarIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true">
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+    </svg>
+  );
+}
+
+function CheckBadgeIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" fill="currentColor" stroke="none" className="text-green-500" />
+      <polyline points="9 12 11 14 15 10" stroke="white" strokeWidth="2" fill="none" />
+    </svg>
+  );
+}
+
+function ChevronLeftIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <polyline points="15 18 9 12 15 6" />
+    </svg>
+  );
+}
+
+function ChevronRightIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <polyline points="9 18 15 12 9 6" />
+    </svg>
+  );
+}
+
+// ─── Portfolio Carousel ────────────────────────────────────────────────────────
+
+function PortfolioCarousel({ items }: { items: Designer["portfolio"] }) {
+  const [current, setCurrent] = useState(0);
+
+  if (!items.length) return <div className="h-52 bg-zinc-100 flex-shrink-0" />;
+
+  function handlePrev(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrent((c) => (c - 1 + items.length) % items.length);
+  }
+
+  function handleNext(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrent((c) => (c + 1) % items.length);
+  }
+
+  function handleDot(index: number, e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrent(index);
+  }
+
+  return (
+    <div className="relative h-52 flex-shrink-0 overflow-hidden bg-zinc-100">
+      {/* Slides — crossfade via opacity */}
+      {items.map((item, i) => (
+        <div
+          key={item.id}
+          aria-hidden={i !== current}
+          className={`absolute inset-0 bg-gradient-to-br ${item.gradient} transition-opacity duration-200 ${
+            i === current ? "opacity-100" : "opacity-0 pointer-events-none"
+          }`}
+        >
+          {/* Bottom text overlay */}
+          <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/75 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 px-3 pb-8">
+            <p className="text-white text-xs font-semibold leading-snug truncate drop-shadow-sm">
+              {item.title}
+            </p>
+            <p className="text-white/70 text-xs leading-snug mt-0.5">{item.category}</p>
+          </div>
+        </div>
+      ))}
+
+      {/* Counter badge */}
+      <div className="absolute top-2.5 right-2.5 z-10 px-2 py-0.5 rounded-full bg-black/50 text-white text-xs font-medium tabular-nums">
+        {current + 1}/{items.length}
+      </div>
+
+      {/* Prev / Next arrows — always visible at 70%, full on card hover */}
+      {items.length > 1 && (
+        <>
+          <button
+            type="button"
+            onClick={handlePrev}
+            aria-label="Previous portfolio item"
+            className="absolute left-2 top-1/2 -translate-y-1/2 z-10 h-8 w-8 flex items-center justify-center rounded-full bg-white/85 text-zinc-800 shadow-sm hover:bg-white hover:scale-105 transition-all duration-150 cursor-pointer opacity-70 group-hover:opacity-100"
+          >
+            <ChevronLeftIcon />
+          </button>
+          <button
+            type="button"
+            onClick={handleNext}
+            aria-label="Next portfolio item"
+            className="absolute right-2 top-1/2 -translate-y-1/2 z-10 h-8 w-8 flex items-center justify-center rounded-full bg-white/85 text-zinc-800 shadow-sm hover:bg-white hover:scale-105 transition-all duration-150 cursor-pointer opacity-70 group-hover:opacity-100"
+          >
+            <ChevronRightIcon />
+          </button>
+        </>
+      )}
+
+      {/* Dot indicators */}
+      {items.length > 1 && (
+        <div className="absolute bottom-2 left-0 right-0 flex justify-center items-center gap-1 z-10">
+          {items.map((item, i) => (
+            <button
+              key={item.id}
+              type="button"
+              onClick={(e) => handleDot(i, e)}
+              aria-label={`Go to portfolio item ${i + 1}`}
+              className={`h-5 flex items-center justify-center px-0.5 cursor-pointer`}
+            >
+              <span
+                className={`block h-1.5 rounded-full transition-all duration-200 ${
+                  i === current ? "w-4 bg-white shadow-sm" : "w-1.5 bg-white/55 hover:bg-white/80"
+                }`}
+              />
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Designer Card ─────────────────────────────────────────────────────────────
+
+export default function DesignerCard({ designer }: { designer: Designer }) {
+  const {
+    name,
+    slug,
+    category,
+    skills,
+    experience,
+    location,
+    rate,
+    rating,
+    reviewCount,
+    available,
+    photoUrl,
+    avatarColor,
+    avatarText,
+    portfolio,
+  } = designer;
+
+  const initials = name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
+  return (
+    <Link
+      href={`/designers/${slug}`}
+      className="group flex flex-col rounded-2xl border border-zinc-200 bg-white shadow-sm hover:shadow-lg hover:border-green-200 transition-all duration-200 cursor-pointer overflow-hidden"
+      aria-label={`View ${name}'s profile`}
+    >
+      {/* Portfolio carousel */}
+      <PortfolioCarousel items={portfolio} />
+
+      {/* Card header */}
+      <div className="relative p-5 pb-4">
+        {/* Availability indicator */}
+        <div className="absolute top-4 right-4">
+          <span
+            className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${
+              available
+                ? "bg-green-50 text-green-700"
+                : "bg-zinc-100 text-zinc-400"
+            }`}
+          >
+            <span
+              className={`h-1.5 w-1.5 rounded-full ${
+                available ? "bg-green-500" : "bg-zinc-400"
+              }`}
+            />
+            {available ? "Available" : "Booked"}
+          </span>
+        </div>
+
+        {/* Avatar */}
+        <div className="flex items-start gap-4">
+          <div className="shrink-0">
+            {photoUrl ? (
+              <Image
+                src={photoUrl}
+                alt={name}
+                width={52}
+                height={52}
+                className="rounded-full object-cover"
+              />
+            ) : (
+              <div
+                className={`rounded-full flex items-center justify-center text-sm font-semibold ${avatarColor} ${avatarText}`}
+                style={{ width: 52, height: 52 }}
+              >
+                {initials}
+              </div>
+            )}
+          </div>
+
+          {/* Name + meta */}
+          <div className="min-w-0 flex-1 pr-16">
+            <div className="flex items-center gap-1.5">
+              <p className="font-semibold text-zinc-900 text-sm truncate">
+                {name}
+              </p>
+              <span className="shrink-0 text-green-500" title="Vetted designer">
+                <CheckBadgeIcon />
+              </span>
+            </div>
+
+            <p className="text-xs text-zinc-500 mt-0.5">{category}</p>
+
+            <div className="flex items-center gap-3 mt-2 text-xs text-zinc-400">
+              <span className="flex items-center gap-1">
+                <MapPinIcon />
+                {location}
+              </span>
+              <span className="flex items-center gap-1">
+                <BriefcaseIcon />
+                {experience} yr{experience !== 1 ? "s" : ""}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Skills */}
+      <div className="px-5 pb-4 flex flex-wrap gap-1.5">
+        {skills.slice(0, 3).map((skill) => (
+          <span
+            key={skill}
+            className="px-2.5 py-0.5 rounded-full bg-green-50 text-green-700 text-xs font-medium border border-green-100"
+          >
+            {skill}
+          </span>
+        ))}
+        {skills.length > 3 && (
+          <span className="px-2.5 py-0.5 rounded-full bg-zinc-100 text-zinc-400 text-xs">
+            +{skills.length - 3}
+          </span>
+        )}
+      </div>
+
+      {/* Footer */}
+      <div className="mt-auto border-t border-zinc-100 px-5 py-3.5 flex items-center justify-between">
+        <div className="flex items-center gap-1.5 text-xs text-zinc-500">
+          <span className="text-green-500">
+            <StarIcon />
+          </span>
+          <span className="font-semibold text-zinc-900">{rating.toFixed(1)}</span>
+          <span>({reviewCount})</span>
+        </div>
+
+        <div className="text-sm font-bold text-zinc-900">
+          ${rate}
+          <span className="text-xs font-normal text-zinc-400"> / hr</span>
+        </div>
+      </div>
+    </Link>
+  );
+}
