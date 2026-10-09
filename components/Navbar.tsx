@@ -2,7 +2,7 @@ import Link from "next/link";
 import NavResourcesDropdown from "@/components/NavResourcesDropdown";
 
 const navLinks = [
-  { href: "/designers", label: "Browse Designers" },
+  { href: "/designers", label: "Browse Professionals" },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -54,16 +54,10 @@ export default function Navbar() {
         {/* Right: secondary text link + CTA pill */}
         <div className="flex items-center gap-1 shrink-0">
           <Link
-            href="/contact"
-            className="hidden sm:block px-4 py-2 text-sm text-zinc-500 hover:text-zinc-900 transition-colors duration-150 cursor-pointer rounded-full hover:bg-zinc-50"
-          >
-            Post a Job
-          </Link>
-          <Link
-            href="/get-started"
+            href="/get-started/client"
             className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-zinc-900 text-white text-sm font-semibold hover:bg-zinc-700 transition-colors duration-150 cursor-pointer"
           >
-            Get Started
+            Submit a Brief
             <ArrowRightIcon />
           </Link>
         </div>

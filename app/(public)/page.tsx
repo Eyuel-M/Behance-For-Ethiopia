@@ -1,74 +1,27 @@
 import Link from "next/link";
 
-// ─── SVG Icons ────────────────────────────────────────────────────────────────
+// ─── Icons ────────────────────────────────────────────────────────────────────
 
-function SearchIcon() {
+function ArrowRightIcon({ size = 16 }: { size?: number }) {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <circle cx="11" cy="11" r="8" />
-      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <line x1="5" y1="12" x2="19" y2="12" />
+      <polyline points="12 5 19 12 12 19" />
     </svg>
   );
 }
 
-function MapPinSmIcon() {
+function CheckIcon() {
   return (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-      <circle cx="12" cy="10" r="3" />
-    </svg>
-  );
-}
-
-function AwardIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <circle cx="12" cy="8" r="6" />
-      <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
-    </svg>
-  );
-}
-
-function CoinsIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <circle cx="8" cy="8" r="6" />
-      <path d="M18.09 10.37A6 6 0 1 1 10.34 18" />
-      <path d="M7 6h1v4" />
-      <path d="m16.71 13.88.7.71-2.82 2.82" />
-    </svg>
-  );
-}
-
-function ChatIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-    </svg>
-  );
-}
-
-function ShieldIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-    </svg>
-  );
-}
-
-function LayersIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <polygon points="12 2 2 7 12 12 22 7 12 2" />
-      <polyline points="2 17 12 22 22 17" />
-      <polyline points="2 12 12 17 22 12" />
+    <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+      <polyline points="2 6 5 9 10 3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
 
 function PaletteIcon() {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <circle cx="13.5" cy="6.5" r=".5" fill="currentColor" />
       <circle cx="17.5" cy="10.5" r=".5" fill="currentColor" />
       <circle cx="8.5" cy="7.5" r=".5" fill="currentColor" />
@@ -78,26 +31,9 @@ function PaletteIcon() {
   );
 }
 
-function PenIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
-    </svg>
-  );
-}
-
-function PlayCircleIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <circle cx="12" cy="12" r="10" />
-      <polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none" />
-    </svg>
-  );
-}
-
 function GlobeIcon() {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <circle cx="12" cy="12" r="10" />
       <line x1="2" y1="12" x2="22" y2="12" />
       <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
@@ -105,382 +41,511 @@ function GlobeIcon() {
   );
 }
 
-function BoxIcon() {
+function VideoIcon() {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <polygon points="23 7 16 12 23 17 23 7" />
+      <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
     </svg>
   );
 }
 
-function ArrowRightIcon() {
+function UserIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <line x1="5" y1="12" x2="19" y2="12" />
-      <polyline points="12 5 19 12 12 19" />
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
     </svg>
   );
 }
 
-function StarIcon() {
+function ClipboardIcon() {
   return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true">
-      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+      <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
     </svg>
   );
 }
 
-// ─── Data ──────────────────────────────────────────────────────────────────────
+function SearchIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="11" cy="11" r="8" />
+      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+    </svg>
+  );
+}
 
-const reasons = [
-  {
-    Icon: AwardIcon,
-    title: "World-Class Talent",
-    body: "Ethiopian designers are trained in the same tools and principles as designers anywhere in the world — with portfolios to prove it.",
-  },
-  {
-    Icon: CoinsIcon,
-    title: "Exceptional Value",
-    body: "Get senior-level creative work at a fraction of Western agency costs, without compromising on quality or professionalism.",
-  },
-  {
-    Icon: ChatIcon,
-    title: "Fluent Collaboration",
-    body: "Clear English communication, fast response times, and a strong work ethic make every project smooth from brief to delivery.",
-  },
-  {
-    Icon: ShieldIcon,
-    title: "Vetted & Trusted",
-    body: "Every designer on the platform is manually reviewed for skill, reliability, and portfolio quality before being accepted.",
-  },
-];
+function ThumbsUpIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z" />
+      <path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3" />
+    </svg>
+  );
+}
 
-const featured = [
-  {
-    initials: "AD",
-    name: "Abebe Dereje",
-    specialty: "Brand Identity & UI Design",
-    tags: ["Figma", "Branding", "Systems"],
-    rate: "$25 / hr",
-    rating: 4.9,
-    bg: "bg-green-100",
-    text: "text-green-800",
-    slug: "abebe-dereje",
-  },
-  {
-    initials: "SM",
-    name: "Sara Mulugeta",
-    specialty: "Product & UX Design",
-    tags: ["UX Research", "Prototyping", "Figma"],
-    rate: "$30 / hr",
-    rating: 5.0,
-    bg: "bg-zinc-200",
-    text: "text-zinc-800",
-    slug: "sara-mulugeta",
-  },
-  {
-    initials: "YT",
-    name: "Yonas Tesfaye",
-    specialty: "Motion & Visual Design",
-    tags: ["After Effects", "Illustration", "3D"],
-    rate: "$28 / hr",
-    rating: 4.8,
-    bg: "bg-emerald-100",
-    text: "text-emerald-800",
-    slug: "yonas-tesfaye",
-  },
-];
+function ShieldCheckIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      <polyline points="9 12 11 14 15 10" />
+    </svg>
+  );
+}
 
-const categories = [
-  { label: "UI / UX Design", count: 24, Icon: LayersIcon },
-  { label: "Brand Identity", count: 18, Icon: PaletteIcon },
-  { label: "Illustration", count: 12, Icon: PenIcon },
-  { label: "Motion Graphics", count: 9, Icon: PlayCircleIcon },
-  { label: "Web Design", count: 21, Icon: GlobeIcon },
-  { label: "Product Design", count: 15, Icon: BoxIcon },
-];
-
-const stats = [
-  { value: "100+", label: "Vetted designers" },
-  { value: "50+", label: "Businesses served" },
-  { value: "4.9", label: "Average rating" },
-  { value: "48h", label: "Avg. match time" },
-];
-
-const trustedBy = [
-  "Ethiopian Airlines",
-  "Ethio Telecom",
-  "Awash Bank",
-  "CBE",
-  "Safaricom ET",
-  "HelloCash",
-];
-
-const popularSearches = ["Brand Identity", "UI/UX Design", "Motion Graphics", "Web Design"];
-
-const locations = [
-  "Addis Ababa",
-  "Dire Dawa",
-  "Mekelle",
-  "Hawassa",
-  "Bahir Dar",
-  "Remote",
-];
-
-// ─── Page ──────────────────────────────────────────────────────────────────────
+// ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function HomePage() {
   return (
     <>
       <HeroSection />
-      <StatsBar />
-      <TrustedSection />
-      <ForSection />
-      <WhySection />
-      <FeaturedSection />
+      <HowItWorksSection />
+      <ServiceModesSection />
       <CategoriesSection />
+      <ForProfessionalsSection />
+      <WhySection />
       <CtaSection />
     </>
   );
 }
 
-// ─── Sections ──────────────────────────────────────────────────────────────────
+// ─── Sections ─────────────────────────────────────────────────────────────────
 
 function HeroSection() {
   return (
-    <section className="bg-green-500">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-20 sm:pt-28 pb-16 sm:pb-24">
-        {/* Badge */}
-        <div className="inline-flex items-center gap-2 rounded-full border border-black/20 bg-black/10 px-4 py-1.5 text-xs font-semibold text-black/80 mb-8">
-          <span className="h-1.5 w-1.5 rounded-full bg-black/60 animate-pulse" />
-          Now matching businesses — get connected in 48 hours
-        </div>
+    <section className="bg-white border-b border-zinc-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-20 sm:pt-28 pb-20 sm:pb-28">
+        <div className="max-w-3xl">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 rounded-full border border-green-200 bg-green-50 px-4 py-1.5 text-xs font-semibold text-green-700 mb-8">
+            <span className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
+            Now accepting project briefs · Ethiopia-first talent network
+          </div>
 
-        {/* Headline */}
-        <h1 className="text-5xl sm:text-7xl lg:text-8xl font-extrabold tracking-tight text-black leading-[0.95] max-w-4xl mb-5">
-          The fastest way to hire Ethiopia&apos;s best designers
-        </h1>
+          {/* Headline */}
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-zinc-900 leading-[0.95] mb-6">
+            Tell us what you need.{" "}
+            <span className="text-green-500">We&apos;ll handle the rest.</span>
+          </h1>
 
-        {/* Subheadline */}
-        <p className="max-w-lg text-base sm:text-lg text-black/75 leading-relaxed mb-8">
-          A curated marketplace of vetted Ethiopian designers. Senior-level
-          creative work, transparent pricing, zero agency markup.
-        </p>
+          {/* Sub */}
+          <p className="text-base sm:text-lg text-zinc-500 leading-relaxed max-w-xl mb-10">
+            A curated network of vetted Ethiopian professionals — branding, web, and visual
+            production. We match you with the right talent, or coordinate the entire project
+            for you.
+          </p>
 
-        {/* Search bar — plain HTML form, GET navigates to /designers */}
-        <div className="w-full max-w-2xl">
-          <form
-            action="/designers"
-            method="get"
-            className="flex items-center gap-0 bg-white rounded-2xl shadow-lg overflow-hidden"
-          >
-            {/* Keyword input */}
-            <label htmlFor="hero-search" className="sr-only">Search designers by name, skill, or category</label>
-            <div className="flex items-center gap-2.5 flex-1 px-4 py-1 min-w-0">
-              <span className="text-zinc-400 shrink-0"><SearchIcon /></span>
-              <input
-                id="hero-search"
-                type="text"
-                name="q"
-                placeholder="Designer name, skill, or category…"
-                className="flex-1 bg-transparent text-sm text-zinc-900 placeholder-zinc-400 outline-none py-3 min-w-0"
-              />
-            </div>
-
-            {/* Divider */}
-            <div className="w-px h-10 bg-zinc-200 shrink-0" />
-
-            {/* Location select */}
-            <label htmlFor="hero-location" className="sr-only">Filter by location</label>
-            <div className="flex items-center gap-2 px-4 shrink-0">
-              <span className="text-zinc-400"><MapPinSmIcon /></span>
-              <select
-                id="hero-location"
-                name="location"
-                className="bg-transparent text-sm text-zinc-600 outline-none cursor-pointer py-3 pr-1 appearance-none"
-              >
-                <option value="">All Locations</option>
-                {locations.map((loc) => (
-                  <option key={loc} value={loc}>{loc}</option>
-                ))}
-              </select>
-            </div>
-
-            {/* Search button */}
-            <button
-              type="submit"
-              className="m-1.5 px-6 py-3 rounded-xl bg-green-500 text-black text-sm font-semibold hover:bg-green-400 transition-colors duration-150 cursor-pointer shrink-0"
+          {/* CTAs */}
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Link
+              href="/get-started/client"
+              className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-zinc-900 text-white text-sm font-semibold hover:bg-zinc-700 transition-colors duration-150 cursor-pointer"
             >
-              Search
-            </button>
-          </form>
-
-          {/* Popular searches */}
-          <div className="flex flex-wrap items-center gap-1.5 mt-3 text-xs text-black/70">
-            <span className="font-medium">Popular:</span>
-            {popularSearches.map((term) => (
-              <a
-                key={term}
-                href={`/designers?q=${encodeURIComponent(term)}`}
-                className="underline underline-offset-2 hover:text-black transition-colors"
-              >
-                {term}
-              </a>
-            ))}
+              Submit Your Brief
+              <ArrowRightIcon />
+            </Link>
+            <Link
+              href="/get-started/designer"
+              className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full border border-zinc-200 bg-white text-zinc-700 text-sm font-semibold hover:border-zinc-400 hover:text-zinc-900 transition-all duration-150 cursor-pointer"
+            >
+              Apply as a Professional
+            </Link>
           </div>
-        </div>
 
-        {/* Social proof */}
-        <div className="flex items-center gap-2.5 text-sm text-black/70 mt-8">
-          <div className="flex -space-x-2">
-            {["AB", "SM", "YT", "KD"].map((init) => (
-              <span
-                key={init}
-                className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-black/20 border-2 border-green-500 text-xs font-semibold text-black"
-              >
-                {init}
-              </span>
-            ))}
-          </div>
-          <span>
-            Trusted by{" "}
-            <span className="font-bold text-black">50+ businesses</span>{" "}
-            across Ethiopia
-          </span>
+          {/* Trust note */}
+          <p className="mt-8 text-xs text-zinc-400 max-w-sm leading-relaxed">
+            Every professional is manually reviewed before joining. We qualify every brief
+            before matching. No listings, no bidding wars.
+          </p>
         </div>
       </div>
     </section>
   );
 }
 
-function StatsBar() {
+function HowItWorksSection() {
+  const steps = [
+    {
+      n: "01",
+      Icon: ClipboardIcon,
+      title: "Submit your brief",
+      body: "Tell us your goal, what you need delivered, your deadline and budget. Choose whether you want a direct match or managed delivery.",
+    },
+    {
+      n: "02",
+      Icon: SearchIcon,
+      title: "We qualify & match",
+      body: "Our team reviews your brief, confirms it&apos;s a good fit, and identifies the right professionals from our vetted network.",
+    },
+    {
+      n: "03",
+      Icon: UserIcon,
+      title: "You approve the shortlist",
+      body: "We present you with a curated shortlist — not a feed of hundreds. You confirm the fit before work begins.",
+    },
+    {
+      n: "04",
+      Icon: ThumbsUpIcon,
+      title: "Work begins",
+      body: "Kick off with confidence. We support the engagement end-to-end and stay accountable to the agreed scope.",
+    },
+  ];
+
   return (
-    <div className="bg-white border-b border-zinc-100">
+    <section className="bg-zinc-50 py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-zinc-100">
-          {stats.map(({ value, label }) => (
-            <div key={label} className="flex flex-col items-center py-10 gap-1">
-              <span className="text-4xl sm:text-5xl font-extrabold text-zinc-900">{value}</span>
-              <span className="text-xs sm:text-sm text-zinc-400 font-medium">{label}</span>
+        <div className="mb-14">
+          <p className="text-xs font-semibold uppercase tracking-widest text-green-600 mb-3">
+            The process
+          </p>
+          <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-zinc-900">
+            How it works
+          </h2>
+          <p className="mt-4 text-zinc-500 max-w-md text-base leading-relaxed">
+            No open bidding. No cold searching. A qualified human reviews every brief and
+            every match before anything moves forward.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {steps.map(({ n, Icon, title, body }, i) => (
+            <div
+              key={n}
+              className="relative rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm"
+            >
+              {i < steps.length - 1 && (
+                <div aria-hidden className="hidden lg:block absolute top-10 -right-2.5 z-10 text-zinc-300">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="9 18 15 12 9 6" /></svg>
+                </div>
+              )}
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-xs font-bold text-zinc-300 tabular-nums">{n}</span>
+                <span className="w-10 h-10 rounded-xl bg-green-50 text-green-700 flex items-center justify-center">
+                  <Icon />
+                </span>
+              </div>
+              <h3 className="font-bold text-zinc-900 mb-2">{title}</h3>
+              <p className="text-sm text-zinc-500 leading-relaxed" dangerouslySetInnerHTML={{ __html: body }} />
             </div>
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 
-function TrustedSection() {
+function ServiceModesSection() {
   return (
-    <div className="bg-white border-b border-zinc-100 py-10">
+    <section className="bg-white py-24 border-b border-zinc-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <p className="text-xs font-semibold uppercase tracking-widest text-zinc-400 text-center mb-7">
-          Trusted by leading businesses &amp; startups
-        </p>
-        <div className="flex flex-wrap justify-center items-center gap-x-10 gap-y-4">
-          {trustedBy.map((name) => (
-            <span
-              key={name}
-              className="text-zinc-300 font-extrabold text-lg tracking-tight select-none"
+        <div className="mb-14">
+          <p className="text-xs font-semibold uppercase tracking-widest text-green-600 mb-3">
+            Two ways to work
+          </p>
+          <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-zinc-900">
+            Choose how much support you need
+          </h2>
+          <p className="mt-4 text-zinc-500 max-w-md text-base leading-relaxed">
+            Both modes use the same vetted professionals. The difference is how much day-to-day
+            coordination we take off your hands.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {/* Direct Match */}
+          <div className="rounded-3xl border border-zinc-200 bg-zinc-50 p-8 flex flex-col gap-6">
+            <div>
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-zinc-900 text-white text-xs font-semibold px-3 py-1 mb-4">
+                Direct Match
+              </div>
+              <h3 className="text-2xl font-extrabold text-zinc-900 mb-2">
+                You manage, we find
+              </h3>
+              <p className="text-zinc-500 text-sm leading-relaxed">
+                We qualify your brief, vet the talent, and recommend a shortlist. You own the
+                day-to-day relationship with your professional.
+              </p>
+            </div>
+            <ul className="space-y-2.5">
+              {[
+                "Brief qualified by our team",
+                "Curated shortlist of 2–3 vetted professionals",
+                "Support for agreement and kickoff",
+                "You manage day-to-day work",
+                "Best for: clients who know what they want",
+              ].map((item, i) => (
+                <li key={i} className="flex items-start gap-2.5 text-sm text-zinc-600">
+                  <span className="mt-0.5 w-4 h-4 rounded-full bg-green-100 text-green-700 flex items-center justify-center shrink-0">
+                    <CheckIcon />
+                  </span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <Link
+              href="/get-started/client"
+              className="mt-auto inline-flex items-center gap-2 text-sm font-semibold text-zinc-900 hover:text-green-700 transition-colors cursor-pointer"
             >
-              {name}
-            </span>
+              Submit a brief <ArrowRightIcon size={14} />
+            </Link>
+          </div>
+
+          {/* Managed Project */}
+          <div className="rounded-3xl bg-zinc-900 p-8 flex flex-col gap-6">
+            <div>
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-green-500 text-black text-xs font-semibold px-3 py-1 mb-4">
+                Managed Project
+              </div>
+              <h3 className="text-2xl font-extrabold text-white mb-2">
+                We coordinate, you approve
+              </h3>
+              <p className="text-zinc-400 text-sm leading-relaxed">
+                We scope the project, select the professionals, coordinate milestones, check
+                quality, and manage handover. You stay informed and approve at key stages.
+              </p>
+            </div>
+            <ul className="space-y-2.5">
+              {[
+                "Full brief scoping with deliverables & milestones",
+                "Platform project manager coordinates delivery",
+                "Quality checks before every handover",
+                "Change order management included",
+                "Best for: teams without bandwidth to manage",
+              ].map((item, i) => (
+                <li key={i} className="flex items-start gap-2.5 text-sm text-zinc-300">
+                  <span className="mt-0.5 w-4 h-4 rounded-full bg-white/10 text-green-400 flex items-center justify-center shrink-0">
+                    <CheckIcon />
+                  </span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <Link
+              href="/get-started/client"
+              className="mt-auto inline-flex items-center gap-2 text-sm font-semibold text-white hover:text-green-400 transition-colors cursor-pointer"
+            >
+              Submit a brief <ArrowRightIcon size={14} />
+            </Link>
+          </div>
+        </div>
+
+        <p className="text-xs text-zinc-400 text-center mt-6 max-w-lg mx-auto leading-relaxed">
+          Not sure which fits? Submit a brief and select &quot;Not sure yet&quot; — our team will
+          recommend the right mode after reviewing your project.
+        </p>
+      </div>
+    </section>
+  );
+}
+
+function CategoriesSection() {
+  const cats = [
+    {
+      Icon: PaletteIcon,
+      title: "Branding & Graphic Design",
+      description: "Identity systems, logos, packaging, print materials, campaign assets, presentations.",
+      examples: ["Brand identity", "Logo design", "Packaging", "Marketing collateral"],
+      color: "bg-green-50 text-green-700 border-green-100",
+      dot: "bg-green-500",
+    },
+    {
+      Icon: GlobeIcon,
+      title: "Web & Digital",
+      description: "WordPress sites, landing pages, UI/UX design, web app interfaces, digital product design.",
+      examples: ["UI/UX design", "WordPress sites", "Landing pages", "Web apps"],
+      color: "bg-blue-50 text-blue-700 border-blue-100",
+      dot: "bg-blue-500",
+    },
+    {
+      Icon: VideoIcon,
+      title: "Visual Content",
+      description: "3D visualisation, product rendering, motion graphics, explainer videos, video editing.",
+      examples: ["3D rendering", "Motion graphics", "Video editing", "Product visualisation"],
+      color: "bg-amber-50 text-amber-700 border-amber-100",
+      dot: "bg-amber-500",
+    },
+  ];
+
+  return (
+    <section className="bg-zinc-50 py-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="mb-14">
+          <p className="text-xs font-semibold uppercase tracking-widest text-green-600 mb-3">
+            What we cover
+          </p>
+          <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-zinc-900">
+            Three disciplines. One network.
+          </h2>
+          <p className="mt-4 text-zinc-500 max-w-md text-base leading-relaxed">
+            We launched with the creative and digital disciplines where we can reliably vet
+            talent and deliver consistent results. More categories follow as we grow.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+          {cats.map(({ Icon, title, description, examples, color, dot }) => (
+            <div key={title} className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm flex flex-col gap-4">
+              <div className={`w-11 h-11 rounded-xl border flex items-center justify-center ${color}`}>
+                <Icon />
+              </div>
+              <div>
+                <h3 className="font-bold text-zinc-900 mb-1.5">{title}</h3>
+                <p className="text-sm text-zinc-500 leading-relaxed">{description}</p>
+              </div>
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                {examples.map((ex) => (
+                  <span key={ex} className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-zinc-50 border border-zinc-100 text-xs text-zinc-500">
+                    <span className={`w-1.5 h-1.5 rounded-full ${dot}`} />
+                    {ex}
+                  </span>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
+
+        <div className="mt-8 rounded-2xl border border-dashed border-zinc-200 bg-white p-5 flex items-center justify-between gap-4 flex-wrap">
+          <div>
+            <p className="text-sm font-semibold text-zinc-700">Need something not listed here?</p>
+            <p className="text-xs text-zinc-400 mt-0.5">CAD, software development, copywriting, translation, and more are on the roadmap. Submit a brief and describe what you need — we&apos;ll be honest about whether we can help today.</p>
+          </div>
+          <Link
+            href="/contact"
+            className="shrink-0 inline-flex items-center gap-1.5 text-sm font-semibold text-green-700 hover:text-green-900 transition-colors cursor-pointer"
+          >
+            Contact us <ArrowRightIcon size={14} />
+          </Link>
+        </div>
       </div>
-    </div>
+    </section>
   );
 }
 
-function ForSection() {
+function ForProfessionalsSection() {
+  const perks = [
+    "Free to apply — no fees to join the network",
+    "Work with vetted Ethiopian businesses and international clients",
+    "Set your own rates, availability, and engagement type",
+    "Portfolio and identity reviewed; quality reputation protected",
+    "Access managed projects — we handle client coordination for you",
+  ];
+
   return (
-    <section className="bg-zinc-50 py-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 sm:grid-cols-2 gap-5">
+    <section className="bg-white py-24 border-t border-zinc-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="rounded-3xl bg-zinc-900 overflow-hidden">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-0">
+            {/* Left */}
+            <div className="p-10 sm:p-14 flex flex-col justify-center">
+              <p className="text-xs font-semibold uppercase tracking-widest text-green-400 mb-4">
+                For professionals
+              </p>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-white leading-tight mb-4">
+                Join Ethiopia&apos;s first curated talent network
+              </h2>
+              <p className="text-zinc-400 text-sm leading-relaxed mb-8">
+                We&apos;re building a small, vetted network — not a race to the bottom. If your
+                portfolio is strong and you take your craft seriously, we want to meet you.
+              </p>
+              <ul className="space-y-2.5 mb-8">
+                {perks.map((p, i) => (
+                  <li key={i} className="flex items-start gap-2.5 text-sm text-zinc-300">
+                    <span className="mt-0.5 w-4 h-4 rounded-full bg-white/10 text-green-400 flex items-center justify-center shrink-0">
+                      <CheckIcon />
+                    </span>
+                    {p}
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href="/get-started/designer"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-green-500 text-black text-sm font-semibold hover:bg-green-400 transition-colors duration-150 cursor-pointer w-fit"
+              >
+                Apply to the network
+                <ArrowRightIcon />
+              </Link>
+            </div>
 
-        {/* For Businesses */}
-        <div className="relative rounded-3xl bg-green-50 border border-green-100 p-10 overflow-hidden">
-          {/* Decorative circles */}
-          <div aria-hidden className="absolute -right-10 -bottom-10 w-48 h-48 rounded-full bg-green-200/40" />
-          <div aria-hidden className="absolute -right-2 -bottom-2 w-28 h-28 rounded-full bg-green-300/30" />
-
-          <p className="relative text-xs font-semibold uppercase tracking-widest text-green-700 mb-4">
-            For Businesses
-          </p>
-          <h3 className="relative text-2xl sm:text-3xl font-extrabold text-zinc-900 leading-tight mb-3 max-w-xs">
-            Find the right designer for your project
-          </h3>
-          <p className="relative text-zinc-500 text-sm leading-relaxed mb-8 max-w-sm">
-            Browse 100+ vetted Ethiopian designers across all disciplines.
-            Post your brief and get matched within 48 hours — no upfront fees.
-          </p>
-          <Link
-            href="/designers"
-            className="relative inline-flex items-center gap-2 px-6 py-3 rounded-full bg-green-500 text-black text-sm font-semibold hover:bg-green-400 transition-colors duration-150 cursor-pointer"
-          >
-            Browse Designers
-            <ArrowRightIcon />
-          </Link>
+            {/* Right — visual */}
+            <div className="hidden sm:flex items-center justify-center p-10 sm:p-14 bg-zinc-800/40">
+              <div className="space-y-3 w-full max-w-xs">
+                {[
+                  { label: "Portfolio reviewed", color: "bg-green-500" },
+                  { label: "Identity verified", color: "bg-green-500" },
+                  { label: "Skills assessed", color: "bg-green-500" },
+                  { label: "Approved & listed", color: "bg-green-500" },
+                ].map((step, i) => (
+                  <div key={i} className="flex items-center gap-3 rounded-xl bg-white/5 border border-white/10 px-4 py-3">
+                    <span className={`w-2 h-2 rounded-full ${step.color} shrink-0`} />
+                    <span className="text-sm text-zinc-300">{step.label}</span>
+                    <span className="ml-auto">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-green-500"><polyline points="20 6 9 17 4 12" /></svg>
+                    </span>
+                  </div>
+                ))}
+                <div className="flex items-center gap-3 rounded-xl bg-white/5 border border-white/10 px-4 py-3 opacity-40">
+                  <span className="w-2 h-2 rounded-full bg-zinc-500 shrink-0" />
+                  <span className="text-sm text-zinc-400">Matching begins</span>
+                  <span className="ml-auto text-zinc-500">→</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-
-        {/* For Designers */}
-        <div className="relative rounded-3xl bg-zinc-900 p-10 overflow-hidden">
-          {/* Decorative circles */}
-          <div aria-hidden className="absolute -right-10 -bottom-10 w-48 h-48 rounded-full bg-green-500/10" />
-          <div aria-hidden className="absolute -right-2 -bottom-2 w-28 h-28 rounded-full bg-green-500/15" />
-
-          <p className="relative text-xs font-semibold uppercase tracking-widest text-green-400 mb-4">
-            For Designers
-          </p>
-          <h3 className="relative text-2xl sm:text-3xl font-extrabold text-white leading-tight mb-3 max-w-xs">
-            Get discovered by top businesses
-          </h3>
-          <p className="relative text-zinc-400 text-sm leading-relaxed mb-8 max-w-sm">
-            Join our curated network of Ethiopian designers. Build your profile,
-            upload your portfolio, and connect with clients who value your craft.
-          </p>
-          <Link
-            href="/apply"
-            className="relative inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-zinc-900 text-sm font-semibold hover:bg-zinc-100 transition-colors duration-150 cursor-pointer"
-          >
-            Upload Your Portfolio
-            <ArrowRightIcon />
-          </Link>
-        </div>
-
       </div>
     </section>
   );
 }
 
 function WhySection() {
+  const points = [
+    {
+      Icon: ShieldCheckIcon,
+      title: "Manually vetted, not self-listed",
+      body: "Every professional is reviewed for portfolio quality, identity, and reliability before being accepted. We decline more than we approve.",
+    },
+    {
+      Icon: ClipboardIcon,
+      title: "Brief-first, not search-first",
+      body: "You tell us what you need. We qualify it and match you — no scrolling through hundreds of profiles or waiting for bids.",
+    },
+    {
+      Icon: UserIcon,
+      title: "Honest about fit",
+      body: "If your brief isn't a good fit — budget too low, timeline unrealistic, category not yet supported — we'll tell you and explain why, rather than take your money.",
+    },
+    {
+      Icon: ThumbsUpIcon,
+      title: "Accountable to the scope",
+      body: "We define deliverables, exclusions, milestones and acceptance criteria before work starts. Scope creep and surprise costs are managed, not ignored.",
+    },
+  ];
+
   return (
-    <section className="bg-zinc-50 pt-4 pb-24">
+    <section className="bg-zinc-50 py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="mb-14">
           <p className="text-xs font-semibold uppercase tracking-widest text-green-600 mb-3">
-            Why Ethiopia
+            Why curated
           </p>
           <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-zinc-900">
-            The smarter way to hire design talent
+            Not a marketplace. A network.
           </h2>
-          <p className="mt-4 text-zinc-500 max-w-lg text-base leading-relaxed">
-            Ethiopian designers bring a rare combination of craft, value, and
-            professionalism that fast-growing businesses need.
+          <p className="mt-4 text-zinc-500 max-w-md text-base leading-relaxed">
+            Upwork has millions of freelancers. We have a small, carefully selected group. The
+            difference is accountability — ours and theirs.
           </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {reasons.map(({ Icon, title, body }) => (
-            <div
-              key={title}
-              className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm hover:shadow-md hover:border-green-200 transition-all duration-200 cursor-default"
-            >
+          {points.map(({ Icon, title, body }) => (
+            <div key={title} className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm hover:shadow-md hover:border-green-200 transition-all duration-200">
               <span className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-green-100 text-green-700 mb-4">
                 <Icon />
               </span>
-              <h3 className="font-bold text-zinc-900 text-base mb-2">
-                {title}
-              </h3>
+              <h3 className="font-bold text-zinc-900 text-base mb-2">{title}</h3>
               <p className="text-sm text-zinc-500 leading-relaxed">{body}</p>
             </div>
           ))}
@@ -490,147 +555,35 @@ function WhySection() {
   );
 }
 
-function FeaturedSection() {
-  return (
-    <section className="bg-white py-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="flex items-end justify-between mb-12">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-green-600 mb-3">
-              Featured
-            </p>
-            <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-zinc-900">
-              Meet a few of our designers
-            </h2>
-          </div>
-          <Link
-            href="/designers"
-            className="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold text-zinc-600 hover:text-zinc-900 transition-colors duration-150 cursor-pointer"
-          >
-            View all <ArrowRightIcon />
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-          {featured.map((d) => (
-            <Link
-              key={d.slug}
-              href={`/designers/${d.slug}`}
-              className="group rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm hover:shadow-xl hover:border-green-200 transition-all duration-200 cursor-pointer"
-            >
-              <div className="flex items-center gap-3 mb-5">
-                <div
-                  className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-sm ${d.bg} ${d.text}`}
-                >
-                  {d.initials}
-                </div>
-                <div>
-                  <p className="font-bold text-zinc-900 text-sm leading-tight">{d.name}</p>
-                  <p className="text-xs text-zinc-400 mt-0.5">{d.specialty}</p>
-                </div>
-              </div>
-
-              <div className="flex flex-wrap gap-1.5 mb-5">
-                {d.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="px-2.5 py-0.5 rounded-full bg-green-50 text-green-700 text-xs font-medium border border-green-100"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-
-              <div className="flex items-center justify-between border-t border-zinc-100 pt-4">
-                <span className="text-sm font-bold text-zinc-900">{d.rate}</span>
-                <div className="flex items-center gap-1 text-green-600 text-xs font-semibold">
-                  <StarIcon />
-                  <span>{d.rating.toFixed(1)}</span>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-
-        <div className="mt-8 text-center sm:hidden">
-          <Link
-            href="/designers"
-            className="text-sm font-semibold text-zinc-700 hover:text-zinc-900 cursor-pointer"
-          >
-            View all designers →
-          </Link>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function CategoriesSection() {
-  return (
-    <section className="bg-zinc-50 py-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="mb-12">
-          <p className="text-xs font-semibold uppercase tracking-widest text-green-600 mb-3">
-            Categories
-          </p>
-          <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-zinc-900">
-            Find the right skill set
-          </h2>
-          <p className="mt-4 text-zinc-500 max-w-md text-base">
-            Browse designers by discipline and find the exact expertise your
-            project needs.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-          {categories.map(({ label, count, Icon }) => (
-            <Link
-              key={label}
-              href="/designers"
-              className="group flex flex-col items-center gap-3 rounded-2xl border border-zinc-200 bg-white p-5 text-center shadow-sm hover:shadow-md hover:border-green-300 hover:bg-green-50 transition-all duration-200 cursor-pointer"
-            >
-              <span className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-zinc-100 text-zinc-600 group-hover:bg-green-100 group-hover:text-green-700 transition-colors duration-200">
-                <Icon />
-              </span>
-              <span className="text-xs font-bold text-zinc-800 leading-snug">{label}</span>
-              <span className="text-xs text-zinc-400">{count} designers</span>
-            </Link>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function CtaSection() {
   return (
-    <section className="bg-zinc-900 py-24">
+    <section className="bg-green-500 py-24">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center flex flex-col items-center gap-6">
-        <p className="text-xs font-semibold uppercase tracking-widest text-green-400">
-          Ready to hire?
-        </p>
-        <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-white leading-tight">
-          Work with exceptional designers — matched in 48 hours
+        <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-black leading-tight">
+          Ready to submit your brief?
         </h2>
-        <p className="text-zinc-400 text-base max-w-xl leading-relaxed">
-          Tell us about your project and we&apos;ll connect you with the right
-          vetted Ethiopian designer. No upfront fees, no agency overhead.
+        <p className="text-black/70 text-base max-w-xl leading-relaxed">
+          Tell us what you need. We&apos;ll review it, ask any clarifying questions, and match
+          you with the right professional — usually within 48 hours.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 mt-1">
           <Link
-            href="/designers"
-            className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-green-500 text-black text-sm font-semibold hover:bg-green-400 transition-colors duration-150 cursor-pointer"
+            href="/get-started/client"
+            className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-zinc-900 text-white text-sm font-semibold hover:bg-zinc-700 transition-colors duration-150 cursor-pointer"
           >
-            Browse Designers
+            Submit Your Brief
             <ArrowRightIcon />
           </Link>
           <Link
-            href="/contact"
-            className="inline-flex items-center justify-center px-7 py-3.5 rounded-full border-2 border-zinc-600 text-white text-sm font-semibold hover:bg-zinc-800 hover:border-zinc-500 transition-colors duration-150 cursor-pointer"
+            href="/designers"
+            className="inline-flex items-center justify-center px-7 py-3.5 rounded-full border-2 border-black/20 text-black text-sm font-semibold hover:bg-black/10 transition-colors duration-150 cursor-pointer"
           >
-            Get Matched
+            Browse Professionals
           </Link>
         </div>
+        <p className="text-xs text-black/60">
+          No upfront fees. We qualify your brief before asking for anything.
+        </p>
       </div>
     </section>
   );
