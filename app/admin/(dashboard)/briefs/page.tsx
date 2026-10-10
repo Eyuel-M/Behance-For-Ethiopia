@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getClientBriefs } from "@/lib/supabase/admin-queries";
+import { getClientBriefs, getProjects, getDesignerApplications } from "@/lib/supabase/admin-queries";
 import {
   BRIEF_STATUS_LABELS,
   BRIEF_STATUS_COLORS,
@@ -17,7 +17,20 @@ function StatusBadge({ status }: { status: BriefStatus }) {
 }
 
 export default async function BriefsPage() {
-  const briefs = await getClientBriefs();
+  const [briefs, projects, applications] = await Promise.all([
+    getClientBriefs(),
+    getProjects(),
+    getDesignerApplications(),
+  ]);
+
+  const appById = new Map(applications.map((a) => [a.id, a]));
+  const assignedByBrief = new Map<string, string>();
+  for (const p of projects) {
+    if (p.brief_id && p.assigned_professional_ids?.length) {
+      const pro = appById.get(p.assigned_professional_ids[0]);
+      if (pro) assignedByBrief.set(p.brief_id, pro.full_name);
+    }
+  }
 
   const counts = briefs.reduce<Record<string, number>>((acc, b) => {
     acc[b.status] = (acc[b.status] ?? 0) + 1;
@@ -58,11 +71,11 @@ export default async function BriefsPage() {
       ) : (
         <>
           {actionable.length > 0 && (
-            <BriefTable briefs={actionable} heading="Need action" />
+            <BriefTable briefs={actionable} heading="Need action" assignedByBrief={assignedByBrief} />
           )}
           {rest.length > 0 && (
             <div className="mt-8">
-              <BriefTable briefs={rest} heading="All others" />
+              <BriefTable briefs={rest} heading="All others" assignedByBrief={assignedByBrief} />
             </div>
           )}
         </>
@@ -74,9 +87,11 @@ export default async function BriefsPage() {
 function BriefTable({
   briefs,
   heading,
+  assignedByBrief,
 }: {
   briefs: Awaited<ReturnType<typeof getClientBriefs>>;
   heading: string;
+  assignedByBrief: Map<string, string>;
 }) {
   return (
     <div>
@@ -90,46 +105,65 @@ function BriefTable({
               <th className="text-left px-4 py-3 font-semibold text-zinc-500 text-xs uppercase tracking-wide hidden md:table-cell">Mode</th>
               <th className="text-left px-4 py-3 font-semibold text-zinc-500 text-xs uppercase tracking-wide hidden lg:table-cell">Budget</th>
               <th className="text-left px-4 py-3 font-semibold text-zinc-500 text-xs uppercase tracking-wide">Status</th>
+              <th className="text-left px-4 py-3 font-semibold text-zinc-500 text-xs uppercase tracking-wide hidden xl:table-cell">Assigned</th>
               <th className="text-left px-4 py-3 font-semibold text-zinc-500 text-xs uppercase tracking-wide hidden md:table-cell">Date</th>
               <th className="text-left px-4 py-3 font-semibold text-zinc-500 text-xs uppercase tracking-wide"></th>
             </tr>
           </thead>
           <tbody className="divide-y divide-zinc-100">
-            {briefs.map((b) => (
-              <tr key={b.id} className="hover:bg-zinc-50 transition-colors duration-100">
-                <td className="px-4 py-3">
-                  <p className="font-medium text-zinc-900 leading-snug">{b.business_name}</p>
-                  <p className="text-xs text-zinc-400 mt-0.5">{b.contact_name}</p>
-                </td>
-                <td className="px-4 py-3 text-zinc-600 hidden sm:table-cell">
-                  <span className="inline-flex px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-600 text-xs">
-                    {b.category}
-                  </span>
-                </td>
-                <td className="px-4 py-3 text-zinc-500 hidden md:table-cell text-xs">{b.service_mode}</td>
-                <td className="px-4 py-3 text-zinc-600 hidden lg:table-cell">
-                  <span className="inline-flex px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-100 text-xs font-medium">
-                    {b.budget}
-                  </span>
-                </td>
-                <td className="px-4 py-3">
-                  <StatusBadge status={b.status as BriefStatus} />
-                </td>
-                <td className="px-4 py-3 text-zinc-400 hidden md:table-cell whitespace-nowrap text-xs">
-                  {new Date(b.created_at).toLocaleDateString("en-GB", {
-                    day: "numeric", month: "short", year: "numeric",
-                  })}
-                </td>
-                <td className="px-4 py-3">
-                  <Link
-                    href={`/admin/briefs/${b.id}`}
-                    className="text-xs font-semibold text-zinc-600 hover:text-zinc-900 transition-colors cursor-pointer"
-                  >
-                    Review →
-                  </Link>
-                </td>
-              </tr>
-            ))}
+            {briefs.map((b) => {
+              const assigned = assignedByBrief.get(b.id);
+              const initials = assigned
+                ? assigned.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()
+                : null;
+              return (
+                <tr key={b.id} className="hover:bg-zinc-50 transition-colors duration-100">
+                  <td className="px-4 py-3">
+                    <p className="font-medium text-zinc-900 leading-snug">{b.business_name}</p>
+                    <p className="text-xs text-zinc-400 mt-0.5">{b.contact_name}</p>
+                  </td>
+                  <td className="px-4 py-3 text-zinc-600 hidden sm:table-cell">
+                    <span className="inline-flex px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-600 text-xs">
+                      {b.category}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3 text-zinc-500 hidden md:table-cell text-xs">{b.service_mode}</td>
+                  <td className="px-4 py-3 text-zinc-600 hidden lg:table-cell">
+                    <span className="inline-flex px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-100 text-xs font-medium">
+                      {b.budget}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <StatusBadge status={b.status as BriefStatus} />
+                  </td>
+                  <td className="px-4 py-3 hidden xl:table-cell">
+                    {assigned ? (
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-6 rounded-full bg-green-100 border border-green-200 flex items-center justify-center shrink-0">
+                          <span className="text-[10px] font-bold text-green-700">{initials}</span>
+                        </div>
+                        <span className="text-xs font-medium text-zinc-700 truncate max-w-[120px]">{assigned}</span>
+                      </div>
+                    ) : (
+                      <span className="text-xs text-zinc-300">—</span>
+                    )}
+                  </td>
+                  <td className="px-4 py-3 text-zinc-400 hidden md:table-cell whitespace-nowrap text-xs">
+                    {new Date(b.created_at).toLocaleDateString("en-GB", {
+                      day: "numeric", month: "short", year: "numeric",
+                    })}
+                  </td>
+                  <td className="px-4 py-3">
+                    <Link
+                      href={`/admin/briefs/${b.id}`}
+                      className="text-xs font-semibold text-zinc-600 hover:text-zinc-900 transition-colors cursor-pointer"
+                    >
+                      Review →
+                    </Link>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

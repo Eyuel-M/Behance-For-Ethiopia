@@ -413,36 +413,45 @@ export default async function ApplicationDetailPage({ params, searchParams }: Pr
         <div className="mt-5">
           <SectionCard title={`Client Feedback (${feedback.length})`}>
             <div className="space-y-4">
-              {feedback.map((f) => (
-                <div key={f.id} className={`rounded-xl border p-4 ${f.status === "pending" ? "bg-zinc-50 border-zinc-100 border-dashed" : "bg-white border-zinc-200"}`}>
-                  <div className="flex items-start justify-between gap-3 flex-wrap mb-3">
-                    <div>
+              {[...feedback].sort((a, b) => (a.status === "pending" ? -1 : b.status === "pending" ? 1 : 0)).map((f) => {
+                if (f.status === "pending") {
+                  return (
+                    <div key={f.id} className="rounded-xl border-2 border-amber-200 bg-amber-50 p-4">
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="relative flex h-2.5 w-2.5 shrink-0">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
+                          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500" />
+                        </span>
+                        <span className="text-sm font-bold text-amber-800">Waiting for response</span>
+                      </div>
                       <p className="text-sm font-semibold text-zinc-800">{f.project_title ?? "Untitled project"}</p>
-                      <p className="text-xs text-zinc-400 mt-0.5">{f.client_name} · {new Date(f.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}</p>
+                      <p className="text-xs text-zinc-500 mt-1">Sent to {f.client_name} · {new Date(f.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}</p>
                     </div>
-                    {f.status === "pending" ? (
-                      <span className="px-2.5 py-1 rounded-full bg-zinc-100 text-zinc-400 text-xs font-semibold border border-zinc-200">Awaiting response</span>
-                    ) : (
-                      f.would_rehire && <RehirePill value={f.would_rehire} />
+                  );
+                }
+                return (
+                  <div key={f.id} className="rounded-xl border border-zinc-200 bg-white p-4">
+                    <div className="flex items-start justify-between gap-3 flex-wrap mb-3">
+                      <div>
+                        <p className="text-sm font-semibold text-zinc-800">{f.project_title ?? "Untitled project"}</p>
+                        <p className="text-xs text-zinc-400 mt-0.5">{f.client_name} · {new Date(f.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}</p>
+                      </div>
+                      {f.would_rehire && <RehirePill value={f.would_rehire} />}
+                    </div>
+                    <div className="grid grid-cols-3 gap-3 mb-3">
+                      {([["Quality", f.quality_rating], ["Communication", f.communication_rating], ["On-time", f.delivery_rating]] as [string, number][]).map(([label, val]) => (
+                        <div key={label} className="text-center">
+                          <p className="text-xs text-zinc-400 mb-1">{label}</p>
+                          <Stars value={val} />
+                        </div>
+                      ))}
+                    </div>
+                    {f.comments && (
+                      <p className="text-sm text-zinc-600 leading-relaxed bg-zinc-50 rounded-lg px-3 py-2.5 border border-zinc-100 italic">&ldquo;{f.comments}&rdquo;</p>
                     )}
                   </div>
-                  {f.status === "submitted" && (
-                    <>
-                      <div className="grid grid-cols-3 gap-3 mb-3">
-                        {([["Quality", f.quality_rating], ["Communication", f.communication_rating], ["On-time", f.delivery_rating]] as [string, number][]).map(([label, val]) => (
-                          <div key={label} className="text-center">
-                            <p className="text-xs text-zinc-400 mb-1">{label}</p>
-                            <Stars value={val} />
-                          </div>
-                        ))}
-                      </div>
-                      {f.comments && (
-                        <p className="text-sm text-zinc-600 leading-relaxed bg-zinc-50 rounded-lg px-3 py-2.5 border border-zinc-100 italic">&ldquo;{f.comments}&rdquo;</p>
-                      )}
-                    </>
-                  )}
-                </div>
-              ))}
+                );
+              })}
             </div>
           </SectionCard>
         </div>
