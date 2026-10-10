@@ -255,28 +255,17 @@ export default async function ProjectDetailPage({ params, searchParams }: Props)
 
         {/* Right col — status + meta */}
         <div className="space-y-5">
-          <Section title="Update status">
-            <form action={changeProjectStatus} className="space-y-3">
+          <Section title="Status">
+            <form action={changeProjectStatus}>
               <input type="hidden" name="projectId" value={id} />
+              <input type="hidden" name="notes" value="" />
               <AutoSubmitSelect
                 name="status"
                 defaultValue={status}
-                autoSubmit={false}
+                autoSubmit={true}
                 options={(Object.entries(PROJECT_STATUS_LABELS) as [ProjectStatus, string][]).map(([s, label]) => ({ value: s, label }))}
                 className="w-full rounded-lg border border-zinc-200 px-3 py-2.5 text-sm text-zinc-900 bg-white outline-none focus:border-zinc-900 focus:ring-2 focus:ring-zinc-900/10 cursor-pointer"
               />
-              <input
-                type="text"
-                name="notes"
-                placeholder="Notes for this update (optional)"
-                className="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm text-zinc-900 bg-white outline-none focus:border-zinc-900"
-              />
-              <button
-                type="submit"
-                className="w-full px-4 py-2.5 rounded-full bg-zinc-900 text-white text-sm font-semibold hover:bg-zinc-700 transition-colors cursor-pointer"
-              >
-                Update status
-              </button>
             </form>
           </Section>
 
