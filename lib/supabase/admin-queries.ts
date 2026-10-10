@@ -249,7 +249,7 @@ const MOCK_APPLICATIONS: DesignerApplicationRow[] = [
 ];
 
 export async function getDesignerApplications(): Promise<DesignerApplicationRow[]> {
-  if (!supabase) return MOCK_APPLICATIONS;
+  if (!supabase) return Array.from(getDemoStore().applications.values()).sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
   const { data, error } = await supabase
     .from("designer_applications")
     .select("*")
@@ -259,7 +259,7 @@ export async function getDesignerApplications(): Promise<DesignerApplicationRow[
 }
 
 export async function getDesignerApplication(id: string): Promise<DesignerApplicationRow | null> {
-  if (!supabase) return MOCK_APPLICATIONS.find((a) => a.id === id) ?? null;
+  if (!supabase) return getDemoStore().applications.get(id) ?? null;
   const { data, error } = await supabase
     .from("designer_applications")
     .select("*")
@@ -274,7 +274,12 @@ export async function updateApplicationStatus(
   status: string,
   reviewerNotes?: string
 ): Promise<void> {
-  if (!supabase) { console.warn("[demo] Supabase not configured — write skipped."); return; }
+  if (!supabase) {
+    const store = getDemoStore();
+    const a = store.applications.get(id);
+    if (a) store.applications.set(id, { ...a, status: status as DesignerApplicationRow["status"], reviewer_notes: reviewerNotes ?? a.reviewer_notes });
+    return;
+  }
   const updates: Record<string, string> = { status };
   if (reviewerNotes !== undefined) updates.reviewer_notes = reviewerNotes;
   const { error } = await supabase
@@ -764,15 +769,17 @@ type DemoStore = {
   proposals: Map<string, ClientProposalRow>;
   projects: Map<string, ProjectRow>;
   milestones: Map<string, MilestoneRow>;
+  applications: Map<string, DesignerApplicationRow>;
 };
 function getDemoStore(): DemoStore {
   const g = globalThis as typeof globalThis & { __demoStore?: DemoStore };
-  if (!g.__demoStore?.projects || !g.__demoStore?.milestones || !g.__demoStore?.briefs) {
+  if (!g.__demoStore?.projects || !g.__demoStore?.milestones || !g.__demoStore?.briefs || !g.__demoStore?.applications) {
     g.__demoStore = {
       briefs: g.__demoStore?.briefs ?? new Map(MOCK_BRIEFS.map((b) => [b.id, { ...b }])),
       proposals: g.__demoStore?.proposals ?? new Map(MOCK_PROPOSALS.map((p) => [p.id, { ...p }])),
       projects: g.__demoStore?.projects ?? new Map(MOCK_PROJECTS.map((p) => [p.id, { ...p }])),
       milestones: g.__demoStore?.milestones ?? new Map(MOCK_MILESTONES.map((m) => [m.id, { ...m }])),
+      applications: g.__demoStore?.applications ?? new Map(MOCK_APPLICATIONS.map((a) => [a.id, { ...a }])),
     };
   }
   return g.__demoStore;
