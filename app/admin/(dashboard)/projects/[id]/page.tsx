@@ -306,15 +306,19 @@ export default async function ProjectDetailPage({ params, searchParams }: Props)
       <div className="mt-5 mb-2">
         <Card title="Professional Shortlist">
 
-          {proposalToken && (
-            <div className="mb-5 rounded-xl border border-green-200 bg-green-50 px-5 py-4">
-              <p className="text-xs font-bold text-green-700 uppercase tracking-widest mb-1.5">Proposal link ready</p>
-              <p className="text-sm text-green-800 mb-3">Share this with your client — it shows the project scope, milestones, and anonymised shortlist.</p>
-              <div className="flex items-center gap-3 flex-wrap bg-white rounded-lg border border-green-200 px-4 py-2.5">
-                <code className="text-xs text-zinc-700 flex-1 break-all font-mono">/proposal/{proposalToken}</code>
-                <Link href={`/proposal/${proposalToken}`} target="_blank"
-                  className="text-xs font-bold text-green-700 hover:text-green-900 shrink-0 transition-colors">
-                  Preview →
+          {activeProposal && activeProposal.status !== "selected" && (
+            <div className={`mb-5 rounded-xl border px-5 py-4 ${proposalToken ? "border-green-200 bg-green-50" : "border-zinc-200 bg-zinc-50"}`}>
+              <p className={`text-xs font-bold uppercase tracking-widest mb-1.5 ${proposalToken ? "text-green-700" : "text-zinc-500"}`}>
+                {proposalToken ? "Proposal link ready" : "Proposal link"}
+              </p>
+              <p className={`text-sm mb-3 ${proposalToken ? "text-green-800" : "text-zinc-500"}`}>
+                Send this link to your client — it shows the project scope, milestones, and anonymised shortlist.
+              </p>
+              <div className={`flex items-center gap-3 flex-wrap bg-white rounded-lg border px-4 py-2.5 ${proposalToken ? "border-green-200" : "border-zinc-200"}`}>
+                <code className="text-xs text-zinc-700 flex-1 break-all font-mono">/proposal/{activeProposal.id}</code>
+                <Link href={`/proposal/${activeProposal.id}`} target="_blank"
+                  className={`text-xs font-bold shrink-0 transition-colors ${proposalToken ? "text-green-700 hover:text-green-900" : "text-zinc-600 hover:text-zinc-900"}`}>
+                  Open →
                 </Link>
               </div>
             </div>
