@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getClientBrief } from "@/lib/supabase/admin-queries";
+import { getClientBrief, getProjects } from "@/lib/supabase/admin-queries";
 import {
   BRIEF_STATUS_LABELS,
   BRIEF_STATUS_COLORS,
@@ -42,13 +42,15 @@ function SectionCard({ title, children }: { title: string; children: React.React
 
 export default async function BriefDetailPage({ params }: Props) {
   const { id } = await params;
-  const brief = await getClientBrief(id);
+  const [brief, projects] = await Promise.all([getClientBrief(id), getProjects()]);
   if (!brief) notFound();
 
   const status = brief.status as BriefStatus;
   const initials = brief.business_name.split(" ").map((n: string) => n[0]).join("").slice(0, 2).toUpperCase();
-  const isActionable = ["new", "needs_clarification"].includes(status);
-  const canCreateProject = status === "qualified";
+  const existingProject = projects.find((p) => p.brief_id === id) ?? null;
+  const isTerminal = ["declined", "cancelled", "completed"].includes(status);
+  const isActionable = !isTerminal;
+  const canCreateProject = !existingProject && !isTerminal;
 
   async function handleQualify(formData: FormData) {
     "use server";
@@ -182,7 +184,10 @@ export default async function BriefDetailPage({ params }: Props) {
                     <option value="new">New</option>
                     <option value="needs_clarification">Needs clarification</option>
                     <option value="qualified">Qualified ✓</option>
+                    <option value="in_progress">In progress</option>
+                    <option value="completed">Completed</option>
                     <option value="declined">Declined</option>
+                    <option value="cancelled">Cancelled</option>
                   </select>
                 </div>
               </div>
@@ -206,6 +211,23 @@ export default async function BriefDetailPage({ params }: Props) {
               </button>
             </form>
           </SectionCard>
+        </div>
+      )}
+
+      {/* Existing project link */}
+      {existingProject && (
+        <div className="mt-5 rounded-2xl border border-green-200 bg-green-50 px-6 py-5 flex items-center justify-between gap-4 flex-wrap">
+          <div>
+            <p className="text-xs font-bold text-green-700 uppercase tracking-widest mb-1">Project created</p>
+            <p className="text-sm font-semibold text-zinc-800">{existingProject.title}</p>
+            <p className="text-xs text-zinc-400 mt-0.5 capitalize">{existingProject.status.replace(/_/g, " ")}</p>
+          </div>
+          <Link
+            href={`/admin/projects/${existingProject.id}`}
+            className="px-5 py-2.5 rounded-full bg-green-700 text-white text-sm font-bold hover:bg-green-900 transition-colors shrink-0"
+          >
+            View project →
+          </Link>
         </div>
       )}
 
