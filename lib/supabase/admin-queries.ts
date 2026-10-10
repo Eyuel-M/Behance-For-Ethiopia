@@ -268,8 +268,33 @@ export async function updateApplicationStatus(
 
 // ─── Projects ─────────────────────────────────────────────────────────────────
 
+const MOCK_PROJECTS: ProjectRow[] = [
+  {
+    id: "mock-project-1",
+    brief_id: "mock-brief-2",
+    title: "Agar Microfinance — Mobile App UI",
+    client_name: "Yohannes Tesfaye",
+    client_email: "yohannes@agarfinance.et",
+    client_business: "Agar Microfinance Solutions",
+    assigned_professional_ids: ["mock-app-2"],
+    service_mode: "Consultation + freelance hand-off",
+    category: "UI/UX Design",
+    deliverables: "Mobile app UI, user flow diagrams, design system — Amharic language support required. App must work offline and handle low-bandwidth connections.",
+    exclusions: "Development / engineering work",
+    assumptions: null,
+    acceptance_criteria: "All screens approved by product owner, design system handed off in Figma",
+    revision_limit: 2,
+    status: "in_progress",
+    deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+    budget: "ETB 80,000–120,000",
+    manager_notes: "Natnael is assigned. Kick-off call done. Wireframes expected by end of week.",
+    created_at: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+    updated_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+  },
+];
+
 export async function getProjects(): Promise<ProjectRow[]> {
-  if (!supabase) return [];
+  if (!supabase) return MOCK_PROJECTS;
   const { data, error } = await supabase
     .from("projects")
     .select("*")
@@ -279,7 +304,7 @@ export async function getProjects(): Promise<ProjectRow[]> {
 }
 
 export async function getProject(id: string): Promise<ProjectRow | null> {
-  if (!supabase) return null;
+  if (!supabase) return MOCK_PROJECTS.find((p) => p.id === id) ?? null;
   const { data, error } = await supabase
     .from("projects")
     .select("*")
@@ -306,7 +331,10 @@ export async function createProject(input: {
   budget: string;
   managerNotes?: string;
 }): Promise<string> {
-  if (!supabase) throw new Error("Supabase not configured.");
+  if (!supabase) {
+    console.warn("[createProject] Supabase not configured — project not persisted.");
+    return "mock-project-1";
+  }
   const { data, error } = await supabase
     .from("projects")
     .insert({
@@ -348,8 +376,55 @@ export async function updateProjectStatus(
 
 // ─── Milestones ───────────────────────────────────────────────────────────────
 
+const MOCK_MILESTONES: MilestoneRow[] = [
+  {
+    id: "mock-ms-1",
+    project_id: "mock-project-1",
+    title: "Discovery & User Research",
+    description: "Interviews with 5 rural users, competitive analysis, accessibility audit",
+    due_date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+    status: "accepted",
+    payment_condition: "25% on acceptance",
+    sort_order: 0,
+    created_at: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: "mock-ms-2",
+    project_id: "mock-project-1",
+    title: "Wireframes & User Flows",
+    description: "Low-fidelity wireframes for all core screens, Amharic typography exploration",
+    due_date: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
+    status: "in_progress",
+    payment_condition: null,
+    sort_order: 1,
+    created_at: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: "mock-ms-3",
+    project_id: "mock-project-1",
+    title: "High-Fidelity UI & Design System",
+    description: "Full Figma designs, component library, light/dark mode, offline-state screens",
+    due_date: new Date(Date.now() + 18 * 24 * 60 * 60 * 1000).toISOString(),
+    status: "pending",
+    payment_condition: "50% on acceptance",
+    sort_order: 2,
+    created_at: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: "mock-ms-4",
+    project_id: "mock-project-1",
+    title: "Developer Handoff",
+    description: "Annotated Figma, asset export, design token documentation",
+    due_date: new Date(Date.now() + 28 * 24 * 60 * 60 * 1000).toISOString(),
+    status: "pending",
+    payment_condition: "25% on handoff",
+    sort_order: 3,
+    created_at: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+  },
+];
+
 export async function getProjectMilestones(projectId: string): Promise<MilestoneRow[]> {
-  if (!supabase) return [];
+  if (!supabase) return MOCK_MILESTONES.filter((m) => m.project_id === projectId);
   const { data, error } = await supabase
     .from("project_milestones")
     .select("*")
@@ -394,8 +469,27 @@ export async function updateMilestoneStatus(
 
 // ─── Project notes ────────────────────────────────────────────────────────────
 
+const MOCK_NOTES: ProjectNoteRow[] = [
+  {
+    id: "mock-note-1",
+    project_id: "mock-project-1",
+    author: "Admin",
+    content: "Kick-off call completed. Natnael confirmed scope and timeline. Research phase starts Monday.",
+    is_internal: true,
+    created_at: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: "mock-note-2",
+    project_id: "mock-project-1",
+    author: "Admin",
+    content: "Discovery phase delivered on time. User research report shared with client — positive feedback. Moving to wireframes.",
+    is_internal: false,
+    created_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+  },
+];
+
 export async function getProjectNotes(projectId: string): Promise<ProjectNoteRow[]> {
-  if (!supabase) return [];
+  if (!supabase) return MOCK_NOTES.filter((n) => n.project_id === projectId);
   const { data, error } = await supabase
     .from("project_notes")
     .select("*")
