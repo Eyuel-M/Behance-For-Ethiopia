@@ -54,7 +54,7 @@ export default async function ProjectDetailPage({ params, searchParams }: Props)
   const progressPct = milestones.length > 0 ? Math.round((acceptedCount / milestones.length) * 100) : 0;
 
   return (
-    <div className="max-w-5xl">
+    <div>
       <Link href="/admin/projects" className="inline-flex items-center gap-1.5 text-sm text-zinc-400 hover:text-zinc-700 transition-colors cursor-pointer mb-5 group">
         <span className="group-hover:-translate-x-0.5 transition-transform">←</span> All projects
       </Link>
