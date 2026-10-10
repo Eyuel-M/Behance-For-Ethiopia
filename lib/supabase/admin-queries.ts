@@ -2,6 +2,7 @@ import { supabase } from "./server";
 import type {
   ClientBriefRow,
   DesignerApplicationRow,
+  DesignerFeedbackRow,
   ProjectRow,
   MilestoneRow,
   ProjectNoteRow,
@@ -413,6 +414,158 @@ export async function addProjectNote(input: {
     content: input.content,
     is_internal: input.isInternal ?? true,
   });
+  if (error) throw new Error(error.message);
+}
+
+// ─── Designer feedback ────────────────────────────────────────────────────────
+
+const MOCK_FEEDBACK: DesignerFeedbackRow[] = [
+  {
+    id: "fb-tigist-001",
+    designer_application_id: "mock-app-1",
+    project_title: "Brand Identity — Habesha Premium Coffee Exports",
+    client_name: "Dawit Alemu",
+    client_email: "dawit@habeshacoffee.et",
+    quality_rating: 5,
+    communication_rating: 4,
+    delivery_rating: 5,
+    would_rehire: "yes",
+    comments: "Tigist delivered a brand that felt authentically Ethiopian and globally professional at the same time. The logo works beautifully on our export packaging. Highly recommend.",
+    status: "submitted",
+    created_at: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(),
+    submitted_at: new Date(Date.now() - 18 * 24 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: "fb-tigist-002",
+    designer_application_id: "mock-app-1",
+    project_title: "Marketing Materials — Addis Organic Bakery",
+    client_name: "Sara Tesfaye",
+    client_email: "sara@addisbakery.com",
+    quality_rating: 4,
+    communication_rating: 5,
+    delivery_rating: 3,
+    would_rehire: "yes",
+    comments: "Excellent quality and she was very communicative throughout the project. Delivery took a bit longer than expected but the end result was worth it.",
+    status: "submitted",
+    created_at: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000).toISOString(),
+    submitted_at: new Date(Date.now() - 43 * 24 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: "fb-tigist-003",
+    designer_application_id: "mock-app-1",
+    project_title: "Website Redesign — Addis Flowers Import/Export",
+    client_name: "Hiwot Bekele",
+    client_email: "hiwot@addisflowers.et",
+    quality_rating: null,
+    communication_rating: null,
+    delivery_rating: null,
+    would_rehire: null,
+    comments: null,
+    status: "pending",
+    created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+    submitted_at: null,
+  },
+  {
+    id: "fb-mekdes-001",
+    designer_application_id: "mock-app-3",
+    project_title: "Social Media Campaign — EthioTech Solutions",
+    client_name: "Yonas Girma",
+    client_email: "yonas@ethiotech.et",
+    quality_rating: 5,
+    communication_rating: 5,
+    delivery_rating: 5,
+    would_rehire: "yes",
+    comments: "Mekdes produced outstanding motion graphics for our product launch. Everything delivered on time and the animations were exactly what we envisioned. Will definitely work together again.",
+    status: "submitted",
+    created_at: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
+    submitted_at: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: "fb-mekdes-002",
+    designer_application_id: "mock-app-3",
+    project_title: "Explainer Video — Kifiya Financial Technology",
+    client_name: "Nebiat Hailu",
+    client_email: "nebiat@kifiya.et",
+    quality_rating: 5,
+    communication_rating: 4,
+    delivery_rating: 4,
+    would_rehire: "maybe",
+    comments: "Very talented motion designer. The explainer video was polished and professional. One revision round took longer than expected. Overall happy with the result.",
+    status: "submitted",
+    created_at: new Date(Date.now() - 35 * 24 * 60 * 60 * 1000).toISOString(),
+    submitted_at: new Date(Date.now() - 33 * 24 * 60 * 60 * 1000).toISOString(),
+  },
+];
+
+export async function getDesignerFeedback(designerApplicationId: string): Promise<DesignerFeedbackRow[]> {
+  if (!supabase) return MOCK_FEEDBACK.filter((f) => f.designer_application_id === designerApplicationId);
+  const { data, error } = await supabase
+    .from("designer_feedback")
+    .select("*")
+    .eq("designer_application_id", designerApplicationId)
+    .order("created_at", { ascending: false });
+  if (error) { console.error("[getDesignerFeedback]", error.message); return []; }
+  return data as DesignerFeedbackRow[];
+}
+
+export async function getFeedbackByToken(token: string): Promise<DesignerFeedbackRow | null> {
+  if (!supabase) return MOCK_FEEDBACK.find((f) => f.id === token) ?? null;
+  const { data, error } = await supabase
+    .from("designer_feedback")
+    .select("*")
+    .eq("id", token)
+    .single();
+  if (error) return null;
+  return data as DesignerFeedbackRow;
+}
+
+export async function createFeedbackRequest(input: {
+  designerApplicationId: string;
+  projectTitle: string;
+  clientName: string;
+  clientEmail?: string;
+}): Promise<string> {
+  const token = crypto.randomUUID();
+  if (!supabase) {
+    console.warn("[createFeedbackRequest] Supabase not configured — token not persisted:", token);
+    return token;
+  }
+  const { error } = await supabase.from("designer_feedback").insert({
+    id: token,
+    designer_application_id: input.designerApplicationId,
+    project_title: input.projectTitle,
+    client_name: input.clientName,
+    client_email: input.clientEmail || null,
+    status: "pending",
+  });
+  if (error) throw new Error(error.message);
+  return token;
+}
+
+export async function submitFeedbackResponse(input: {
+  token: string;
+  qualityRating: number;
+  communicationRating: number;
+  deliveryRating: number;
+  wouldRehire: "yes" | "maybe" | "no";
+  comments: string;
+}): Promise<void> {
+  if (!supabase) {
+    console.warn("[submitFeedbackResponse] Supabase not configured — response not persisted.");
+    return;
+  }
+  const { error } = await supabase
+    .from("designer_feedback")
+    .update({
+      quality_rating: input.qualityRating,
+      communication_rating: input.communicationRating,
+      delivery_rating: input.deliveryRating,
+      would_rehire: input.wouldRehire,
+      comments: input.comments,
+      status: "submitted",
+      submitted_at: new Date().toISOString(),
+    })
+    .eq("id", input.token);
   if (error) throw new Error(error.message);
 }
 

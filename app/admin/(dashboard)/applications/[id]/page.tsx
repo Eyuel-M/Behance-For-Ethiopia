@@ -1,16 +1,18 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getDesignerApplication } from "@/lib/supabase/admin-queries";
+import { getDesignerApplication, getDesignerFeedback } from "@/lib/supabase/admin-queries";
 import {
   APPLICATION_STATUS_LABELS,
   APPLICATION_STATUS_COLORS,
   type ApplicationStatus,
+  type DesignerFeedbackRow,
 } from "@/lib/supabase/project-types";
 import { reviewApplication } from "@/app/actions/admin-applications";
+import { generateFeedbackLink } from "@/app/actions/designer-feedback";
 
 export const dynamic = "force-dynamic";
 
-type Props = { params: Promise<{ id: string }> };
+type Props = { params: Promise<{ id: string }>; searchParams: Promise<{ newToken?: string }> };
 
 function StatusBadge({ status }: { status: ApplicationStatus }) {
   return (
@@ -37,21 +39,59 @@ function StatCard({ label, value }: { label: string; value: string }) {
   );
 }
 
-function SectionCard({ title, children }: { title: string; children: React.ReactNode }) {
+function SectionCard({ title, children, accent }: { title: string; children: React.ReactNode; accent?: boolean }) {
   return (
-    <div className="bg-white rounded-2xl border border-zinc-200 overflow-hidden">
-      <div className="px-6 py-4 border-b border-zinc-100 bg-zinc-50/50">
-        <h2 className="text-xs font-bold uppercase tracking-widest text-zinc-400">{title}</h2>
+    <div className={`bg-white rounded-2xl border overflow-hidden ${accent ? "border-green-200" : "border-zinc-200"}`}>
+      <div className={`px-6 py-4 border-b ${accent ? "bg-green-50 border-green-100" : "bg-zinc-50/50 border-zinc-100"}`}>
+        <h2 className={`text-xs font-bold uppercase tracking-widest ${accent ? "text-green-700" : "text-zinc-400"}`}>{title}</h2>
       </div>
       <div className="p-6">{children}</div>
     </div>
   );
 }
 
-export default async function ApplicationDetailPage({ params }: Props) {
+function Stars({ value }: { value: number }) {
+  return (
+    <span className="flex items-center gap-0.5">
+      {[1,2,3,4,5].map((n) => (
+        <span key={n} className={`text-sm ${n <= Math.round(value) ? "text-amber-400" : "text-zinc-200"}`}>★</span>
+      ))}
+      <span className="ml-1 text-xs font-bold text-zinc-700">{value.toFixed(1)}</span>
+    </span>
+  );
+}
+
+function RehirePill({ value }: { value: "yes" | "maybe" | "no" }) {
+  const map = { yes: "bg-green-50 text-green-700 border-green-100", maybe: "bg-amber-50 text-amber-700 border-amber-100", no: "bg-red-50 text-red-700 border-red-100" };
+  const label = { yes: "Yes, definitely", maybe: "Maybe", no: "Probably not" };
+  return <span className={`inline-flex px-2.5 py-0.5 rounded-full border text-xs font-semibold ${map[value]}`}>{label[value]}</span>;
+}
+
+function computeMetrics(feedback: DesignerFeedbackRow[]) {
+  const submitted = feedback.filter((f) => f.status === "submitted");
+  if (submitted.length === 0) return null;
+  const avg = (key: keyof DesignerFeedbackRow) =>
+    submitted.reduce((s, f) => s + ((f[key] as number) ?? 0), 0) / submitted.length;
+  const rehireYes = submitted.filter((f) => f.would_rehire === "yes").length;
+  return {
+    count: submitted.length,
+    quality: avg("quality_rating"),
+    communication: avg("communication_rating"),
+    delivery: avg("delivery_rating"),
+    overall: (avg("quality_rating") + avg("communication_rating") + avg("delivery_rating")) / 3,
+    rehireRate: Math.round((rehireYes / submitted.length) * 100),
+  };
+}
+
+export default async function ApplicationDetailPage({ params, searchParams }: Props) {
   const { id } = await params;
-  const app = await getDesignerApplication(id);
+  const { newToken } = await searchParams;
+  const [app, feedback] = await Promise.all([
+    getDesignerApplication(id),
+    getDesignerFeedback(id),
+  ]);
   if (!app) notFound();
+  const metrics = computeMetrics(feedback);
 
   const status = app.status as ApplicationStatus;
   const initials = app.full_name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
@@ -206,6 +246,138 @@ export default async function ApplicationDetailPage({ params }: Props) {
           <p className="text-sm text-amber-800 leading-relaxed whitespace-pre-wrap">{app.reviewer_notes}</p>
         </div>
       )}
+
+      {/* New feedback link banner */}
+      {newToken && (
+        <div className="mt-5 rounded-2xl border border-green-200 bg-green-50 px-6 py-5">
+          <p className="text-xs font-bold text-green-700 uppercase tracking-widest mb-2">Feedback link generated</p>
+          <p className="text-sm text-green-800 mb-3">Share this link with the client — it&apos;s unique to this request:</p>
+          <div className="flex items-center gap-3 bg-white rounded-xl border border-green-200 px-4 py-3 flex-wrap">
+            <code className="text-xs text-zinc-700 flex-1 break-all font-mono">
+              {typeof window === "undefined" ? `/feedback/${newToken}` : `${process.env.NEXT_PUBLIC_SITE_URL ?? ""}/feedback/${newToken}`}
+            </code>
+          </div>
+          <p className="text-xs text-green-700 mt-2 opacity-70">⚠ Link only persists once Supabase is connected.</p>
+        </div>
+      )}
+
+      {/* Performance metrics */}
+      {metrics && (
+        <div className="mt-5">
+          <SectionCard title="Performance Metrics">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+              <div className="bg-zinc-50 rounded-xl p-4 border border-zinc-100 text-center">
+                <p className="text-2xl font-black text-zinc-900">{metrics.overall.toFixed(1)}</p>
+                <p className="text-xs text-zinc-400 mt-0.5">Overall score</p>
+                <div className="flex justify-center mt-1">
+                  {[1,2,3,4,5].map((n) => (
+                    <span key={n} className={`text-xs ${n <= Math.round(metrics.overall) ? "text-amber-400" : "text-zinc-200"}`}>★</span>
+                  ))}
+                </div>
+              </div>
+              <div className="bg-zinc-50 rounded-xl p-4 border border-zinc-100 text-center">
+                <p className="text-2xl font-black text-green-700">{metrics.rehireRate}%</p>
+                <p className="text-xs text-zinc-400 mt-0.5">Would rehire</p>
+              </div>
+              <div className="bg-zinc-50 rounded-xl p-4 border border-zinc-100 text-center">
+                <p className="text-2xl font-black text-zinc-900">{metrics.count}</p>
+                <p className="text-xs text-zinc-400 mt-0.5">Projects rated</p>
+              </div>
+              <div className="bg-zinc-50 rounded-xl p-4 border border-zinc-100 text-center">
+                <p className="text-2xl font-black text-zinc-900">{feedback.filter(f => f.status === "pending").length}</p>
+                <p className="text-xs text-zinc-400 mt-0.5">Awaiting response</p>
+              </div>
+            </div>
+            <div className="space-y-3">
+              {(["quality", "communication", "delivery"] as const).map((key) => {
+                const labels = { quality: "Work quality", communication: "Communication", delivery: "On-time delivery" };
+                const val = metrics[`${key}_rating` as never] ?? metrics[key];
+                const score = key === "quality" ? metrics.quality : key === "communication" ? metrics.communication : metrics.delivery;
+                return (
+                  <div key={key} className="flex items-center gap-4">
+                    <p className="text-xs font-semibold text-zinc-500 w-32 shrink-0">{labels[key]}</p>
+                    <div className="flex-1 h-2 bg-zinc-100 rounded-full overflow-hidden">
+                      <div className="h-full bg-amber-400 rounded-full transition-all" style={{ width: `${(score / 5) * 100}%` }} />
+                    </div>
+                    <Stars value={score} />
+                  </div>
+                );
+              })}
+            </div>
+          </SectionCard>
+        </div>
+      )}
+
+      {/* Individual feedback */}
+      {feedback.length > 0 && (
+        <div className="mt-5">
+          <SectionCard title={`Client Feedback (${feedback.length})`}>
+            <div className="space-y-4">
+              {feedback.map((f) => (
+                <div key={f.id} className={`rounded-xl border p-4 ${f.status === "pending" ? "bg-zinc-50 border-zinc-100 border-dashed" : "bg-white border-zinc-200"}`}>
+                  <div className="flex items-start justify-between gap-3 flex-wrap mb-3">
+                    <div>
+                      <p className="text-sm font-semibold text-zinc-800">{f.project_title ?? "Untitled project"}</p>
+                      <p className="text-xs text-zinc-400 mt-0.5">{f.client_name} · {new Date(f.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}</p>
+                    </div>
+                    {f.status === "pending" ? (
+                      <span className="px-2.5 py-1 rounded-full bg-zinc-100 text-zinc-400 text-xs font-semibold border border-zinc-200">Awaiting response</span>
+                    ) : (
+                      f.would_rehire && <RehirePill value={f.would_rehire} />
+                    )}
+                  </div>
+                  {f.status === "submitted" && (
+                    <>
+                      <div className="grid grid-cols-3 gap-3 mb-3">
+                        {([["Quality", f.quality_rating], ["Communication", f.communication_rating], ["On-time", f.delivery_rating]] as [string, number][]).map(([label, val]) => (
+                          <div key={label} className="text-center">
+                            <p className="text-xs text-zinc-400 mb-1">{label}</p>
+                            <Stars value={val} />
+                          </div>
+                        ))}
+                      </div>
+                      {f.comments && (
+                        <p className="text-sm text-zinc-600 leading-relaxed bg-zinc-50 rounded-lg px-3 py-2.5 border border-zinc-100 italic">&ldquo;{f.comments}&rdquo;</p>
+                      )}
+                    </>
+                  )}
+                </div>
+              ))}
+            </div>
+          </SectionCard>
+        </div>
+      )}
+
+      {/* Generate feedback link */}
+      <div className="mt-5">
+        <SectionCard title="Request Client Feedback" accent>
+          <p className="text-sm text-zinc-500 mb-4">Generate a unique feedback link to send to a client after a completed project.</p>
+          <form action={generateFeedbackLink} className="space-y-4">
+            <input type="hidden" name="designerId" value={id} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest block mb-2">Client name <span className="text-red-400">*</span></label>
+                <input type="text" name="clientName" required placeholder="Dawit Alemu"
+                  className="w-full rounded-xl border border-zinc-200 px-4 py-3 text-sm text-zinc-900 bg-white outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/10" />
+              </div>
+              <div>
+                <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest block mb-2">Client email (optional)</label>
+                <input type="email" name="clientEmail" placeholder="client@example.com"
+                  className="w-full rounded-xl border border-zinc-200 px-4 py-3 text-sm text-zinc-900 bg-white outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/10" />
+              </div>
+            </div>
+            <div>
+              <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest block mb-2">Project title <span className="text-red-400">*</span></label>
+              <input type="text" name="projectTitle" required placeholder="Brand Identity — Business Name"
+                className="w-full rounded-xl border border-zinc-200 px-4 py-3 text-sm text-zinc-900 bg-white outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/10" />
+            </div>
+            <button type="submit"
+              className="px-6 py-3 rounded-full bg-green-500 text-black text-sm font-bold hover:bg-green-400 transition-colors cursor-pointer">
+              Generate feedback link →
+            </button>
+          </form>
+        </SectionCard>
+      </div>
 
       {/* Review decision */}
       <div className="mt-5 mb-8">

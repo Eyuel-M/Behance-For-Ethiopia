@@ -167,6 +167,22 @@ export type DesignerApplicationRow = {
   created_at: string;
 };
 
+export type DesignerFeedbackRow = {
+  id: string; // UUID — also the public token in the feedback URL
+  designer_application_id: string;
+  project_title: string | null;
+  client_name: string | null;
+  client_email: string | null;
+  quality_rating: number | null; // 1–5
+  communication_rating: number | null; // 1–5
+  delivery_rating: number | null; // 1–5, on-time
+  would_rehire: "yes" | "maybe" | "no" | null;
+  comments: string | null;
+  status: "pending" | "submitted";
+  created_at: string;
+  submitted_at: string | null;
+};
+
 export type ProjectRow = {
   id: string;
   brief_id: string | null;
