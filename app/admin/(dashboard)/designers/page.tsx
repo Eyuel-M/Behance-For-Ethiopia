@@ -16,13 +16,13 @@ function avgRating(feedback: DesignerFeedbackRow[]): number | null {
 
 function Stars({ score, count }: { score: number; count: number }) {
   return (
-    <div className="flex items-center gap-1.5">
+    <div className="flex items-center gap-1">
       <span className="flex items-center">
         {[1, 2, 3, 4, 5].map((n) => (
           <span key={n} className={`text-sm leading-none ${n <= Math.round(score) ? "text-amber-400" : "text-zinc-200"}`}>★</span>
         ))}
       </span>
-      <span className="text-xs font-bold text-zinc-700">{score.toFixed(1)}</span>
+      <span className="text-xs font-bold text-zinc-700 ml-1">{score.toFixed(1)}</span>
       <span className="text-xs text-zinc-400">({count})</span>
     </div>
   );
@@ -35,7 +35,6 @@ export default async function AdminProfessionalsPage() {
   ]);
   const approved = all.filter((a) => a.status === "approved");
 
-  // Group feedback by designer id
   const feedbackByDesigner = allFeedback.reduce<Record<string, DesignerFeedbackRow[]>>((acc, f) => {
     (acc[f.designer_application_id] ??= []).push(f);
     return acc;
@@ -64,59 +63,50 @@ export default async function AdminProfessionalsPage() {
           </Link>
         </div>
       ) : (
-        <div className="rounded-xl border border-zinc-200 bg-white overflow-hidden">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-zinc-100 bg-zinc-50">
-                <th className="text-left px-4 py-3 font-semibold text-zinc-500 text-xs uppercase tracking-wide">Name</th>
-                <th className="text-left px-4 py-3 font-semibold text-zinc-500 text-xs uppercase tracking-wide hidden sm:table-cell">Specialty</th>
-                <th className="text-left px-4 py-3 font-semibold text-zinc-500 text-xs uppercase tracking-wide hidden md:table-cell">City</th>
-                <th className="text-left px-4 py-3 font-semibold text-zinc-500 text-xs uppercase tracking-wide hidden sm:table-cell">Project rate</th>
-                <th className="text-left px-4 py-3 font-semibold text-zinc-500 text-xs uppercase tracking-wide">Rating</th>
-                <th className="px-4 py-3" />
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-zinc-100">
-              {approved.map((p) => {
-                const pFeedback = feedbackByDesigner[p.id] ?? [];
-                const score = avgRating(pFeedback);
-                const ratedCount = pFeedback.filter((f) => f.status === "submitted").length;
-                return (
-                  <tr key={p.id} className="hover:bg-zinc-50 transition-colors duration-100">
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-zinc-200 flex items-center justify-center text-xs font-semibold text-zinc-600 shrink-0">
-                          {p.full_name.split(" ").map((n: string) => n[0]).join("").slice(0, 2).toUpperCase()}
-                        </div>
-                        <div>
-                          <p className="font-medium text-zinc-900">{p.full_name}</p>
-                          <p className="text-xs text-zinc-400">{p.email}</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-4 py-3 text-zinc-600 hidden sm:table-cell">{p.specialty}</td>
-                    <td className="px-4 py-3 text-zinc-500 hidden md:table-cell">{p.city}</td>
-                    <td className="px-4 py-3 text-zinc-600 hidden sm:table-cell text-xs">{p.hourly_rate}</td>
-                    <td className="px-4 py-3">
-                      {score !== null ? (
-                        <Stars score={score} count={ratedCount} />
-                      ) : (
-                        <span className="text-xs text-zinc-300">No ratings yet</span>
-                      )}
-                    </td>
-                    <td className="px-4 py-3">
-                      <Link
-                        href={`/admin/applications/${p.id}`}
-                        className="text-xs font-medium text-zinc-500 hover:text-zinc-900 transition-colors"
-                      >
-                        View →
-                      </Link>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {approved.map((p) => {
+            const pFeedback = feedbackByDesigner[p.id] ?? [];
+            const score = avgRating(pFeedback);
+            const ratedCount = pFeedback.filter((f) => f.status === "submitted").length;
+            const initials = p.full_name.split(" ").map((n: string) => n[0]).join("").slice(0, 2).toUpperCase();
+
+            return (
+              <Link
+                key={p.id}
+                href={`/admin/applications/${p.id}`}
+                className="group rounded-2xl border border-zinc-200 bg-white p-5 hover:border-zinc-300 hover:shadow-sm transition-all duration-150 flex flex-col gap-4"
+              >
+                {/* Header */}
+                <div className="flex items-start gap-3">
+                  <div className="w-11 h-11 rounded-full bg-zinc-100 flex items-center justify-center text-sm font-bold text-zinc-600 shrink-0">
+                    {initials}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="font-semibold text-zinc-900 group-hover:text-green-700 transition-colors truncate">{p.full_name}</p>
+                    <p className="text-xs text-zinc-400 truncate">{p.specialty}</p>
+                  </div>
+                </div>
+
+                {/* Meta row */}
+                <div className="flex items-center gap-3 text-xs text-zinc-500">
+                  <span className="flex items-center gap-1">
+                    <span className="text-zinc-300">📍</span> {p.city}
+                  </span>
+                  <span className="text-zinc-200">·</span>
+                  <span className="truncate">{p.hourly_rate}</span>
+                </div>
+
+                {/* Rating */}
+                <div className="mt-auto">
+                  {score !== null ? (
+                    <Stars score={score} count={ratedCount} />
+                  ) : (
+                    <span className="text-xs text-zinc-300">No ratings yet</span>
+                  )}
+                </div>
+              </Link>
+            );
+          })}
         </div>
       )}
     </div>
