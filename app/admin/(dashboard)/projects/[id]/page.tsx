@@ -23,6 +23,7 @@ import {
   postProjectNote,
 } from "@/app/actions/admin-projects";
 import ProposalDesignerPicker from "@/components/ProposalDesignerPicker";
+import AutoSubmitSelect from "@/components/AutoSubmitSelect";
 
 export const dynamic = "force-dynamic";
 
@@ -139,19 +140,18 @@ export default async function ProjectDetailPage({ params, searchParams }: Props)
                       <form action={changeMilestoneStatus}>
                         <input type="hidden" name="milestoneId" value={m.id} />
                         <input type="hidden" name="projectId" value={id} />
-                        <select
+                        <AutoSubmitSelect
                           name="status"
                           defaultValue={m.status}
-                          onChange={undefined}
+                          options={[
+                            { value: "pending", label: "Pending" },
+                            { value: "in_progress", label: "In progress" },
+                            { value: "submitted", label: "Submitted" },
+                            { value: "revision_requested", label: "Revision requested" },
+                            { value: "accepted", label: "Accepted" },
+                          ]}
                           className="text-xs rounded-lg border border-zinc-200 bg-white px-2 py-1 text-zinc-600 outline-none cursor-pointer focus:border-zinc-900"
-                        >
-                          <option value="pending">Pending</option>
-                          <option value="in_progress">In progress</option>
-                          <option value="submitted">Submitted</option>
-                          <option value="revision_requested">Revision requested</option>
-                          <option value="accepted">Accepted</option>
-                        </select>
-                        <button type="submit" className="sr-only">Update</button>
+                        />
                       </form>
                     </div>
                   </div>
@@ -258,15 +258,13 @@ export default async function ProjectDetailPage({ params, searchParams }: Props)
           <Section title="Update status">
             <form action={changeProjectStatus} className="space-y-3">
               <input type="hidden" name="projectId" value={id} />
-              <select
+              <AutoSubmitSelect
                 name="status"
                 defaultValue={status}
+                autoSubmit={false}
+                options={(Object.entries(PROJECT_STATUS_LABELS) as [ProjectStatus, string][]).map(([s, label]) => ({ value: s, label }))}
                 className="w-full rounded-lg border border-zinc-200 px-3 py-2.5 text-sm text-zinc-900 bg-white outline-none focus:border-zinc-900 focus:ring-2 focus:ring-zinc-900/10 cursor-pointer"
-              >
-                {(Object.entries(PROJECT_STATUS_LABELS) as [ProjectStatus, string][]).map(([s, label]) => (
-                  <option key={s} value={s}>{label}</option>
-                ))}
-              </select>
+              />
               <input
                 type="text"
                 name="notes"

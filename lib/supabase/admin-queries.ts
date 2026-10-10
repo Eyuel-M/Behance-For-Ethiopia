@@ -437,7 +437,7 @@ const MOCK_MILESTONES: MilestoneRow[] = [
 ];
 
 export async function getProjectMilestones(projectId: string): Promise<MilestoneRow[]> {
-  if (!supabase) return MOCK_MILESTONES.filter((m) => m.project_id === projectId);
+  if (!supabase) return Array.from(getDemoStore().milestones.values()).filter((m) => m.project_id === projectId);
   const { data, error } = await supabase
     .from("project_milestones")
     .select("*")
@@ -472,7 +472,12 @@ export async function updateMilestoneStatus(
   id: string,
   status: string
 ): Promise<void> {
-  if (!supabase) { console.warn("[demo] Supabase not configured — write skipped."); return; }
+  if (!supabase) {
+    const store = getDemoStore();
+    const m = store.milestones.get(id);
+    if (m) store.milestones.set(id, { ...m, status });
+    return;
+  }
   const { error } = await supabase
     .from("project_milestones")
     .update({ status })
@@ -702,13 +707,15 @@ const MOCK_PROPOSALS: ClientProposalRow[] = [
 type DemoStore = {
   proposals: Map<string, ClientProposalRow>;
   projects: Map<string, ProjectRow>;
+  milestones: Map<string, MilestoneRow>;
 };
 function getDemoStore(): DemoStore {
   const g = globalThis as typeof globalThis & { __demoStore?: DemoStore };
-  if (!g.__demoStore?.projects) {
+  if (!g.__demoStore?.projects || !g.__demoStore?.milestones) {
     g.__demoStore = {
       proposals: g.__demoStore?.proposals ?? new Map(MOCK_PROPOSALS.map((p) => [p.id, { ...p }])),
-      projects: new Map(MOCK_PROJECTS.map((p) => [p.id, { ...p }])),
+      projects: g.__demoStore?.projects ?? new Map(MOCK_PROJECTS.map((p) => [p.id, { ...p }])),
+      milestones: new Map(MOCK_MILESTONES.map((m) => [m.id, { ...m }])),
     };
   }
   return g.__demoStore;
