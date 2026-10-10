@@ -378,8 +378,17 @@ export default async function ProjectDetailPage({ params, searchParams }: Props)
           {/* ── State B: Proposal sent, awaiting client ── */}
           {existingProposal && existingProposal.status !== "selected" && (
             <div>
+              {existingProposal.status === "revision_requested" && existingProposal.client_note && (
+                <div className="mb-4 rounded-xl border border-orange-200 bg-orange-50 px-4 py-3">
+                  <p className="text-xs font-bold text-orange-700 uppercase tracking-widest mb-1">Client requested changes</p>
+                  <p className="text-sm text-orange-800 leading-relaxed">&ldquo;{existingProposal.client_note}&rdquo;</p>
+                  <p className="text-xs text-orange-600 mt-2">Update the shortlist and generate a new proposal link for this client.</p>
+                </div>
+              )}
               <div className="flex items-center justify-between gap-3 mb-4 flex-wrap">
-                <p className="text-xs font-semibold text-amber-600 uppercase tracking-widest">Pending client selection</p>
+                <p className={`text-xs font-semibold uppercase tracking-widest ${existingProposal.status === "revision_requested" ? "text-orange-600" : "text-amber-600"}`}>
+                  {existingProposal.status === "revision_requested" ? "Revision requested" : "Pending client selection"}
+                </p>
                 <Link href={`/proposal/${existingProposal.id}`} target="_blank"
                   className="text-xs text-zinc-400 hover:text-zinc-700 transition-colors">
                   View proposal →

@@ -9,6 +9,8 @@ import {
 import type { DesignerFeedbackRow } from "@/lib/supabase/project-types";
 import { MILESTONE_STATUS_LABELS, type MilestoneStatus } from "@/lib/supabase/project-types";
 import { selectDesigner } from "@/app/actions/client-proposal";
+import WorkSampleViewer from "@/components/WorkSampleViewer";
+import ProposalFeedbackForm from "@/components/ProposalFeedbackForm";
 
 export const dynamic = "force-dynamic";
 
@@ -149,6 +151,14 @@ export default async function ProposalPage({ params }: Props) {
                 </div>
               )}
             </div>
+
+            {/* Approve / revise section — inside the scope card */}
+            <ProposalFeedbackForm
+              token={token}
+              disabled={isSelected}
+              alreadyRequested={proposal.status === "revision_requested"}
+              existingNote={proposal.client_note}
+            />
           </div>
 
           {/* Divider */}
@@ -163,7 +173,7 @@ export default async function ProposalPage({ params }: Props) {
       )}
 
       {/* Cards */}
-      <div className="max-w-5xl mx-auto px-5 pb-20">
+      <div className="max-w-5xl mx-auto px-5 pb-20" data-designer-cards>
         <div className={`grid gap-6 ${designers.length === 1 ? "grid-cols-1 max-w-sm" : designers.length === 2 ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"}`}>
           {designers.map((designer, i) => {
             const label = LABELS[i];
@@ -181,20 +191,8 @@ export default async function ProposalPage({ params }: Props) {
                   opacity: isSelected && !isChosen ? 0.45 : 1,
                 }}
               >
-                {/* Work sample strip */}
-                {samples.length > 0 ? (
-                  <div className={`grid gap-0.5 ${samples.length === 1 ? "grid-cols-1" : samples.length === 2 ? "grid-cols-2" : "grid-cols-3"}`}
-                    style={{ aspectRatio: "16/7" }}>
-                    {samples.slice(0, 3).map((url, j) => (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img key={j} src={url} alt="" className="w-full h-full object-cover" />
-                    ))}
-                  </div>
-                ) : (
-                  <div className="flex items-center justify-center" style={{ aspectRatio: "16/7", backgroundColor: "rgba(255,255,255,0.03)" }}>
-                    <p className="text-xs" style={{ color: "rgba(255,255,255,0.15)" }}>No work samples</p>
-                  </div>
-                )}
+                {/* Work sample strip — click opens lightbox */}
+                <WorkSampleViewer samples={samples} />
 
                 {/* Card body */}
                 <div className="p-5 flex flex-col flex-1">

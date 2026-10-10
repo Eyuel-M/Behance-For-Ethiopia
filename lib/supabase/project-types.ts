@@ -173,7 +173,8 @@ export type ClientProposalRow = {
   project_id: string;
   designer_application_ids: string[]; // 1–3 designer IDs (order = label A/B/C)
   selected_designer_id: string | null;
-  status: "pending" | "viewed" | "selected";
+  status: "pending" | "viewed" | "revision_requested" | "selected";
+  client_note: string | null; // revision note from client
   created_at: string;
   selected_at: string | null;
 };

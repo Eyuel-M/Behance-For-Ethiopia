@@ -679,6 +679,7 @@ const MOCK_PROPOSALS: ClientProposalRow[] = [
     designer_application_ids: ["mock-app-1", "mock-app-2", "mock-app-3"],
     selected_designer_id: null,
     status: "pending",
+    client_note: null,
     created_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
     selected_at: null,
   },
@@ -738,6 +739,17 @@ export async function getProjectByClientToken(token: string): Promise<ProjectRow
     .single();
   if (error) return null;
   return data as ProjectRow;
+}
+
+export async function requestProposalRevision(token: string, note: string): Promise<void> {
+  if (!supabase) {
+    console.warn("[requestProposalRevision] Supabase not configured — revision not persisted. Note:", note);
+    return;
+  }
+  await supabase.from("client_proposals").update({
+    status: "revision_requested",
+    client_note: note,
+  }).eq("id", token);
 }
 
 export async function selectProposalDesigner(
