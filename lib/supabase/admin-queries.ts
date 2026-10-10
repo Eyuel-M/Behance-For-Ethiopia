@@ -889,6 +889,14 @@ export async function selectProposalDesigner(
         status: "selected",
         selected_at: new Date().toISOString(),
       });
+      const proj = store.projects.get(p.project_id);
+      if (proj) {
+        store.projects.set(p.project_id, {
+          ...proj,
+          assigned_professional_ids: [designerId],
+          updated_at: new Date().toISOString(),
+        });
+      }
     }
     return;
   }
