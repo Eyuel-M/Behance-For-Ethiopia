@@ -31,57 +31,57 @@ type MilestoneStyle = {
 
 const MILESTONE_STYLES: Record<MilestoneStatus, MilestoneStyle> = {
   pending: {
-    cardBg: "rgba(255,255,255,0.025)",
-    cardBorder: "rgba(255,255,255,0.07)",
-    badgeBg: "rgba(255,255,255,0.08)",
-    badgeColor: "rgba(255,255,255,0.35)",
-    numBg: "rgba(255,255,255,0.06)",
-    numColor: "rgba(255,255,255,0.25)",
+    cardBg: "#ffffff",
+    cardBorder: "#e5e7eb",
+    badgeBg: "#f3f4f6",
+    badgeColor: "#9ca3af",
+    numBg: "#f3f4f6",
+    numColor: "#9ca3af",
   },
   in_progress: {
-    cardBg: "rgba(59,130,246,0.05)",
-    cardBorder: "rgba(59,130,246,0.18)",
-    badgeBg: "rgba(59,130,246,0.15)",
-    badgeColor: "#93c5fd",
-    numBg: "rgba(59,130,246,0.15)",
-    numColor: "#60a5fa",
+    cardBg: "#eff6ff",
+    cardBorder: "#bfdbfe",
+    badgeBg: "#dbeafe",
+    badgeColor: "#2563eb",
+    numBg: "#dbeafe",
+    numColor: "#3b82f6",
   },
   submitted: {
-    cardBg: "rgba(245,158,11,0.05)",
-    cardBorder: "rgba(245,158,11,0.2)",
-    badgeBg: "rgba(245,158,11,0.12)",
-    badgeColor: "#fbbf24",
-    numBg: "rgba(245,158,11,0.12)",
+    cardBg: "#fffbeb",
+    cardBorder: "#fde68a",
+    badgeBg: "#fef3c7",
+    badgeColor: "#d97706",
+    numBg: "#fef3c7",
     numColor: "#f59e0b",
   },
   revision_requested: {
-    cardBg: "rgba(249,115,22,0.05)",
-    cardBorder: "rgba(249,115,22,0.2)",
-    badgeBg: "rgba(249,115,22,0.12)",
-    badgeColor: "#fb923c",
-    numBg: "rgba(249,115,22,0.12)",
+    cardBg: "#fff7ed",
+    cardBorder: "#fed7aa",
+    badgeBg: "#ffedd5",
+    badgeColor: "#c2410c",
+    numBg: "#ffedd5",
     numColor: "#f97316",
   },
   accepted: {
-    cardBg: "rgba(16,185,129,0.05)",
-    cardBorder: "rgba(16,185,129,0.18)",
-    badgeBg: "rgba(16,185,129,0.12)",
-    badgeColor: "#34d399",
-    numBg: "rgba(16,185,129,0.12)",
-    numColor: "#10b981",
+    cardBg: "#f0fdf4",
+    cardBorder: "#bbf7d0",
+    badgeBg: "#dcfce7",
+    badgeColor: "#15803d",
+    numBg: "#dcfce7",
+    numColor: "#16a34a",
   },
 };
 
-const STATUS_COLOR: Partial<Record<ProjectStatus, string>> = {
-  in_progress: "#60a5fa",
+const STATUS_DOT: Partial<Record<ProjectStatus, string>> = {
+  in_progress:          "#3b82f6",
   submitted_for_review: "#f59e0b",
-  revision_requested: "#f97316",
-  change_requested: "#f97316",
-  accepted: "#10b981",
-  completed: "#10b981",
-  cancelled: "rgba(255,255,255,0.3)",
-  disputed: "#f97316",
-  ready_to_start: "#60a5fa",
+  revision_requested:   "#f97316",
+  change_requested:     "#f97316",
+  accepted:             "#16a34a",
+  completed:            "#16a34a",
+  disputed:             "#f97316",
+  ready_to_start:       "#3b82f6",
+  cancelled:            "#9ca3af",
 };
 
 export default async function ProfessionalPortalPage({ params }: Props) {
@@ -96,117 +96,107 @@ export default async function ProfessionalPortalPage({ params }: Props) {
   const acceptedCount = milestones.filter((m) => m.status === "accepted").length;
   const submittedCount = milestones.filter((m) => m.status === "submitted").length;
   const progressPct = milestones.length > 0 ? Math.round((acceptedCount / milestones.length) * 100) : 0;
-  const statusColor = STATUS_COLOR[status] ?? "#60a5fa";
+  const dotColor = STATUS_DOT[status] ?? "#3b82f6";
 
   return (
-    <div style={{ minHeight: "100vh", backgroundColor: "#070d1a", color: "#fff" }}>
+    <div style={{ minHeight: "100vh", backgroundColor: "#f8fafc", fontFamily: "inherit" }}>
 
-      {/* Top navigation */}
-      <nav style={{ borderBottom: "1px solid rgba(255,255,255,0.06)", backgroundColor: "rgba(7,13,26,0.9)", backdropFilter: "blur(12px)", position: "sticky", top: 0, zIndex: 10 }}>
-        <div style={{ maxWidth: 680, margin: "0 auto", padding: "0 20px", height: 56, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+      {/* Top nav */}
+      <nav style={{ backgroundColor: "#ffffff", borderBottom: "1px solid #e5e7eb", position: "sticky", top: 0, zIndex: 10 }}>
+        <div style={{ maxWidth: 700, margin: "0 auto", padding: "0 20px", height: 54, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <div style={{ width: 24, height: 24, borderRadius: 6, background: "linear-gradient(135deg, #3b82f6, #6366f1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                <path d="M2 6h8M6 2l4 4-4 4" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <div style={{ width: 22, height: 22, borderRadius: 6, background: "linear-gradient(135deg, #3b82f6, #6366f1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                <path d="M1.5 5h7M5 2l3 3-3 3" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
-            <span style={{ fontSize: 13, fontWeight: 800, color: "#fff", letterSpacing: "-0.01em" }}>Hire Ethiopia&apos;s Best</span>
+            <span style={{ fontSize: 13, fontWeight: 800, color: "#111827", letterSpacing: "-0.01em" }}>Hire Ethiopia&apos;s Best</span>
           </div>
-          <span style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.08em" }}>Pro Portal</span>
+          <span style={{ fontSize: 11, fontWeight: 600, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.08em" }}>Professional Portal</span>
         </div>
       </nav>
 
-      <div style={{ maxWidth: 680, margin: "0 auto", padding: "0 20px 80px" }}>
+      <div style={{ maxWidth: 700, margin: "0 auto", padding: "0 20px 80px" }}>
 
         {/* Hero */}
-        <div style={{ paddingTop: 48, paddingBottom: 40, borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-          <p style={{ fontSize: 11, fontWeight: 700, color: "rgba(96,165,250,0.7)", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 12 }}>
+        <div style={{ paddingTop: 40, paddingBottom: 32, borderBottom: "1px solid #e5e7eb" }}>
+          <p style={{ fontSize: 11, fontWeight: 700, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 10 }}>
             {project.client_business}
           </p>
-          <h1 style={{ fontSize: "clamp(24px, 5vw, 36px)", fontWeight: 900, lineHeight: 1.15, letterSpacing: "-0.02em", marginBottom: 16, color: "#fff" }}>
+          <h1 style={{ fontSize: "clamp(22px, 5vw, 32px)", fontWeight: 900, lineHeight: 1.2, letterSpacing: "-0.02em", color: "#111827", marginBottom: 14 }}>
             {project.title}
           </h1>
           <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 12px", borderRadius: 999, fontSize: 12, fontWeight: 700, backgroundColor: `${statusColor}18`, border: `1px solid ${statusColor}35`, color: statusColor }}>
-              <span style={{ width: 6, height: 6, borderRadius: "50%", backgroundColor: statusColor, flexShrink: 0 }} />
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 12px", borderRadius: 999, fontSize: 12, fontWeight: 700, backgroundColor: `${dotColor}15`, border: `1px solid ${dotColor}30`, color: dotColor }}>
+              <span style={{ width: 6, height: 6, borderRadius: "50%", backgroundColor: dotColor, flexShrink: 0 }} />
               {STATUS_LABEL[status]}
             </span>
-            <span style={{ fontSize: 12, color: "rgba(255,255,255,0.3)" }}>
+            <span style={{ fontSize: 12, color: "#9ca3af" }}>
               {project.category} · {project.service_mode}
             </span>
             {project.deadline && !isCancelled && (
-              <span style={{ fontSize: 12, color: "rgba(255,255,255,0.25)" }}>
+              <span style={{ fontSize: 12, color: "#9ca3af" }}>
                 Due {new Date(project.deadline).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
               </span>
             )}
           </div>
         </div>
 
-        {/* Progress + stats row */}
+        {/* Progress row */}
         {milestones.length > 0 && !isCancelled && (
-          <div style={{ padding: "28px 0", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap" }}>
-
-            {/* Big number */}
-            <div style={{ minWidth: 80 }}>
-              <p style={{ fontSize: 40, fontWeight: 900, lineHeight: 1, color: isDone ? "#10b981" : "#60a5fa", letterSpacing: "-0.03em" }}>{progressPct}%</p>
-              <p style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginTop: 4, fontWeight: 600 }}>Complete</p>
+          <div style={{ padding: "24px 0", borderBottom: "1px solid #e5e7eb", display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap" }}>
+            <div style={{ minWidth: 72 }}>
+              <p style={{ fontSize: 36, fontWeight: 900, lineHeight: 1, color: isDone ? "#16a34a" : "#3b82f6", letterSpacing: "-0.03em" }}>{progressPct}%</p>
+              <p style={{ fontSize: 11, color: "#9ca3af", marginTop: 3, fontWeight: 600 }}>Complete</p>
             </div>
-
-            {/* Bar + counters */}
             <div style={{ flex: 1, minWidth: 160 }}>
-              <div style={{ height: 6, borderRadius: 999, overflow: "hidden", backgroundColor: "rgba(255,255,255,0.07)", marginBottom: 10 }}>
-                <div style={{ height: "100%", borderRadius: 999, width: `${progressPct}%`, background: isDone ? "linear-gradient(90deg, #10b981, #34d399)" : "linear-gradient(90deg, #3b82f6, #60a5fa)", transition: "width 0.6s ease" }} />
+              <div style={{ height: 6, borderRadius: 999, overflow: "hidden", backgroundColor: "#e5e7eb", marginBottom: 10 }}>
+                <div style={{ height: "100%", borderRadius: 999, width: `${progressPct}%`, background: isDone ? "linear-gradient(90deg, #16a34a, #22c55e)" : "linear-gradient(90deg, #3b82f6, #6366f1)", transition: "width 0.6s ease" }} />
               </div>
               <div style={{ display: "flex", gap: 16 }}>
-                <span style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", fontWeight: 600 }}>
-                  <span style={{ color: "#10b981", marginRight: 4 }}>{acceptedCount}</span> accepted
+                <span style={{ fontSize: 11, color: "#6b7280", fontWeight: 600 }}>
+                  <span style={{ color: "#16a34a", marginRight: 3 }}>{acceptedCount}</span> accepted
                 </span>
                 {submittedCount > 0 && (
-                  <span style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", fontWeight: 600 }}>
-                    <span style={{ color: "#f59e0b", marginRight: 4 }}>{submittedCount}</span> awaiting review
+                  <span style={{ fontSize: 11, color: "#6b7280", fontWeight: 600 }}>
+                    <span style={{ color: "#d97706", marginRight: 3 }}>{submittedCount}</span> awaiting review
                   </span>
                 )}
-                <span style={{ fontSize: 11, color: "rgba(255,255,255,0.25)", fontWeight: 600 }}>
-                  {milestones.length} total
-                </span>
+                <span style={{ fontSize: 11, color: "#9ca3af", fontWeight: 600 }}>{milestones.length} total</span>
               </div>
             </div>
           </div>
         )}
 
         {/* Project scope */}
-        <div style={{ marginTop: 32, marginBottom: 32 }}>
-          <p style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.25)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 16 }}>Project scope</p>
-          <div style={{ borderRadius: 16, border: "1px solid rgba(255,255,255,0.07)", overflow: "hidden" }}>
-
-            <div style={{ padding: "20px 20px 0", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 0 }}>
-              <div style={{ backgroundColor: "rgba(255,255,255,0.04)", borderRadius: 10, padding: "12px 14px" }}>
-                <p style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", marginBottom: 4, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em" }}>Budget</p>
-                <p style={{ fontSize: 15, fontWeight: 800, color: "#fff" }}>{project.budget}</p>
+        <div style={{ marginTop: 28, marginBottom: 28 }}>
+          <p style={{ fontSize: 11, fontWeight: 700, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 14 }}>Project scope</p>
+          <div style={{ backgroundColor: "#ffffff", borderRadius: 14, border: "1px solid #e5e7eb", boxShadow: "0 1px 3px rgba(0,0,0,0.04)", overflow: "hidden" }}>
+            <div style={{ padding: "16px 20px 0", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+              <div style={{ backgroundColor: "#f8fafc", borderRadius: 10, padding: "10px 14px", border: "1px solid #e5e7eb" }}>
+                <p style={{ fontSize: 10, color: "#9ca3af", marginBottom: 3, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>Budget</p>
+                <p style={{ fontSize: 15, fontWeight: 800, color: "#111827" }}>{project.budget}</p>
               </div>
-              <div style={{ backgroundColor: "rgba(255,255,255,0.04)", borderRadius: 10, padding: "12px 14px" }}>
-                <p style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", marginBottom: 4, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em" }}>Revisions</p>
-                <p style={{ fontSize: 15, fontWeight: 800, color: "#fff" }}>Up to {project.revision_limit}</p>
+              <div style={{ backgroundColor: "#f8fafc", borderRadius: 10, padding: "10px 14px", border: "1px solid #e5e7eb" }}>
+                <p style={{ fontSize: 10, color: "#9ca3af", marginBottom: 3, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>Revisions</p>
+                <p style={{ fontSize: 15, fontWeight: 800, color: "#111827" }}>Up to {project.revision_limit}</p>
               </div>
             </div>
-
             <div style={{ padding: 20, display: "flex", flexDirection: "column", gap: 16 }}>
               <div>
-                <p style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", marginBottom: 6, fontWeight: 600 }}>Deliverables</p>
-                <p style={{ fontSize: 14, color: "rgba(255,255,255,0.85)", lineHeight: 1.65, whiteSpace: "pre-wrap" }}>{project.deliverables}</p>
+                <p style={{ fontSize: 11, color: "#6b7280", marginBottom: 5, fontWeight: 600 }}>Deliverables</p>
+                <p style={{ fontSize: 14, color: "#1f2937", lineHeight: 1.7, whiteSpace: "pre-wrap" }}>{project.deliverables}</p>
               </div>
-
               {project.exclusions && (
                 <div>
-                  <p style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", marginBottom: 6, fontWeight: 600 }}>Not included</p>
-                  <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", lineHeight: 1.65 }}>{project.exclusions}</p>
+                  <p style={{ fontSize: 11, color: "#6b7280", marginBottom: 5, fontWeight: 600 }}>Not included</p>
+                  <p style={{ fontSize: 14, color: "#4b5563", lineHeight: 1.7 }}>{project.exclusions}</p>
                 </div>
               )}
-
               {project.acceptance_criteria && (
                 <div>
-                  <p style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", marginBottom: 6, fontWeight: 600 }}>Done when</p>
-                  <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", lineHeight: 1.65 }}>{project.acceptance_criteria}</p>
+                  <p style={{ fontSize: 11, color: "#6b7280", marginBottom: 5, fontWeight: 600 }}>Done when</p>
+                  <p style={{ fontSize: 14, color: "#4b5563", lineHeight: 1.7 }}>{project.acceptance_criteria}</p>
                 </div>
               )}
             </div>
@@ -216,23 +206,21 @@ export default async function ProfessionalPortalPage({ params }: Props) {
         {/* Milestones */}
         {milestones.length > 0 && (
           <div>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
-              <p style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.25)", textTransform: "uppercase", letterSpacing: "0.1em" }}>
-                Milestones
-              </p>
-              <span style={{ fontSize: 11, color: "rgba(255,255,255,0.2)", fontWeight: 600 }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
+              <p style={{ fontSize: 11, fontWeight: 700, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.1em" }}>Milestones</p>
+              <span style={{ fontSize: 11, color: "#9ca3af", fontWeight: 600 }}>
                 {milestones.length} deliverable{milestones.length !== 1 ? "s" : ""}
               </span>
             </div>
-
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {milestones.map((m, i) => {
                 const ms = m.status as MilestoneStatus;
-                const style = MILESTONE_STYLES[ms];
+                const st = MILESTONE_STYLES[ms];
                 const isAccepted = ms === "accepted";
                 const isSubmitted = ms === "submitted";
                 const isRevision = ms === "revision_requested";
                 const canSubmit = (ms === "pending" || ms === "in_progress") && !isCancelled;
+                const canResubmit = isRevision && !isCancelled;
 
                 async function handleSubmit() {
                   "use server";
@@ -244,55 +232,62 @@ export default async function ProfessionalPortalPage({ params }: Props) {
                     key={m.id}
                     style={{
                       borderRadius: 14,
-                      border: `1px solid ${style.cardBorder}`,
-                      backgroundColor: style.cardBg,
+                      border: `1px solid ${st.cardBorder}`,
+                      backgroundColor: st.cardBg,
+                      boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
                       overflow: "hidden",
                     }}
                   >
-                    {/* Card header */}
-                    <div style={{ padding: "16px 18px", display: "flex", alignItems: "flex-start", gap: 14 }}>
-                      {/* Number badge */}
-                      <div style={{ width: 28, height: 28, borderRadius: 8, backgroundColor: style.numBg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
+                    {/* Revision banner */}
+                    {isRevision && (
+                      <div style={{ backgroundColor: "#fff7ed", borderBottom: "1px solid #fed7aa", padding: "8px 18px", display: "flex", alignItems: "center", gap: 8 }}>
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ flexShrink: 0 }}>
+                          <path d="M7 2.5v4m0 2.5v.5" stroke="#f97316" strokeWidth="1.8" strokeLinecap="round" />
+                          <circle cx="7" cy="7" r="5.5" stroke="#f97316" strokeWidth="1.2" />
+                        </svg>
+                        <span style={{ fontSize: 12, fontWeight: 700, color: "#c2410c" }}>Revision requested — review the feedback and resubmit</span>
+                      </div>
+                    )}
+
+                    {/* Card body */}
+                    <div style={{ padding: "14px 18px", display: "flex", alignItems: "flex-start", gap: 12 }}>
+                      <div style={{ width: 28, height: 28, borderRadius: 8, backgroundColor: st.numBg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
                         {isAccepted ? (
                           <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
-                            <path d="M1.5 5L4.5 8L10.5 1.5" stroke={style.numColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            <path d="M1.5 5L4.5 8L10.5 1.5" stroke={st.numColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
                         ) : (
-                          <span style={{ fontSize: 11, fontWeight: 800, color: style.numColor }}>{i + 1}</span>
+                          <span style={{ fontSize: 11, fontWeight: 800, color: st.numColor }}>{i + 1}</span>
                         )}
                       </div>
-
-                      {/* Title + description */}
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 10 }}>
-                          <p style={{ fontSize: 14, fontWeight: 700, color: "#fff", lineHeight: 1.4 }}>{m.title}</p>
-                          <span style={{ fontSize: 11, fontWeight: 700, padding: "3px 9px", borderRadius: 999, backgroundColor: style.badgeBg, color: style.badgeColor, whiteSpace: "nowrap", flexShrink: 0 }}>
+                          <p style={{ fontSize: 14, fontWeight: 700, color: "#111827", lineHeight: 1.4 }}>{m.title}</p>
+                          <span style={{ fontSize: 11, fontWeight: 700, padding: "3px 9px", borderRadius: 999, backgroundColor: st.badgeBg, color: st.badgeColor, whiteSpace: "nowrap", flexShrink: 0 }}>
                             {MILESTONE_STATUS_LABELS[ms]}
                           </span>
                         </div>
                         {m.description && (
-                          <p style={{ fontSize: 12.5, color: "rgba(255,255,255,0.4)", lineHeight: 1.6, marginTop: 5 }}>{m.description}</p>
+                          <p style={{ fontSize: 13, color: "#6b7280", lineHeight: 1.6, marginTop: 5 }}>{m.description}</p>
                         )}
                       </div>
                     </div>
 
-                    {/* Card footer: metadata + action */}
-                    {(m.due_date || m.payment_condition || canSubmit || isSubmitted || isRevision) && (
-                      <div style={{ padding: "10px 18px 14px", paddingTop: 0, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, flexWrap: "wrap" }}>
-                        {/* Metadata */}
+                    {/* Card footer */}
+                    {(m.due_date || m.payment_condition || canSubmit || canResubmit || isSubmitted) && (
+                      <div style={{ padding: "0 18px 14px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, flexWrap: "wrap" }}>
                         <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
                           {m.due_date && (
-                            <span style={{ fontSize: 11, color: "rgba(255,255,255,0.25)", fontWeight: 500 }}>
+                            <span style={{ fontSize: 11, color: "#9ca3af", fontWeight: 500 }}>
                               Due {new Date(m.due_date).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}
                             </span>
                           )}
                           {m.payment_condition && (
-                            <span style={{ fontSize: 11, fontWeight: 700, color: "#f59e0b" }}>{m.payment_condition}</span>
+                            <span style={{ fontSize: 11, fontWeight: 700, color: "#d97706" }}>{m.payment_condition}</span>
                           )}
                         </div>
 
-                        {/* Action / status message */}
-                        {canSubmit && (
+                        {(canSubmit || canResubmit) && (
                           <form action={handleSubmit} style={{ marginLeft: "auto" }}>
                             <button
                               type="submit"
@@ -301,7 +296,7 @@ export default async function ProfessionalPortalPage({ params }: Props) {
                                 fontWeight: 800,
                                 padding: "7px 16px",
                                 borderRadius: 8,
-                                background: "linear-gradient(135deg, #3b82f6, #6366f1)",
+                                background: canResubmit ? "linear-gradient(135deg, #f97316, #fb923c)" : "linear-gradient(135deg, #3b82f6, #6366f1)",
                                 color: "#fff",
                                 border: "none",
                                 cursor: "pointer",
@@ -311,7 +306,7 @@ export default async function ProfessionalPortalPage({ params }: Props) {
                                 gap: 6,
                               }}
                             >
-                              Submit for review
+                              {canResubmit ? "Resubmit for review" : "Submit for review"}
                               <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                                 <path d="M2.5 6h7M6.5 3l3 3-3 3" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                               </svg>
@@ -320,18 +315,9 @@ export default async function ProfessionalPortalPage({ params }: Props) {
                         )}
 
                         {isSubmitted && (
-                          <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11, fontWeight: 700, color: "#fbbf24" }}>
+                          <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11, fontWeight: 700, color: "#d97706", marginLeft: "auto" }}>
                             <span style={{ width: 6, height: 6, borderRadius: "50%", backgroundColor: "#f59e0b", flexShrink: 0 }} />
                             Waiting for admin review
-                          </span>
-                        )}
-
-                        {isRevision && (
-                          <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11, fontWeight: 700, color: "#fb923c" }}>
-                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                              <path d="M6 2v4m0 2.5v.5" stroke="#f97316" strokeWidth="1.5" strokeLinecap="round" />
-                            </svg>
-                            Revision needed — please re-submit
                           </span>
                         )}
                       </div>
@@ -344,26 +330,25 @@ export default async function ProfessionalPortalPage({ params }: Props) {
         )}
 
         {milestones.length === 0 && (
-          <div style={{ borderRadius: 16, border: "1px solid rgba(255,255,255,0.06)", backgroundColor: "rgba(255,255,255,0.025)", padding: "40px 24px", textAlign: "center" }}>
-            <div style={{ width: 44, height: 44, borderRadius: 12, backgroundColor: "rgba(255,255,255,0.05)", margin: "0 auto 14px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ borderRadius: 14, border: "1px solid #e5e7eb", backgroundColor: "#ffffff", padding: "40px 24px", textAlign: "center", boxShadow: "0 1px 3px rgba(0,0,0,0.04)" }}>
+            <div style={{ width: 44, height: 44, borderRadius: 12, backgroundColor: "#f3f4f6", margin: "0 auto 14px", display: "flex", alignItems: "center", justifyContent: "center" }}>
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <rect x="3" y="4" width="14" height="12" rx="2" stroke="rgba(255,255,255,0.25)" strokeWidth="1.5" />
-                <path d="M7 8h6M7 12h4" stroke="rgba(255,255,255,0.25)" strokeWidth="1.5" strokeLinecap="round" />
+                <rect x="3" y="4" width="14" height="12" rx="2" stroke="#9ca3af" strokeWidth="1.5" />
+                <path d="M7 8h6M7 12h4" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round" />
               </svg>
             </div>
-            <p style={{ fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.35)", marginBottom: 6 }}>No milestones yet</p>
-            <p style={{ fontSize: 12, color: "rgba(255,255,255,0.2)", lineHeight: 1.6 }}>
+            <p style={{ fontSize: 14, fontWeight: 600, color: "#6b7280", marginBottom: 6 }}>No milestones yet</p>
+            <p style={{ fontSize: 13, color: "#9ca3af", lineHeight: 1.6 }}>
               Your project milestones will appear here once the plan is confirmed by our team.
             </p>
           </div>
         )}
 
         {/* Footer */}
-        <p style={{ fontSize: 11, textAlign: "center", color: "rgba(255,255,255,0.15)", marginTop: 48, lineHeight: 1.7 }}>
+        <p style={{ fontSize: 11, textAlign: "center", color: "#9ca3af", marginTop: 48, lineHeight: 1.7 }}>
           Questions about your project? Reply to the email you received from our team.<br />
-          <span style={{ color: "rgba(255,255,255,0.1)" }}>Hire Ethiopia&apos;s Best</span>
+          <span style={{ color: "#d1d5db" }}>Hire Ethiopia&apos;s Best</span>
         </p>
-
       </div>
     </div>
   );
