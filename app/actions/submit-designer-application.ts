@@ -23,6 +23,9 @@ export type DesignerApplicationData = {
   whyJoin: string;
   workedWithEthiopianBiz: string;
   socialUrl: string;
+  // Education & certifications
+  education?: string;
+  certificates?: string;
 };
 
 export type SubmitResult =
@@ -50,6 +53,8 @@ export async function submitDesignerApplication(
   const whyJoin = get("whyJoin");
   const workedWithEthiopianBiz = get("workedWithEthiopianBiz");
   const socialUrl = get("socialUrl");
+  const education = get("education");
+  const certificates = get("certificates");
 
   if (!fullName) return { success: false, error: "Full name is required." };
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
@@ -71,6 +76,13 @@ export async function submitDesignerApplication(
   for (let i = 0; i < 5; i++) {
     const file = formData.get(`workSample_${i}`);
     if (file instanceof File && file.size > 0) workSampleFiles.push(file);
+  }
+
+  // Extract certificate files (up to 3)
+  const certFileList: File[] = [];
+  for (let i = 0; i < 3; i++) {
+    const file = formData.get(`certFile_${i}`);
+    if (file instanceof File && file.size > 0) certFileList.push(file);
   }
 
   if (!supabase) {
@@ -98,6 +110,26 @@ export async function submitDesignerApplication(
     if (urls.length > 0) workSamplesJson = JSON.stringify(urls);
   }
 
+  // Upload certificate files to Supabase Storage
+  let certFilesJson: string | null = null;
+  if (certFileList.length > 0) {
+    const urls: string[] = [];
+    for (const file of certFileList) {
+      const ext = file.name.split(".").pop()?.toLowerCase() ?? "pdf";
+      const path = `certs/${crypto.randomUUID()}.${ext}`;
+      const { data, error } = await supabase.storage
+        .from("portfolio-samples")
+        .upload(path, file, { contentType: file.type });
+      if (!error && data) {
+        const { data: urlData } = supabase.storage
+          .from("portfolio-samples")
+          .getPublicUrl(data.path);
+        urls.push(urlData.publicUrl);
+      }
+    }
+    if (urls.length > 0) certFilesJson = JSON.stringify(urls);
+  }
+
   const { error } = await supabase.from("designer_applications").insert({
     full_name: fullName,
     email,
@@ -116,6 +148,9 @@ export async function submitDesignerApplication(
     worked_with_ethiopian_biz: workedWithEthiopianBiz,
     social_url: socialUrl || null,
     work_samples: workSamplesJson,
+    education: education || null,
+    certificates: certificates || null,
+    certificate_files: certFilesJson,
     status: "pending",
   });
 

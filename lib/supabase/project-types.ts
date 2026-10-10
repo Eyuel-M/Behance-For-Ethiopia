@@ -154,6 +154,9 @@ export type DesignerApplicationRow = {
   worked_with_ethiopian_biz: string;
   social_url: string | null;
   work_samples: string | null; // JSON array of public image URLs
+  education: string | null; // e.g. "BSc Graphic Design, AAU, 2020"
+  certificates: string | null; // free-text description of professional certs
+  certificate_files: string | null; // JSON array of uploaded file URLs
   status: ApplicationStatus;
   reviewer_notes: string | null;
   created_at: string;

@@ -5,6 +5,7 @@ import {
   APPLICATION_STATUS_COLORS,
   type ApplicationStatus,
 } from "@/lib/supabase/project-types";
+import { profileCompletion, completionColor } from "@/lib/profile-completion";
 
 export const dynamic = "force-dynamic";
 
@@ -85,6 +86,7 @@ export default async function ApplicationsPage({
                 <th className="text-left px-4 py-3 font-semibold text-zinc-500 text-xs uppercase tracking-wide hidden sm:table-cell">Specialty</th>
                 <th className="text-left px-4 py-3 font-semibold text-zinc-500 text-xs uppercase tracking-wide hidden md:table-cell">City</th>
                 <th className="text-left px-4 py-3 font-semibold text-zinc-500 text-xs uppercase tracking-wide hidden lg:table-cell">Rate</th>
+                <th className="text-left px-4 py-3 font-semibold text-zinc-500 text-xs uppercase tracking-wide hidden sm:table-cell">Profile</th>
                 <th className="text-left px-4 py-3 font-semibold text-zinc-500 text-xs uppercase tracking-wide">Status</th>
                 <th className="text-left px-4 py-3 font-semibold text-zinc-500 text-xs uppercase tracking-wide hidden md:table-cell">Date</th>
                 <th className="px-4 py-3"></th>
@@ -104,6 +106,20 @@ export default async function ApplicationsPage({
                   </td>
                   <td className="px-4 py-3 text-zinc-500 text-xs hidden md:table-cell">{a.city}</td>
                   <td className="px-4 py-3 text-zinc-600 text-xs hidden lg:table-cell">{a.hourly_rate}</td>
+                  <td className="px-4 py-3 hidden sm:table-cell">
+                    {(() => {
+                      const pct = profileCompletion(a);
+                      const color = completionColor(pct);
+                      return (
+                        <div className="flex items-center gap-2 min-w-[80px]">
+                          <div className="flex-1 h-1.5 rounded-full bg-zinc-100 overflow-hidden">
+                            <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, backgroundColor: color }} />
+                          </div>
+                          <span className="text-xs font-semibold tabular-nums" style={{ color }}>{pct}%</span>
+                        </div>
+                      );
+                    })()}
+                  </td>
                   <td className="px-4 py-3">
                     <Badge status={a.status as ApplicationStatus} />
                   </td>

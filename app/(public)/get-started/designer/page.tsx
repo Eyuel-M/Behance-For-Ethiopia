@@ -49,7 +49,7 @@ export default function DesignerApplicationPage() {
             </span>
             <span className="flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
-              4 short sections
+              5 short sections
             </span>
           </div>
         </div>

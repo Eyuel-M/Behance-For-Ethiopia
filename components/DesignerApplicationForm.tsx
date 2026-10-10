@@ -91,11 +91,21 @@ const WORKED_WITH_ETH = [
 
 // ─── Initial state ─────────────────────────────────────────────────────────────
 
+const EDUCATION_LEVELS = [
+  "Self-taught",
+  "High school diploma",
+  "Diploma / TVET Certificate",
+  "Bachelor's degree",
+  "Master's degree",
+  "PhD / Doctorate",
+];
+
 const EMPTY: DesignerApplicationData = {
   fullName: "", email: "", phone: "", city: "",
   specialty: "", experience: "", skills: "", tools: "", portfolioUrl: "",
   availability: "", hourlyRate: "", canWorkOnSite: "",
   bio: "", whyJoin: "", workedWithEthiopianBiz: "", socialUrl: "",
+  education: "", certificates: "",
 };
 
 // ─── Component ─────────────────────────────────────────────────────────────────
@@ -107,6 +117,12 @@ export default function DesignerApplicationForm() {
   const [portfolioFile, setPortfolioFile] = useState<File | null>(null);
   const [workSampleFiles, setWorkSampleFiles] = useState<File[]>([]);
   const [workSamplePreviews, setWorkSamplePreviews] = useState<string[]>([]);
+  const [educationLevel, setEducationLevel] = useState("");
+  const [educationField, setEducationField] = useState("");
+  const [educationInstitution, setEducationInstitution] = useState("");
+  const [educationYear, setEducationYear] = useState("");
+  const [certFiles, setCertFiles] = useState<File[]>([]);
+  const [certFilePreviews, setCertFilePreviews] = useState<string[]>([]);
   const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof DesignerApplicationData, string>>>({});
   const [submitError, setSubmitError] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -138,6 +154,20 @@ export default function DesignerApplicationForm() {
     URL.revokeObjectURL(workSamplePreviews[index]);
     setWorkSampleFiles((prev) => prev.filter((_, i) => i !== index));
     setWorkSamplePreviews((prev) => prev.filter((_, i) => i !== index));
+  }
+
+  function addCertFiles(files: FileList) {
+    const remaining = 3 - certFiles.length;
+    if (remaining <= 0) return;
+    const newFiles = Array.from(files).slice(0, remaining);
+    const newPreviews = newFiles.map((f) => f.name);
+    setCertFiles((prev) => [...prev, ...newFiles]);
+    setCertFilePreviews((prev) => [...prev, ...newPreviews]);
+  }
+
+  function removeCertFile(index: number) {
+    setCertFiles((prev) => prev.filter((_, i) => i !== index));
+    setCertFilePreviews((prev) => prev.filter((_, i) => i !== index));
   }
 
   function validate(): boolean {
@@ -174,14 +204,19 @@ export default function DesignerApplicationForm() {
 
     startTransition(async () => {
       const formData = new FormData();
-      // Text fields
+      // Combine education fields into one string
+      const educationParts = [educationLevel, educationField, educationInstitution, educationYear].filter(Boolean);
+      const educationStr = educationParts.join(", ");
       const textFields: Record<string, string> = {
         ...form,
         tools: selectedTools.join(", "),
+        education: educationStr,
       };
       Object.entries(textFields).forEach(([k, v]) => formData.append(k, v));
       // Work sample images
       workSampleFiles.forEach((file, i) => formData.append(`workSample_${i}`, file));
+      // Certificate files
+      certFiles.forEach((file, i) => formData.append(`certFile_${i}`, file));
 
       const result = await submitDesignerApplication(formData);
       if (result.success) {
@@ -212,6 +247,12 @@ export default function DesignerApplicationForm() {
             workSamplePreviews.forEach((url) => URL.revokeObjectURL(url));
             setWorkSampleFiles([]);
             setWorkSamplePreviews([]);
+            setEducationLevel("");
+            setEducationField("");
+            setEducationInstitution("");
+            setEducationYear("");
+            setCertFiles([]);
+            setCertFilePreviews([]);
             setSubmitted(false);
           }}
           className="mt-2 text-sm font-semibold text-green-700 hover:text-green-900 transition-colors cursor-pointer"
@@ -226,7 +267,7 @@ export default function DesignerApplicationForm() {
     <form onSubmit={handleSubmit} noValidate className="space-y-10">
 
       {/* ── Section 1: Personal Information ─────────────────── */}
-      <Section title="Personal Information" step={1} total={4}>
+      <Section title="Personal Information" step={1} total={5}>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <Field label="Full name" required error={fieldErrors.fullName}>
             <input type="text" value={form.fullName} onChange={(e) => set("fullName", e.target.value)}
@@ -256,7 +297,7 @@ export default function DesignerApplicationForm() {
       </Section>
 
       {/* ── Section 2: Design Expertise ─────────────────────── */}
-      <Section title="Design Expertise" step={2} total={4}>
+      <Section title="Design Expertise" step={2} total={5}>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <Field label="Primary design specialty" required error={fieldErrors.specialty}>
             <select value={form.specialty} onChange={(e) => set("specialty", e.target.value)}
@@ -402,7 +443,7 @@ export default function DesignerApplicationForm() {
       </Section>
 
       {/* ── Section 3: Availability & Rates ──────────────────── */}
-      <Section title="Availability & Rates" step={3} total={4}>
+      <Section title="Availability & Rates" step={3} total={5}>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <Field label="Work availability" required error={fieldErrors.availability}>
             <select value={form.availability} onChange={(e) => set("availability", e.target.value)}
@@ -430,7 +471,7 @@ export default function DesignerApplicationForm() {
       </Section>
 
       {/* ── Section 4: About You ──────────────────────────────── */}
-      <Section title="About You" step={4} total={4}>
+      <Section title="About You" step={4} total={5}>
         <Field label="Professional bio" required error={fieldErrors.bio}
           hint="Tell clients who you are, what you specialize in, and what makes your work unique. Minimum 80 characters.">
           <textarea value={form.bio} onChange={(e) => set("bio", e.target.value)}
@@ -455,6 +496,112 @@ export default function DesignerApplicationForm() {
             {WORKED_WITH_ETH.map((o) => <option key={o} value={o}>{o}</option>)}
           </select>
         </Field>
+      </Section>
+
+      {/* ── Section 5: Education & Certifications ────────────── */}
+      <Section title="Education & Certifications" step={5} total={5}>
+        <p className="text-xs text-zinc-400 -mt-2 mb-1">
+          Optional — but the more you fill, the higher your profile score. Professionals with verified credentials get prioritised for client recommendations.
+        </p>
+
+        {/* Education */}
+        <div className="rounded-xl border border-zinc-100 bg-zinc-50 p-4 space-y-4">
+          <p className="text-xs font-semibold text-zinc-500 uppercase tracking-widest">Academic background</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Field label="Highest level of education">
+              <select
+                value={educationLevel}
+                onChange={(e) => setEducationLevel(e.target.value)}
+                className={inputClass(false) + " cursor-pointer"}
+              >
+                <option value="" disabled>Select…</option>
+                {EDUCATION_LEVELS.map((l) => <option key={l} value={l}>{l}</option>)}
+              </select>
+            </Field>
+            <Field label="Field of study / Major">
+              <input
+                type="text"
+                value={educationField}
+                onChange={(e) => setEducationField(e.target.value)}
+                placeholder="e.g. Graphic Design, Fine Arts"
+                className={inputClass(false)}
+              />
+            </Field>
+            <Field label="Institution / School">
+              <input
+                type="text"
+                value={educationInstitution}
+                onChange={(e) => setEducationInstitution(e.target.value)}
+                placeholder="e.g. Addis Ababa University"
+                className={inputClass(false)}
+              />
+            </Field>
+            <Field label="Graduation year">
+              <input
+                type="text"
+                value={educationYear}
+                onChange={(e) => setEducationYear(e.target.value)}
+                placeholder="e.g. 2021"
+                className={inputClass(false)}
+              />
+            </Field>
+          </div>
+        </div>
+
+        {/* Certificates */}
+        <div className="rounded-xl border border-zinc-100 bg-zinc-50 p-4 space-y-4">
+          <p className="text-xs font-semibold text-zinc-500 uppercase tracking-widest">Professional certifications</p>
+          <Field
+            label="Certifications"
+            hint="List any relevant certifications — e.g. Google UX Design Certificate (2022), Adobe Certified Expert, Figma Advanced"
+          >
+            <textarea
+              value={form.certificates ?? ""}
+              onChange={(e) => set("certificates", e.target.value)}
+              placeholder="e.g. Google UX Design Certificate (Coursera, 2022), Adobe Certified Professional in Visual Design (2021)…"
+              rows={3}
+              className={inputClass(false) + " resize-none"}
+            />
+          </Field>
+
+          {/* Certificate file uploads */}
+          <div>
+            <p className="text-sm font-medium text-zinc-700 mb-1">
+              Upload certificate files
+              <span className="ml-2 text-xs font-normal text-zinc-400">(up to 3 — PDF, JPG, PNG)</span>
+            </p>
+            <p className="text-xs text-zinc-400 mb-3">Scans or photos of diplomas, degrees, or certificate documents.</p>
+            <div className="flex flex-wrap gap-3">
+              {certFilePreviews.map((name, i) => (
+                <div key={i} className="relative group flex items-center gap-2 px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-zinc-700">
+                  <span className="text-zinc-400">📄</span>
+                  <span className="max-w-[120px] truncate">{name}</span>
+                  <button
+                    type="button"
+                    onClick={() => removeCertFile(i)}
+                    className="ml-1 text-red-400 hover:text-red-600 font-bold cursor-pointer"
+                    aria-label="Remove file"
+                  >×</button>
+                </div>
+              ))}
+              {certFiles.length < 3 && (
+                <label className="px-4 py-2 rounded-xl border-2 border-dashed border-zinc-300 flex items-center gap-2 cursor-pointer hover:border-green-400 hover:bg-green-50/50 transition-all text-zinc-400 hover:text-green-600 text-xs font-medium">
+                  <span>+ Add file</span>
+                  <input
+                    type="file"
+                    accept="application/pdf,image/jpeg,image/png,image/webp"
+                    multiple
+                    onChange={(e) => { if (e.target.files) addCertFiles(e.target.files); e.target.value = ""; }}
+                    className="sr-only"
+                  />
+                </label>
+              )}
+            </div>
+            {certFiles.length > 0 && (
+              <p className="text-xs text-zinc-400 mt-2">{certFiles.length} / 3 files added</p>
+            )}
+          </div>
+        </div>
       </Section>
 
       {submitError && (

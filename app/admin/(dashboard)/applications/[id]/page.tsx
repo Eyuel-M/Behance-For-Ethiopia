@@ -9,6 +9,7 @@ import {
 } from "@/lib/supabase/project-types";
 import { reviewApplication } from "@/app/actions/admin-applications";
 import { generateFeedbackLink } from "@/app/actions/designer-feedback";
+import { profileCompletion, completionColor } from "@/lib/profile-completion";
 
 export const dynamic = "force-dynamic";
 
@@ -101,6 +102,15 @@ export default async function ApplicationDetailPage({ params, searchParams }: Pr
     if (!app.work_samples) return [];
     try { return JSON.parse(app.work_samples) as string[]; } catch { return []; }
   })();
+  const certFileUrls: string[] = (() => {
+    if (!app.certificate_files) return [];
+    try { return JSON.parse(app.certificate_files) as string[]; } catch { return []; }
+  })();
+  const pct = profileCompletion(app);
+  const color = completionColor(pct);
+  const radius = 18;
+  const circ = 2 * Math.PI * radius;
+  const dash = (pct / 100) * circ;
 
   async function handleReview(formData: FormData) {
     "use server";
@@ -133,7 +143,24 @@ export default async function ApplicationDetailPage({ params, searchParams }: Pr
               <h1 className="text-2xl font-black text-zinc-900">{app.full_name}</h1>
               <p className="text-sm text-zinc-500 mt-0.5">{app.specialty} · {app.city}</p>
             </div>
-            <StatusBadge status={status} />
+            <div className="flex items-center gap-3">
+              <StatusBadge status={status} />
+              {/* Profile completion ring */}
+              <div title={`Profile ${pct}% complete`}>
+                <svg width="48" height="48" viewBox="0 0 48 48">
+                  <circle cx="24" cy="24" r={radius} fill="none" stroke="#e4e4e7" strokeWidth="3" />
+                  <circle
+                    cx="24" cy="24" r={radius} fill="none"
+                    stroke={color} strokeWidth="3"
+                    strokeDasharray={`${dash} ${circ}`}
+                    strokeLinecap="round"
+                    transform="rotate(-90 24 24)"
+                  />
+                  <text x="24" y="20" textAnchor="middle" fontSize="10" fontWeight="800" fill={color}>{pct}</text>
+                  <text x="24" y="30" textAnchor="middle" fontSize="7" fill="#a1a1aa">%</text>
+                </svg>
+              </div>
+            </div>
           </div>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-zinc-400">
             <span>{app.email}</span>
@@ -269,6 +296,49 @@ export default async function ApplicationDetailPage({ params, searchParams }: Pr
           </div>
         </SectionCard>
       </div>
+
+      {/* Education & Certifications */}
+      {(app.education || app.certificates || certFileUrls.length > 0) && (
+        <div className="mt-5">
+          <SectionCard title="Education & Certifications">
+            <div className="space-y-5">
+              {app.education && (
+                <div className="flex items-start gap-3 p-3 rounded-xl bg-zinc-50 border border-zinc-100">
+                  <span className="text-xl mt-0.5">🎓</span>
+                  <div>
+                    <p className="text-xs font-semibold text-zinc-400 mb-1">Academic background</p>
+                    <p className="text-sm font-medium text-zinc-800">{app.education}</p>
+                  </div>
+                </div>
+              )}
+              {app.certificates && (
+                <div>
+                  <p className="text-xs font-semibold text-zinc-400 mb-2">Professional certifications</p>
+                  <p className="text-sm text-zinc-700 leading-relaxed whitespace-pre-wrap">{app.certificates}</p>
+                </div>
+              )}
+              {certFileUrls.length > 0 && (
+                <div>
+                  <p className="text-xs font-semibold text-zinc-400 mb-2">Certificate files</p>
+                  <div className="flex flex-wrap gap-2">
+                    {certFileUrls.map((url, i) => (
+                      <a
+                        key={i}
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-zinc-200 bg-white text-xs text-zinc-700 hover:border-zinc-400 hover:text-zinc-900 transition-colors"
+                      >
+                        📄 Certificate {i + 1} →
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </SectionCard>
+        </div>
+      )}
 
       {/* Reviewer notes */}
       {app.reviewer_notes && (

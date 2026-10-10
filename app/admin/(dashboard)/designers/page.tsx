@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { getDesignerApplications, getAllFeedback } from "@/lib/supabase/admin-queries";
 import type { DesignerFeedbackRow } from "@/lib/supabase/project-types";
+import { profileCompletion, completionColor } from "@/lib/profile-completion";
 
 export const dynamic = "force-dynamic";
 
@@ -81,6 +82,11 @@ export default async function AdminProfessionalsPage() {
             const ratedCount = pFeedback.filter((f) => f.status === "submitted").length;
             const initials = p.full_name.split(" ").map((n: string) => n[0]).join("").slice(0, 2).toUpperCase();
             const coverImg = getFirstSample(p.work_samples);
+            const pct = profileCompletion(p);
+            const color = completionColor(pct);
+            const radius = 10;
+            const circ = 2 * Math.PI * radius;
+            const dash = (pct / 100) * circ;
 
             return (
               <Link
@@ -103,12 +109,25 @@ export default async function AdminProfessionalsPage() {
                       <span className="text-3xl font-bold text-zinc-300">{initials}</span>
                     </div>
                   )}
+                  {/* Profile completion ring — top right */}
+                  <div className="absolute top-2 right-2 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm shadow flex items-center justify-center">
+                    <svg width="40" height="40" viewBox="0 0 40 40">
+                      <circle cx="20" cy="20" r={radius} fill="none" stroke="#e4e4e7" strokeWidth="3" />
+                      <circle
+                        cx="20" cy="20" r={radius} fill="none"
+                        stroke={color} strokeWidth="3"
+                        strokeDasharray={`${dash} ${circ}`}
+                        strokeLinecap="round"
+                        transform="rotate(-90 20 20)"
+                      />
+                      <text x="20" y="24" textAnchor="middle" fontSize="9" fontWeight="700" fill={color}>{pct}</text>
+                    </svg>
+                  </div>
                 </div>
 
                 {/* Body */}
                 <div className="p-4 flex flex-col gap-3">
                   <div className="flex items-center gap-3">
-                    {/* Avatar over image */}
                     <div className="w-10 h-10 rounded-full bg-zinc-200 border-2 border-white flex items-center justify-center text-sm font-bold text-zinc-600 shrink-0 -mt-8 relative z-10 shadow-sm">
                       {initials}
                     </div>
