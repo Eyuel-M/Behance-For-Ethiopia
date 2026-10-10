@@ -77,18 +77,30 @@ export default async function ApplicationDetailPage({ params }: Props) {
         </div>
       </div>
 
-      {/* Portfolio link */}
+      {/* Portfolio */}
       <div className="rounded-xl border border-zinc-200 bg-white p-6 mb-5">
         <h2 className="text-xs font-semibold uppercase tracking-widest text-zinc-400 mb-3">Portfolio</h2>
-        <a
-          href={app.portfolio_url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 text-sm font-semibold text-green-700 hover:text-green-900 transition-colors"
-        >
-          View portfolio →
-        </a>
-        <p className="text-xs text-zinc-400 mt-1">{app.portfolio_url}</p>
+        {app.portfolio_url.startsWith("[PDF:") ? (
+          <div className="flex items-center gap-2.5">
+            <span className="w-8 h-8 rounded-lg bg-red-50 border border-red-100 flex items-center justify-center text-red-600 text-xs font-bold shrink-0">PDF</span>
+            <div>
+              <p className="text-sm font-semibold text-zinc-800">{app.portfolio_url.replace(/^\[PDF:\s*/, "").replace(/\]$/, "")}</p>
+              <p className="text-xs text-zinc-400">Uploaded PDF — download not available in dev mode</p>
+            </div>
+          </div>
+        ) : (
+          <>
+            <a
+              href={app.portfolio_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-green-700 hover:text-green-900 transition-colors"
+            >
+              View portfolio →
+            </a>
+            <p className="text-xs text-zinc-400 mt-1">{app.portfolio_url}</p>
+          </>
+        )}
       </div>
 
       {/* About */}

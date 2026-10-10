@@ -107,7 +107,7 @@ export async function getClientBriefs(): Promise<ClientBriefRow[]> {
 }
 
 export async function getClientBrief(id: string): Promise<ClientBriefRow | null> {
-  if (!supabase) return null;
+  if (!supabase) return MOCK_BRIEFS.find((b) => b.id === id) ?? null;
   const { data, error } = await supabase
     .from("client_applications")
     .select("*")
@@ -236,7 +236,7 @@ export async function getDesignerApplications(): Promise<DesignerApplicationRow[
 }
 
 export async function getDesignerApplication(id: string): Promise<DesignerApplicationRow | null> {
-  if (!supabase) return null;
+  if (!supabase) return MOCK_APPLICATIONS.find((a) => a.id === id) ?? null;
   const { data, error } = await supabase
     .from("designer_applications")
     .select("*")
