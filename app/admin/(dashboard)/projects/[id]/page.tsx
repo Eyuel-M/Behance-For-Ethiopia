@@ -22,8 +22,8 @@ import {
   resendProposalToClient,
 } from "@/app/actions/admin-projects";
 import ProposalDesignerPicker from "@/components/ProposalDesignerPicker";
-import MilestoneStatusSelect from "@/components/MilestoneStatusSelect";
-import ProjectStatusSelect from "@/components/ProjectStatusSelect";
+import MilestoneStatusSelect from "@/components/MilestoneStatusSelectClient";
+import ProjectStatusSelect from "@/components/ProjectStatusSelectClient";
 
 export const dynamic = "force-dynamic";
 
