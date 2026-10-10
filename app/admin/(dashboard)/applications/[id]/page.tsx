@@ -145,20 +145,27 @@ export default async function ApplicationDetailPage({ params, searchParams }: Pr
             </div>
             <div className="flex items-center gap-3">
               <StatusBadge status={status} />
-              {/* Profile completion ring */}
+              {/* Profile completion badge */}
               <div title={`Profile ${pct}% complete`}>
-                <svg width="48" height="48" viewBox="0 0 48 48">
-                  <circle cx="24" cy="24" r={radius} fill="none" stroke="#e4e4e7" strokeWidth="3" />
-                  <circle
-                    cx="24" cy="24" r={radius} fill="none"
-                    stroke={color} strokeWidth="3"
-                    strokeDasharray={`${dash} ${circ}`}
-                    strokeLinecap="round"
-                    transform="rotate(-90 24 24)"
-                  />
-                  <text x="24" y="20" textAnchor="middle" fontSize="10" fontWeight="800" fill={color}>{pct}</text>
-                  <text x="24" y="30" textAnchor="middle" fontSize="7" fill="#a1a1aa">%</text>
-                </svg>
+                {pct === 100 ? (
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center shadow-sm" style={{ backgroundColor: color }}>
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                      <polyline points="3,9 7,13 15,5" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </div>
+                ) : (
+                  <svg width="48" height="48" viewBox="0 0 48 48">
+                    <circle cx="24" cy="24" r={radius} fill="none" stroke="#e4e4e7" strokeWidth="3" />
+                    <circle
+                      cx="24" cy="24" r={radius} fill="none"
+                      stroke={color} strokeWidth="3"
+                      strokeDasharray={`${dash} ${circ}`}
+                      strokeLinecap="round"
+                      transform="rotate(-90 24 24)"
+                    />
+                    <text x="24" y="28" textAnchor="middle" fontSize="11" fontWeight="800" fill={color}>{pct}%</text>
+                  </svg>
+                )}
               </div>
             </div>
           </div>
