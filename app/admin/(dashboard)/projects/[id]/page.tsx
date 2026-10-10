@@ -19,6 +19,7 @@ import {
   addProjectMilestone,
   postProjectNote,
   generateProLink,
+  resendProposalToClient,
 } from "@/app/actions/admin-projects";
 import ProposalDesignerPicker from "@/components/ProposalDesignerPicker";
 import MilestoneStatusSelect from "@/components/MilestoneStatusSelect";
@@ -346,10 +347,24 @@ export default async function ProjectDetailPage({ params, searchParams }: Props)
           {/* State B — awaiting selection */}
           {activeProposal && activeProposal.status !== "selected" && (
             <div>
-              {activeProposal.status === "revision_requested" && activeProposal.client_note && (
-                <div className="mb-4 rounded-xl border border-orange-200 bg-orange-50 px-4 py-3">
-                  <p className="text-xs font-bold text-orange-700 uppercase tracking-widest mb-1">Client requested changes</p>
-                  <p className="text-sm text-orange-800 leading-relaxed">&ldquo;{activeProposal.client_note}&rdquo;</p>
+              {activeProposal.status === "revision_requested" && (
+                <div className="mb-4 rounded-xl border border-orange-200 bg-orange-50 overflow-hidden">
+                  <div className="px-4 py-3 border-b border-orange-100">
+                    <p className="text-xs font-bold text-orange-700 uppercase tracking-widest">Client requested changes</p>
+                    {activeProposal.client_note && (
+                      <p className="text-sm text-orange-800 leading-relaxed mt-1">&ldquo;{activeProposal.client_note}&rdquo;</p>
+                    )}
+                  </div>
+                  <div className="px-4 py-3">
+                    <p className="text-xs text-orange-700 mb-2.5">Update the shortlist below if needed, then resend to the client.</p>
+                    <form action={resendProposalToClient}>
+                      <input type="hidden" name="proposalId" value={activeProposal.id} />
+                      <input type="hidden" name="projectId" value={id} />
+                      <button type="submit" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-orange-600 text-white text-xs font-bold hover:bg-orange-700 transition-colors cursor-pointer">
+                        Resend to client →
+                      </button>
+                    </form>
+                  </div>
                 </div>
               )}
               <div className="flex items-center justify-between gap-3 mb-4 flex-wrap">

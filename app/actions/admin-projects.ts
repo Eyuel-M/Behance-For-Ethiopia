@@ -9,6 +9,7 @@ import {
   generateProfessionalToken,
   updateMilestoneStatus,
   updateProjectStatus,
+  resendProposal,
 } from "@/lib/supabase/admin-queries";
 
 export async function createProjectFromScratch(formData: FormData): Promise<void> {
@@ -81,6 +82,13 @@ export async function changeProjectStatus(formData: FormData): Promise<void> {
   const status = ((formData.get("status") as string | null) ?? "").trim();
   const notes = ((formData.get("notes") as string | null) ?? "").trim() || undefined;
   await updateProjectStatus(projectId, status, notes);
+  revalidatePath(`/admin/projects/${projectId}`);
+}
+
+export async function resendProposalToClient(formData: FormData): Promise<void> {
+  const proposalId = ((formData.get("proposalId") as string | null) ?? "").trim();
+  const projectId = ((formData.get("projectId") as string | null) ?? "").trim();
+  await resendProposal(proposalId);
   revalidatePath(`/admin/projects/${projectId}`);
 }
 

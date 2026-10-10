@@ -1059,6 +1059,16 @@ export async function requestProposalRevision(token: string, note: string): Prom
   }).eq("id", token);
 }
 
+export async function resendProposal(proposalId: string): Promise<void> {
+  if (!supabase) {
+    const store = getDemoStore();
+    const p = store.proposals.get(proposalId);
+    if (p) store.proposals.set(proposalId, { ...p, status: "pending", client_note: null });
+    return;
+  }
+  await supabase.from("client_proposals").update({ status: "pending", client_note: null }).eq("id", proposalId);
+}
+
 export async function selectProposalDesigner(
   token: string,
   designerId: string
