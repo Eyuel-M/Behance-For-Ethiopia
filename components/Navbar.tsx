@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Navbar() {
   return (
-    <div>
+    <>
       {/* Announcement bar */}
       <div className="bg-[#0d2318] py-2.5">
         <div className="max-w-6xl mx-auto px-5 sm:px-8 flex items-center justify-between gap-4">
@@ -80,6 +80,6 @@ export default function Navbar() {
 
         </nav>
       </header>
-    </div>
+    </>
   );
 }

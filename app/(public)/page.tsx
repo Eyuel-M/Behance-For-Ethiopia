@@ -73,8 +73,9 @@ function Hero() {
               style={{ backgroundColor: "#6dcc46", color: "#0d2318" }}
             >
               Submit a Brief
-              <span className="w-6 h-6 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: "#0d2318", opacity: 0.25 }}></span>
-              <span className="absolute" aria-hidden>»</span>
+              <span className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-[#0d2318] font-bold" style={{ backgroundColor: "rgba(13,35,24,0.2)" }}>
+                »
+              </span>
             </Link>
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full border border-white/15 flex items-center justify-center shrink-0">
