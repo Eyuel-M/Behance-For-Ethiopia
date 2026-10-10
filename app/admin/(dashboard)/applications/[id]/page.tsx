@@ -495,10 +495,12 @@ export default async function ApplicationDetailPage({ params, searchParams }: Pr
               <div>
                 <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest block mb-2">Decision</label>
                 <select
+                  key={status}
                   name="status"
                   defaultValue={status}
                   className="w-full rounded-xl border border-zinc-200 px-4 py-3 text-sm text-zinc-900 bg-white outline-none focus:border-zinc-900 focus:ring-2 focus:ring-zinc-900/10 cursor-pointer"
                 >
+                  <option value="pending">Pending — awaiting review</option>
                   <option value="reviewing">Reviewing — in progress</option>
                   <option value="approved">Approved — add to network</option>
                   <option value="conditionally_approved">Conditionally approved</option>
@@ -513,6 +515,7 @@ export default async function ApplicationDetailPage({ params, searchParams }: Pr
                 Notes
               </label>
               <textarea
+                key={app.reviewer_notes ?? ""}
                 name="reviewerNotes"
                 defaultValue={app.reviewer_notes ?? ""}
                 rows={4}
