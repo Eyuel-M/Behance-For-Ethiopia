@@ -1,11 +1,13 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import {
   updateProjectStatus,
   addMilestone,
   updateMilestoneStatus,
   addProjectNote,
+  generateProfessionalToken,
 } from "@/lib/supabase/admin-queries";
 
 export async function changeProjectStatus(formData: FormData): Promise<void> {
@@ -55,4 +57,10 @@ export async function postProjectNote(formData: FormData): Promise<void> {
 
   await addProjectNote({ projectId, author, content, isInternal });
   revalidatePath(`/admin/projects/${projectId}`);
+}
+
+export async function generateProLink(formData: FormData): Promise<void> {
+  const projectId = formData.get("projectId") as string;
+  const token = await generateProfessionalToken(projectId);
+  redirect(`/admin/projects/${projectId}?proToken=${token}`);
 }

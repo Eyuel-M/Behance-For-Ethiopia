@@ -86,7 +86,16 @@ export async function submitDesignerApplication(
   }
 
   if (!supabase) {
-    console.warn("[submitDesignerApplication] Supabase not configured — application not persisted.");
+    const { storeDemoApplicationSubmission } = await import("@/lib/supabase/admin-queries");
+    storeDemoApplicationSubmission({
+      full_name: fullName, email, phone, city, specialty, experience,
+      skills, tools, portfolio_url: portfolioUrl, availability,
+      hourly_rate: hourlyRate, can_work_on_site: canWorkOnSite,
+      bio, why_join: whyJoin, worked_with_ethiopian_biz: workedWithEthiopianBiz,
+      social_url: socialUrl || null, work_samples: null,
+      education: education || null, certificates: certificates || null,
+      certificate_files: null,
+    });
     return { success: true };
   }
 

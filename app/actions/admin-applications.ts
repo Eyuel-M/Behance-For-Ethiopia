@@ -1,7 +1,8 @@
 "use server";
 
+import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { updateApplicationStatus } from "@/lib/supabase/admin-queries";
+import { updateApplicationStatus, deleteApplicationById } from "@/lib/supabase/admin-queries";
 
 export async function reviewApplication(
   applicationId: string,
@@ -12,4 +13,11 @@ export async function reviewApplication(
   revalidatePath(`/admin/applications/${applicationId}`);
   revalidatePath("/admin/applications");
   revalidatePath("/admin/designers");
+}
+
+export async function deleteApplication(applicationId: string): Promise<void> {
+  await deleteApplicationById(applicationId);
+  revalidatePath("/admin/applications");
+  revalidatePath("/admin/designers");
+  redirect("/admin/applications");
 }

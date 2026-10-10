@@ -311,6 +311,8 @@ const MOCK_PROJECTS: ProjectRow[] = [
     deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
     budget: "ETB 80,000–120,000",
     manager_notes: null,
+    client_token: "mock-project-1",
+    professional_token: null,
     created_at: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
     updated_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
   },
@@ -375,6 +377,8 @@ export async function createProject(input: {
       deadline: input.deadline ?? null,
       budget: input.budget,
       manager_notes: input.managerNotes ?? null,
+      client_token: id,
+      professional_token: null,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     };
@@ -844,8 +848,11 @@ export async function createProposal(
 }
 
 export async function getProjectByClientToken(token: string): Promise<ProjectRow | null> {
-  // In demo mode the project ID is used directly as the token.
-  if (!supabase) return getDemoStore().projects.get(token) ?? null;
+  // In demo mode client_token === id, so a direct lookup works.
+  if (!supabase) {
+    const byToken = Array.from(getDemoStore().projects.values()).find((p) => p.client_token === token);
+    return byToken ?? getDemoStore().projects.get(token) ?? null;
+  }
   const { data, error } = await supabase
     .from("projects")
     .select("*")
@@ -902,4 +909,99 @@ export async function selectProposalDesigner(
       updated_at: new Date().toISOString(),
     }).eq("id", proposal.project_id);
   }
+}
+
+// ─── Professional token ────────────────────────────────────────────────────────
+
+export async function generateProfessionalToken(projectId: string): Promise<string> {
+  const token = crypto.randomUUID();
+  if (!supabase) {
+    const store = getDemoStore();
+    const p = store.projects.get(projectId);
+    if (p) store.projects.set(projectId, { ...p, professional_token: token, updated_at: new Date().toISOString() });
+    return token;
+  }
+  await supabase.from("projects").update({ professional_token: token, updated_at: new Date().toISOString() }).eq("id", projectId);
+  return token;
+}
+
+export async function getProfessionalProject(token: string): Promise<ProjectRow | null> {
+  if (!supabase) {
+    return Array.from(getDemoStore().projects.values()).find((p) => p.professional_token === token) ?? null;
+  }
+  const { data, error } = await supabase
+    .from("projects")
+    .select("*")
+    .eq("professional_token", token)
+    .single();
+  if (error) return null;
+  return data as ProjectRow;
+}
+
+export async function submitMilestoneByPro(milestoneId: string): Promise<void> {
+  if (!supabase) {
+    const store = getDemoStore();
+    const m = store.milestones.get(milestoneId);
+    if (m) store.milestones.set(milestoneId, { ...m, status: "submitted" });
+    return;
+  }
+  await supabase.from("project_milestones").update({ status: "submitted" }).eq("id", milestoneId);
+}
+
+// ─── Demo form submissions ─────────────────────────────────────────────────────
+
+export function storeDemoBriefSubmission(data: {
+  service_mode: string; category: string; design_types: string;
+  project_description: string; timeline: string; budget: string;
+  references: string | null; contact_name: string; business_name: string;
+  email: string; phone: string; engagement_type: string;
+  worked_with_designer: string; hear_about_us: string; additional_notes: string | null;
+}): void {
+  const id = crypto.randomUUID();
+  const row: ClientBriefRow = {
+    id,
+    status: "new",
+    admin_notes: null,
+    created_at: new Date().toISOString(),
+    ...data,
+  };
+  getDemoStore().briefs.set(id, row);
+}
+
+export function storeDemoApplicationSubmission(data: {
+  full_name: string; email: string; phone: string; city: string;
+  specialty: string; experience: string; skills: string; tools: string;
+  portfolio_url: string; availability: string; hourly_rate: string;
+  can_work_on_site: string; bio: string; why_join: string;
+  worked_with_ethiopian_biz: string; social_url: string | null;
+  work_samples: string | null; education: string | null;
+  certificates: string | null; certificate_files: string | null;
+}): void {
+  const id = crypto.randomUUID();
+  const row: DesignerApplicationRow = {
+    id,
+    status: "pending",
+    reviewer_notes: null,
+    created_at: new Date().toISOString(),
+    ...data,
+  };
+  getDemoStore().applications.set(id, row);
+}
+
+// ─── Delete ───────────────────────────────────────────────────────────────────
+
+export async function deleteBriefById(id: string): Promise<void> {
+  if (!supabase) {
+    getDemoStore().briefs.delete(id);
+    return;
+  }
+  await supabase.from("client_applications").delete().eq("id", id);
+}
+
+export async function deleteApplicationById(id: string): Promise<void> {
+  if (!supabase) {
+    getDemoStore().applications.delete(id);
+    return;
+  }
+  await supabase.from("designer_applications").delete().eq("id", id);
 }

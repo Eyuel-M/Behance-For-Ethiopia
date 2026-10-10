@@ -6,7 +6,8 @@ import {
   BRIEF_STATUS_COLORS,
   type BriefStatus,
 } from "@/lib/supabase/project-types";
-import { qualifyBrief, createProjectFromBrief } from "@/app/actions/admin-briefs";
+import { qualifyBrief, createProjectFromBrief, deleteBrief } from "@/app/actions/admin-briefs";
+import ConfirmDeleteButton from "@/components/ConfirmDeleteButton";
 
 export const dynamic = "force-dynamic";
 
@@ -62,14 +63,21 @@ export default async function BriefDetailPage({ params }: Props) {
   return (
     <div>
 
-      {/* Back */}
-      <Link
-        href="/admin/briefs"
-        className="inline-flex items-center gap-1.5 text-sm text-zinc-400 hover:text-zinc-700 transition-colors cursor-pointer mb-6 group"
-      >
-        <span className="group-hover:-translate-x-0.5 transition-transform">←</span>
-        All briefs
-      </Link>
+      {/* Back + delete */}
+      <div className="flex items-center justify-between mb-6">
+        <Link
+          href="/admin/briefs"
+          className="inline-flex items-center gap-1.5 text-sm text-zinc-400 hover:text-zinc-700 transition-colors cursor-pointer group"
+        >
+          <span className="group-hover:-translate-x-0.5 transition-transform">←</span>
+          All briefs
+        </Link>
+        <ConfirmDeleteButton
+          action={async () => { "use server"; await deleteBrief(id); }}
+          label="Delete brief"
+          confirmMessage="Delete this brief permanently? This cannot be undone."
+        />
+      </div>
 
       {/* Hero card */}
       <div className="bg-white rounded-2xl border border-zinc-200 p-6 mb-5 flex items-start gap-5 flex-wrap">

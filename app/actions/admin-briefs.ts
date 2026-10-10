@@ -6,6 +6,7 @@ import {
   updateBriefStatus,
   createProject,
   getClientBrief,
+  deleteBriefById,
 } from "@/lib/supabase/admin-queries";
 
 export async function qualifyBrief(
@@ -55,4 +56,10 @@ export async function createProjectFromBrief(formData: FormData): Promise<void> 
   await updateBriefStatus(briefId, "in_progress");
 
   redirect(`/admin/projects/${projectId}`);
+}
+
+export async function deleteBrief(briefId: string): Promise<void> {
+  await deleteBriefById(briefId);
+  revalidatePath("/admin/briefs");
+  redirect("/admin/briefs");
 }

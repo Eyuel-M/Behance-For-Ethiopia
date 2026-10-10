@@ -18,6 +18,7 @@ import {
 import {
   addProjectMilestone,
   postProjectNote,
+  generateProLink,
 } from "@/app/actions/admin-projects";
 import ProposalDesignerPicker from "@/components/ProposalDesignerPicker";
 import MilestoneStatusSelect from "@/components/MilestoneStatusSelect";
@@ -25,11 +26,11 @@ import ProjectStatusSelect from "@/components/ProjectStatusSelect";
 
 export const dynamic = "force-dynamic";
 
-type Props = { params: Promise<{ id: string }>; searchParams: Promise<{ proposalToken?: string }> };
+type Props = { params: Promise<{ id: string }>; searchParams: Promise<{ proposalToken?: string; proToken?: string }> };
 
 export default async function ProjectDetailPage({ params, searchParams }: Props) {
   const { id } = await params;
-  const { proposalToken } = await searchParams;
+  const { proposalToken, proToken } = await searchParams;
   const [project, milestones, notes, allDesigners, existingProposal, tokenProposal] = await Promise.all([
     getProject(id),
     getProjectMilestones(id),
@@ -238,12 +239,43 @@ export default async function ProjectDetailPage({ params, searchParams }: Props)
               Share with your client to track milestones and project status.
             </p>
             <div className="rounded-lg border border-zinc-100 bg-zinc-50 px-3 py-2 mb-3">
-              <code className="text-xs text-zinc-600 break-all font-mono">/project/{id}</code>
+              <code className="text-xs text-zinc-600 break-all font-mono">/project/{project.client_token ?? id}</code>
             </div>
-            <Link href={`/project/${id}`} target="_blank"
+            <Link href={`/project/${project.client_token ?? id}`} target="_blank"
               className="inline-flex items-center gap-1 text-xs font-semibold text-green-700 hover:text-green-900 transition-colors">
               Open client view →
             </Link>
+          </Card>
+
+          {/* Professional link */}
+          <Card title="Professional link">
+            {proToken || project.professional_token ? (
+              <>
+                <p className="text-xs text-zinc-500 mb-3 leading-relaxed">
+                  Send this link to the assigned professional — they can view the scope, milestones, and mark work as submitted.
+                </p>
+                <div className="rounded-lg border border-blue-100 bg-blue-50 px-3 py-2 mb-3">
+                  <code className="text-xs text-blue-700 break-all font-mono">/professional/{proToken ?? project.professional_token}</code>
+                </div>
+                <Link href={`/professional/${proToken ?? project.professional_token}`} target="_blank"
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-blue-700 hover:text-blue-900 transition-colors">
+                  Open professional view →
+                </Link>
+              </>
+            ) : (
+              <>
+                <p className="text-xs text-zinc-500 mb-4 leading-relaxed">
+                  Generate a unique link to share with the assigned professional once the client has selected them.
+                </p>
+                <form action={generateProLink}>
+                  <input type="hidden" name="projectId" value={id} />
+                  <button type="submit"
+                    className="px-4 py-2 rounded-full bg-blue-600 text-white text-xs font-bold hover:bg-blue-700 transition-colors cursor-pointer">
+                    Generate professional link →
+                  </button>
+                </form>
+              </>
+            )}
           </Card>
 
           {project.manager_notes && (

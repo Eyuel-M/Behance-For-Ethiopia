@@ -208,6 +208,8 @@ export type ProjectRow = {
   deadline: string | null;
   budget: string;
   manager_notes: string | null;
+  client_token: string | null;
+  professional_token: string | null;
   created_at: string;
   updated_at: string;
 };

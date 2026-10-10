@@ -45,7 +45,24 @@ export async function submitClientApplication(
   if (!data.phone.trim()) return { success: false, error: "Phone number is required." };
 
   if (!supabase) {
-    console.warn("[submitClientApplication] Supabase not configured — application not persisted.");
+    const { storeDemoBriefSubmission } = await import("@/lib/supabase/admin-queries");
+    storeDemoBriefSubmission({
+      service_mode: data.serviceMode,
+      category: data.category,
+      design_types: data.designTypes,
+      project_description: data.projectDescription.trim(),
+      timeline: data.timeline,
+      budget: data.budget,
+      references: data.references.trim() || null,
+      contact_name: data.contactName.trim(),
+      business_name: data.businessName.trim(),
+      email: data.email.trim(),
+      phone: data.phone.trim(),
+      engagement_type: data.engagementType,
+      worked_with_designer: data.workedWithDesigner,
+      hear_about_us: data.hearAboutUs,
+      additional_notes: data.additionalNotes.trim() || null,
+    });
     return { success: true };
   }
 

@@ -7,8 +7,9 @@ import {
   type ApplicationStatus,
   type DesignerFeedbackRow,
 } from "@/lib/supabase/project-types";
-import { reviewApplication } from "@/app/actions/admin-applications";
+import { reviewApplication, deleteApplication } from "@/app/actions/admin-applications";
 import { profileCompletion, completionColor } from "@/lib/profile-completion";
+import ConfirmDeleteButton from "@/components/ConfirmDeleteButton";
 
 export const dynamic = "force-dynamic";
 
@@ -121,14 +122,21 @@ export default async function ApplicationDetailPage({ params, searchParams }: Pr
   return (
     <div>
 
-      {/* Back */}
-      <Link
-        href="/admin/applications"
-        className="inline-flex items-center gap-1.5 text-sm text-zinc-400 hover:text-zinc-700 transition-colors cursor-pointer mb-6 group"
-      >
-        <span className="group-hover:-translate-x-0.5 transition-transform">←</span>
-        All applications
-      </Link>
+      {/* Back + delete */}
+      <div className="flex items-center justify-between mb-6">
+        <Link
+          href="/admin/applications"
+          className="inline-flex items-center gap-1.5 text-sm text-zinc-400 hover:text-zinc-700 transition-colors cursor-pointer group"
+        >
+          <span className="group-hover:-translate-x-0.5 transition-transform">←</span>
+          All applications
+        </Link>
+        <ConfirmDeleteButton
+          action={async () => { "use server"; await deleteApplication(id); }}
+          label="Delete application"
+          confirmMessage={`Permanently delete ${app.full_name}'s application? This cannot be undone.`}
+        />
+      </div>
 
       {/* Hero card */}
       <div className="bg-white rounded-2xl border border-zinc-200 p-6 mb-5 flex items-start gap-5 flex-wrap">
