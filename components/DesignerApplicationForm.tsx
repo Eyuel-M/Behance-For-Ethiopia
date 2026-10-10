@@ -103,6 +103,8 @@ const EMPTY: DesignerApplicationData = {
 export default function DesignerApplicationForm() {
   const [form, setForm] = useState<DesignerApplicationData>(EMPTY);
   const [selectedTools, setSelectedTools] = useState<string[]>([]);
+  const [portfolioMode, setPortfolioMode] = useState<"link" | "pdf">("link");
+  const [portfolioFile, setPortfolioFile] = useState<File | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof DesignerApplicationData, string>>>({});
   const [submitError, setSubmitError] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -129,7 +131,8 @@ export default function DesignerApplicationForm() {
     if (!form.specialty) errors.specialty = "Required";
     if (!form.experience) errors.experience = "Required";
     if (!form.skills.trim()) errors.skills = "Required";
-    if (!form.portfolioUrl.trim()) errors.portfolioUrl = "Required";
+    if (portfolioMode === "link" && !form.portfolioUrl.trim()) errors.portfolioUrl = "Required";
+    if (portfolioMode === "pdf" && !portfolioFile) errors.portfolioUrl = "Please select a PDF file";
     if (!form.availability) errors.availability = "Required";
     if (!form.hourlyRate) errors.hourlyRate = "Required";
     if (!form.canWorkOnSite) errors.canWorkOnSite = "Required";
@@ -174,7 +177,7 @@ export default function DesignerApplicationForm() {
           we&apos;ll get back to you within 3–5 business days.
         </p>
         <button
-          onClick={() => { setForm(EMPTY); setSelectedTools([]); setSubmitted(false); }}
+          onClick={() => { setForm(EMPTY); setSelectedTools([]); setPortfolioMode("link"); setPortfolioFile(null); setSubmitted(false); }}
           className="mt-2 text-sm font-semibold text-green-700 hover:text-green-900 transition-colors cursor-pointer"
         >
           Submit another application
@@ -265,10 +268,48 @@ export default function DesignerApplicationForm() {
           </div>
         </div>
 
-        <Field label="Portfolio URL" required error={fieldErrors.portfolioUrl}
-          hint="Link to your Behance, Dribbble, personal website, or any online portfolio">
-          <input type="url" value={form.portfolioUrl} onChange={(e) => set("portfolioUrl", e.target.value)}
-            placeholder="https://behance.net/yourname" className={inputClass(!!fieldErrors.portfolioUrl)} />
+        <Field label="Portfolio" required error={fieldErrors.portfolioUrl}
+          hint={portfolioMode === "link" ? "Link to your Behance, Dribbble, personal website, or any online portfolio" : "Upload a PDF showcasing your work (max 10 MB)"}>
+          <div className="flex gap-2 mb-3">
+            <button
+              type="button"
+              onClick={() => { setPortfolioMode("link"); setPortfolioFile(null); if (form.portfolioUrl.startsWith("[PDF:")) set("portfolioUrl", ""); }}
+              className={`px-3.5 py-1.5 rounded-full text-sm font-medium border transition-all duration-150 cursor-pointer ${portfolioMode === "link" ? "bg-green-500 border-green-500 text-black" : "bg-white border-zinc-200 text-zinc-600 hover:border-zinc-400"}`}
+            >
+              Share a link
+            </button>
+            <button
+              type="button"
+              onClick={() => { setPortfolioMode("pdf"); set("portfolioUrl", ""); }}
+              className={`px-3.5 py-1.5 rounded-full text-sm font-medium border transition-all duration-150 cursor-pointer ${portfolioMode === "pdf" ? "bg-green-500 border-green-500 text-black" : "bg-white border-zinc-200 text-zinc-600 hover:border-zinc-400"}`}
+            >
+              Upload a PDF
+            </button>
+          </div>
+          {portfolioMode === "link" ? (
+            <input
+              type="url"
+              value={form.portfolioUrl}
+              onChange={(e) => set("portfolioUrl", e.target.value)}
+              placeholder="https://behance.net/yourname"
+              className={inputClass(!!fieldErrors.portfolioUrl)}
+            />
+          ) : (
+            <input
+              type="file"
+              accept="application/pdf"
+              onChange={(e) => {
+                const file = e.target.files?.[0] ?? null;
+                setPortfolioFile(file);
+                set("portfolioUrl", file ? `[PDF: ${file.name}]` : "");
+              }}
+              className={[
+                "w-full rounded-xl border bg-white px-4 py-2.5 text-sm text-zinc-900 outline-none transition-all duration-150 cursor-pointer",
+                "file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-medium file:bg-green-50 file:text-green-700 hover:file:bg-green-100 file:cursor-pointer",
+                fieldErrors.portfolioUrl ? "border-red-400" : "border-zinc-200",
+              ].join(" ")}
+            />
+          )}
         </Field>
       </Section>
 
