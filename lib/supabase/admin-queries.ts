@@ -767,7 +767,10 @@ function getDemoStore(): DemoStore {
 }
 
 export async function getProposalByProject(projectId: string): Promise<ClientProposalRow | null> {
-  if (!supabase) return null; // demo: always show the picker so you can generate a link
+  if (!supabase) {
+    const match = Array.from(getDemoStore().proposals.values()).find((p) => p.project_id === projectId);
+    return match ?? null;
+  }
   const { data, error } = await supabase
     .from("client_proposals")
     .select("*")
@@ -795,8 +798,19 @@ export async function createProposal(
   designerIds: string[]
 ): Promise<string> {
   if (!supabase) {
-    console.warn("[createProposal] Supabase not configured — proposal not persisted.");
-    return "mock-proposal-1";
+    const token = crypto.randomUUID();
+    const proposal: ClientProposalRow = {
+      id: token,
+      project_id: projectId,
+      designer_application_ids: designerIds,
+      selected_designer_id: null,
+      status: "pending",
+      client_note: null,
+      created_at: new Date().toISOString(),
+      selected_at: null,
+    };
+    getDemoStore().proposals.set(token, proposal);
+    return token;
   }
   const token = crypto.randomUUID();
   const { error } = await supabase.from("client_proposals").insert({
