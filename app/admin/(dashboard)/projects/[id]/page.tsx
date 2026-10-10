@@ -17,13 +17,12 @@ import {
   type MilestoneStatus,
 } from "@/lib/supabase/project-types";
 import {
-  changeProjectStatus,
   addProjectMilestone,
-  changeMilestoneStatus,
   postProjectNote,
 } from "@/app/actions/admin-projects";
 import ProposalDesignerPicker from "@/components/ProposalDesignerPicker";
-import AutoSubmitSelect from "@/components/AutoSubmitSelect";
+import MilestoneStatusSelect from "@/components/MilestoneStatusSelect";
+import ProjectStatusSelect from "@/components/ProjectStatusSelect";
 
 export const dynamic = "force-dynamic";
 
@@ -137,23 +136,12 @@ export default async function ProjectDetailPage({ params, searchParams }: Props)
                     </div>
                     <div className="shrink-0 flex items-center gap-2">
                       <MilestoneBadge status={m.status as MilestoneStatus} />
-                      <form action={changeMilestoneStatus}>
-                        <input type="hidden" name="milestoneId" value={m.id} />
-                        <input type="hidden" name="projectId" value={id} />
-                        <AutoSubmitSelect
-                          key={m.status}
-                          name="status"
-                          defaultValue={m.status}
-                          options={[
-                            { value: "pending", label: "Pending" },
-                            { value: "in_progress", label: "In progress" },
-                            { value: "submitted", label: "Submitted" },
-                            { value: "revision_requested", label: "Revision requested" },
-                            { value: "accepted", label: "Accepted" },
-                          ]}
-                          className="text-xs rounded-lg border border-zinc-200 bg-white px-2 py-1 text-zinc-600 outline-none cursor-pointer focus:border-zinc-900"
-                        />
-                      </form>
+                      <MilestoneStatusSelect
+                        milestoneId={m.id}
+                        projectId={id}
+                        currentStatus={m.status}
+                        className="text-xs rounded-lg border border-zinc-200 bg-white px-2 py-1 text-zinc-600 outline-none cursor-pointer focus:border-zinc-900"
+                      />
                     </div>
                   </div>
                 ))}
@@ -257,18 +245,11 @@ export default async function ProjectDetailPage({ params, searchParams }: Props)
         {/* Right col — status + meta */}
         <div className="space-y-5">
           <Section title="Status">
-            <form action={changeProjectStatus}>
-              <input type="hidden" name="projectId" value={id} />
-              <input type="hidden" name="notes" value="" />
-              <AutoSubmitSelect
-                key={status}
-                name="status"
-                defaultValue={status}
-                autoSubmit={true}
-                options={(Object.entries(PROJECT_STATUS_LABELS) as [ProjectStatus, string][]).map(([s, label]) => ({ value: s, label }))}
-                className="w-full rounded-lg border border-zinc-200 px-3 py-2.5 text-sm text-zinc-900 bg-white outline-none focus:border-zinc-900 focus:ring-2 focus:ring-zinc-900/10 cursor-pointer"
-              />
-            </form>
+            <ProjectStatusSelect
+              projectId={id}
+              currentStatus={status}
+              className="w-full rounded-lg border border-zinc-200 px-3 py-2.5 text-sm text-zinc-900 bg-white outline-none focus:border-zinc-900 focus:ring-2 focus:ring-zinc-900/10 cursor-pointer"
+            />
           </Section>
 
           {/* Client progress link */}
