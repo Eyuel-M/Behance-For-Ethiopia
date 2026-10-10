@@ -32,6 +32,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
 
         <nav className="flex-1 px-3 py-4 space-y-5 overflow-y-auto">
+
+          {/* Quick action — visually distinct CTA */}
+          <div className="pb-1">
+            <Link
+              href="/admin/projects/new"
+              className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-green-500 hover:bg-green-400 transition-colors duration-150 cursor-pointer group"
+            >
+              <span className="w-5 h-5 rounded-md bg-black/20 flex items-center justify-center text-black text-xs font-extrabold shrink-0 group-hover:bg-black/10">+</span>
+              <span className="text-sm font-bold text-black leading-tight">New Project</span>
+            </Link>
+            <p className="px-1 mt-1.5 text-xs text-zinc-600 leading-snug">For clients who call in</p>
+          </div>
+
           {navSections.map((section) => (
             <div key={section.label}>
               <p className="px-3 text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-1">
