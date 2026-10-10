@@ -1,7 +1,19 @@
 import { notFound } from "next/navigation";
 import { getProjectByClientToken, getProjectMilestones } from "@/lib/supabase/admin-queries";
 import type { ProjectStatus, MilestoneStatus } from "@/lib/supabase/project-types";
-import { PROJECT_STATUS_LABELS, MILESTONE_STATUS_LABELS } from "@/lib/supabase/project-types";
+import { MILESTONE_STATUS_LABELS } from "@/lib/supabase/project-types";
+
+const CLIENT_STATUS_LABELS: Record<ProjectStatus, string> = {
+  ready_to_start:       "Starting soon",
+  in_progress:          "In progress",
+  submitted_for_review: "Under review",
+  revision_requested:   "Revisions underway",
+  change_requested:     "Changes requested",
+  accepted:             "Approved",
+  completed:            "Completed",
+  disputed:             "On hold",
+  cancelled:            "Cancelled",
+};
 
 export const dynamic = "force-dynamic";
 
@@ -84,7 +96,7 @@ export default async function ClientProjectPage({ params }: Props) {
               className="w-1.5 h-1.5 rounded-full"
               style={{ backgroundColor: isDone ? "#6dcc46" : isCancelled ? "rgba(255,255,255,0.3)" : "#6dcc46", opacity: isCancelled ? 0.5 : 1 }}
             />
-            {PROJECT_STATUS_LABELS[status]}
+            {CLIENT_STATUS_LABELS[status]}
           </span>
           {project.deadline && !isCancelled && (
             <span className="text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>
