@@ -347,13 +347,6 @@ export default async function ApplicationDetailPage({ params, searchParams }: Pr
         </div>
       )}
 
-      {/* Reviewer notes */}
-      {app.reviewer_notes && (
-        <div className="mt-5 rounded-2xl border border-amber-200 bg-amber-50 px-6 py-5">
-          <p className="text-xs font-bold text-amber-700 uppercase tracking-widest mb-2">Previous reviewer notes</p>
-          <p className="text-sm text-amber-800 leading-relaxed whitespace-pre-wrap">{app.reviewer_notes}</p>
-        </div>
-      )}
 
       {/* New feedback link banner */}
       {newToken && (
