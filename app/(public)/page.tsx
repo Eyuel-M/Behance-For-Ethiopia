@@ -1,18 +1,18 @@
 import Link from "next/link";
 
-// ─── Shared ───────────────────────────────────────────────────────────────────
+// ─── Icons ────────────────────────────────────────────────────────────────────
 
-function Arrow() {
+function ArrowIcon() {
   return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
     </svg>
   );
 }
 
-function Check() {
+function CheckIcon({ dark }: { dark?: boolean }) {
   return (
-    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke={dark ? "#0d2318" : "#6dcc46"} strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <polyline points="20 6 9 17 4 12"/>
     </svg>
   );
@@ -24,10 +24,10 @@ export default function HomePage() {
   return (
     <>
       <Hero />
-      <TrustStrip />
+      <StatsBar />
+      <Services />
       <HowItWorks />
-      <ServiceModes />
-      <Categories />
+      <WhyUs />
       <ForProfessionals />
       <ClosingCta />
     </>
@@ -38,79 +38,150 @@ export default function HomePage() {
 
 function Hero() {
   return (
-    <section className="bg-zinc-950 overflow-hidden">
-      <div className="max-w-6xl mx-auto px-5 sm:px-8 pt-20 pb-28 sm:pt-28 sm:pb-36 relative">
+    <section className="bg-[#0d2318] overflow-hidden">
+      <div className="max-w-6xl mx-auto px-5 sm:px-8 py-20 sm:py-28 grid grid-cols-1 lg:grid-cols-[1fr_0.9fr] gap-12 lg:gap-10 items-center">
 
-        {/* Background accent */}
-        <div aria-hidden className="absolute top-0 right-0 w-96 h-96 rounded-full bg-green-500/5 blur-3xl pointer-events-none" />
-        <div aria-hidden className="absolute bottom-0 left-20 w-64 h-64 rounded-full bg-green-500/8 blur-3xl pointer-events-none" />
+        {/* Left — copy */}
+        <div>
+          {/* Social proof badge */}
+          <div className="inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/5 px-4 py-2 mb-8">
+            <span className="text-yellow-400 text-xs tracking-wider">★★★★★</span>
+            <span className="text-white/60 text-xs font-medium">4.9 · 50+ vetted professionals</span>
+          </div>
 
-        {/* Eyebrow */}
-        <div className="inline-flex items-center gap-2 rounded-full border border-zinc-800 bg-zinc-900 px-4 py-1.5 mb-10">
-          <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-          <span className="text-xs font-medium text-zinc-400">Now accepting project briefs</span>
+          {/* Display headline */}
+          <h1
+            className="text-white uppercase leading-[0.85] tracking-tight mb-7"
+            style={{ fontFamily: "var(--font-display), sans-serif", fontSize: "clamp(2.6rem, 7vw, 5rem)", fontWeight: 900 }}
+          >
+            <span className="block">Ethiopia&apos;s</span>
+            <span className="block" style={{ color: "#6dcc46" }}>Top Creative</span>
+            <span className="block">Talent.</span>
+          </h1>
+
+          {/* Body */}
+          <p className="text-zinc-400 text-base sm:text-lg leading-relaxed max-w-[420px] mb-9">
+            A curated network of vetted Ethiopian professionals. Branding, web, and
+            visual production — matched to your brief or managed end-to-end.
+          </p>
+
+          {/* CTAs */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-9">
+            <Link
+              href="/get-started/client"
+              className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full text-sm font-bold transition-colors duration-150"
+              style={{ backgroundColor: "#6dcc46", color: "#0d2318" }}
+            >
+              Submit a Brief
+              <span className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-[#0d2318] font-bold" style={{ backgroundColor: "rgba(13,35,24,0.2)" }}>
+                »
+              </span>
+            </Link>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full border border-white/15 flex items-center justify-center shrink-0">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.31 8.91a19.79 19.79 0 01-3.07-8.59A2 2 0 012.22 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 9.91a16 16 0 006.12 6.12l1.27-.66a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 17.92z"/>
+                </svg>
+              </div>
+              <div>
+                <p className="text-[10px] uppercase tracking-widest text-white/35 font-semibold">Call Us</p>
+                <p className="text-sm font-semibold text-white">+251 911 000 000</p>
+              </div>
+            </div>
+          </div>
+
+          <p className="text-xs text-white/25 leading-relaxed">
+            Every brief reviewed by a real person · No auto-matching · No upfront fee
+          </p>
         </div>
 
-        {/* Headline */}
-        <h1 className="font-extrabold text-white tracking-tight leading-[0.9] mb-8 max-w-3xl">
-          <span className="block text-5xl sm:text-7xl lg:text-8xl">Tell us what</span>
-          <span className="block text-5xl sm:text-7xl lg:text-8xl">you need.</span>
-          <span className="block text-5xl sm:text-7xl lg:text-8xl text-green-400 mt-2">We handle</span>
-          <span className="block text-5xl sm:text-7xl lg:text-8xl text-green-400">the rest.</span>
-        </h1>
+        {/* Right — mosaic grid */}
+        <div className="hidden lg:grid grid-cols-2 gap-3">
 
-        {/* Sub */}
-        <p className="text-base sm:text-lg text-zinc-400 leading-relaxed max-w-md mb-10">
-          A curated network of vetted Ethiopian professionals. Branding, web, and
-          visual production — matched to your brief or managed end-to-end.
-        </p>
+          {/* Branding tile — lime */}
+          <div className="rounded-2xl p-6 flex flex-col justify-between aspect-square" style={{ backgroundColor: "#6dcc46" }}>
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "rgba(13,35,24,0.15)" }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0d2318" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+            </div>
+            <div>
+              <h3 className="font-bold text-sm mb-0.5" style={{ color: "#0d2318" }}>Branding &amp; Design</h3>
+              <p className="text-xs" style={{ color: "rgba(13,35,24,0.6)" }}>Identity, logo, packaging</p>
+              <span className="font-black text-2xl mt-2 block" style={{ color: "#0d2318", fontFamily: "var(--font-display), sans-serif" }}>01</span>
+            </div>
+          </div>
 
-        {/* CTAs */}
-        <div className="flex flex-col sm:flex-row gap-3">
-          <Link
-            href="/get-started/client"
-            className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-green-500 text-black text-sm font-bold hover:bg-green-400 transition-colors duration-150"
-          >
-            Submit Your Brief <Arrow />
-          </Link>
-          <Link
-            href="/get-started/designer"
-            className="inline-flex items-center justify-center px-7 py-3.5 rounded-full border border-zinc-700 text-zinc-300 text-sm font-semibold hover:border-zinc-500 hover:text-white transition-all duration-150"
-          >
-            Apply as a Professional
-          </Link>
+          {/* Response stat tile — dark */}
+          <div className="rounded-2xl p-6 flex flex-col justify-between aspect-square" style={{ backgroundColor: "#1a3e28" }}>
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "rgba(255,255,255,0.1)" }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6dcc46" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </div>
+            <div>
+              <p className="font-black text-3xl" style={{ color: "#6dcc46", fontFamily: "var(--font-display), sans-serif" }}>48h</p>
+              <p className="text-xs text-white/50">Brief reviewed &amp; matched</p>
+            </div>
+          </div>
+
+          {/* Web tile — mid */}
+          <div className="rounded-2xl p-6 flex flex-col justify-between aspect-square" style={{ backgroundColor: "#163222" }}>
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "rgba(109,204,70,0.15)" }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6dcc46" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/>
+              </svg>
+            </div>
+            <div>
+              <h3 className="font-bold text-sm text-white mb-0.5">Web &amp; Digital</h3>
+              <p className="text-xs text-white/40">UI/UX, WordPress, apps</p>
+              <span className="font-black text-2xl mt-2 block text-white/20" style={{ fontFamily: "var(--font-display), sans-serif" }}>02</span>
+            </div>
+          </div>
+
+          {/* Visual tile — ghost */}
+          <div className="rounded-2xl p-6 flex flex-col justify-between aspect-square border" style={{ backgroundColor: "rgba(255,255,255,0.04)", borderColor: "rgba(255,255,255,0.08)" }}>
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "rgba(255,255,255,0.08)" }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/>
+              </svg>
+            </div>
+            <div>
+              <h3 className="font-bold text-sm text-white mb-0.5">Visual Content</h3>
+              <p className="text-xs text-white/40">3D, motion, video</p>
+              <span className="font-black text-2xl mt-2 block text-white/20" style={{ fontFamily: "var(--font-display), sans-serif" }}>03</span>
+            </div>
+          </div>
+
         </div>
-
-        {/* Disclaimer */}
-        <p className="mt-7 text-xs text-zinc-600 max-w-xs leading-relaxed">
-          Every brief is reviewed by a real person before anything moves. No
-          auto-matching. No upfront fee.
-        </p>
       </div>
     </section>
   );
 }
 
-// ─── Trust strip ──────────────────────────────────────────────────────────────
+// ─── Stats bar ────────────────────────────────────────────────────────────────
 
-function TrustStrip() {
-  const items = [
-    "Branding & Graphic Design",
-    "Web & Digital",
-    "Visual Content",
-    "Ethiopia-first",
-    "Manually vetted",
-    "Curated, not crowdsourced",
+function StatsBar() {
+  const stats = [
+    { value: "48h", label: "Average response time" },
+    { value: "100%", label: "Manually reviewed briefs" },
+    { value: "ETB 0", label: "Upfront placement fee" },
+    { value: "2", label: "Flexible service modes" },
   ];
   return (
-    <div className="bg-zinc-900 border-y border-zinc-800 overflow-hidden">
-      <div className="max-w-6xl mx-auto px-5 sm:px-8 py-4">
-        <div className="flex items-center gap-6 flex-wrap">
-          {items.map((item, i) => (
-            <span key={item} className="flex items-center gap-6">
-              <span className="text-xs text-zinc-500 font-medium tracking-wide whitespace-nowrap">{item}</span>
-              {i < items.length - 1 && <span aria-hidden className="text-zinc-700 text-xs">·</span>}
-            </span>
+    <div className="bg-white border-b border-zinc-100">
+      <div className="max-w-6xl mx-auto px-5 sm:px-8 py-10">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8">
+          {stats.map((s) => (
+            <div key={s.label} className="text-center sm:text-left">
+              <p
+                className="text-3xl sm:text-4xl font-black text-[#0d2318] leading-none mb-1"
+                style={{ fontFamily: "var(--font-display), sans-serif" }}
+              >
+                {s.value}
+              </p>
+              <p className="text-xs text-zinc-400 leading-snug">{s.label}</p>
+            </div>
           ))}
         </div>
       </div>
@@ -118,44 +189,165 @@ function TrustStrip() {
   );
 }
 
-// ─── How it works ─────────────────────────────────────────────────────────────
+// ─── Services ─────────────────────────────────────────────────────────────────
+
+function Services() {
+  const cards = [
+    {
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+      ),
+      title: "Branding & Graphic Design",
+      body: "Logos, identity systems, packaging, marketing collateral, presentations, and campaign assets that make your brand unmistakable.",
+      tags: ["Brand Identity", "Logo Design", "Packaging", "Print"],
+      bg: "bg-white",
+      border: "border border-zinc-200",
+      iconBg: "bg-zinc-100",
+      iconColor: "text-zinc-600",
+      tagBg: "bg-zinc-50 text-zinc-500",
+      linkColor: "text-[#0d2318] hover:text-[#6dcc46]",
+    },
+    {
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/>
+        </svg>
+      ),
+      title: "Web & Digital",
+      body: "WordPress sites, landing pages, UI/UX design, web app interfaces, and digital product design built to convert and perform.",
+      tags: ["UI/UX Design", "WordPress", "Landing Pages", "Design Systems"],
+      bg: "bg-[#6dcc46]",
+      border: "",
+      iconBg: "bg-[#0d2318]/15",
+      iconColor: "text-[#0d2318]",
+      tagBg: "bg-[#0d2318]/10 text-[#0d2318]",
+      linkColor: "text-[#0d2318] hover:text-[#0d2318]/70",
+    },
+    {
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/>
+        </svg>
+      ),
+      title: "Visual Content",
+      body: "3D visualisation, product rendering, motion graphics, video editing, and explainer content that brings your message to life.",
+      tags: ["3D Rendering", "Motion Graphics", "Video Editing", "Animation"],
+      bg: "bg-[#0d2318]",
+      border: "",
+      iconBg: "bg-white/10",
+      iconColor: "text-[#6dcc46]",
+      tagBg: "bg-white/10 text-white/70",
+      linkColor: "text-white hover:text-[#6dcc46]",
+    },
+  ];
+
+  return (
+    <section id="services" className="bg-[#f1f0ea] py-24 sm:py-32">
+      <div className="max-w-6xl mx-auto px-5 sm:px-8">
+
+        {/* Header */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-end mb-14">
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#6dcc46]" />
+              <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500">Our Services</p>
+            </div>
+            <h2
+              className="text-3xl sm:text-5xl font-black text-[#0d2318] leading-tight"
+              style={{ fontFamily: "var(--font-display), sans-serif" }}
+            >
+              Essential services<br />for Ethiopian<br />businesses
+            </h2>
+          </div>
+          <p className="text-zinc-500 text-base leading-relaxed max-w-md lg:ml-auto">
+            We launched with three disciplines where we can reliably vet talent and
+            deliver results. Every professional is reviewed before they join our network.
+          </p>
+        </div>
+
+        {/* Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+          {cards.map((card) => (
+            <div key={card.title} className={`rounded-3xl p-7 sm:p-8 flex flex-col ${card.bg} ${card.border}`}>
+              <div className={`w-11 h-11 rounded-xl flex items-center justify-center mb-6 ${card.iconBg} ${card.iconColor}`}>
+                {card.icon}
+              </div>
+              <h3 className={`font-extrabold text-lg leading-tight mb-3 ${card.bg === "bg-white" ? "text-zinc-900" : card.bg === "bg-[#6dcc46]" ? "text-[#0d2318]" : "text-white"}`}>
+                {card.title}
+              </h3>
+              <p className={`text-sm leading-relaxed mb-6 flex-1 ${card.bg === "bg-white" ? "text-zinc-500" : card.bg === "bg-[#6dcc46]" ? "text-[#0d2318]/70" : "text-white/55"}`}>
+                {card.body}
+              </p>
+              <div className="flex flex-wrap gap-1.5 mb-7">
+                {card.tags.map((tag) => (
+                  <span key={tag} className={`px-2.5 py-1 rounded-full text-xs font-medium ${card.tagBg}`}>
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              <Link
+                href="/get-started/client"
+                className={`inline-flex items-center gap-1.5 text-sm font-bold transition-colors ${card.linkColor}`}
+              >
+                Explore More
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                </svg>
+              </Link>
+            </div>
+          ))}
+        </div>
+
+      </div>
+    </section>
+  );
+}
+
+// ─── How It Works ─────────────────────────────────────────────────────────────
 
 function HowItWorks() {
   const steps = [
     {
       n: "01",
-      title: "You submit a brief",
-      body: "Describe your goal, deliverables, budget, and deadline. Choose Direct Match or Managed Project. Takes under 5 minutes.",
+      title: "Submit a brief",
+      body: "Describe your project, budget, timeline, and choose your service mode. Takes under 5 minutes.",
     },
     {
       n: "02",
       title: "We qualify it",
-      body: "A real person reviews every brief. We check feasibility, budget fit, and whether we have the right professionals. We'll reach out within 48 hours.",
+      body: "A real person reviews every brief — checking feasibility, budget fit, and available talent. We reach out within 48 hours.",
     },
     {
       n: "03",
       title: "We match you",
-      body: "We present a curated shortlist — not a feed of hundreds. You confirm the fit before anything is agreed.",
+      body: "We present a curated shortlist of 2–3 professionals. You confirm the fit before anything is agreed.",
     },
     {
       n: "04",
       title: "Work begins",
-      body: "Scope is agreed, milestones set, kickoff confirmed. You stay informed at every stage. We hold everyone accountable to what was agreed.",
+      body: "Scope agreed, milestones set, kickoff confirmed. We keep everyone accountable to what was agreed.",
     },
   ];
 
   return (
-    <section id="how-it-works" className="bg-white py-24 sm:py-32">
+    <section id="how-it-works" className="bg-white py-24 sm:py-32 border-t border-zinc-100">
       <div className="max-w-6xl mx-auto px-5 sm:px-8">
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-start">
-          {/* Left — label + headline */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+
+          {/* Left */}
           <div className="lg:sticky lg:top-28">
-            <p className="text-xs font-semibold uppercase tracking-widest text-green-600 mb-4">
-              The process
-            </p>
-            <h2 className="text-4xl sm:text-5xl font-extrabold text-zinc-900 tracking-tight leading-tight mb-5">
-              No open bidding.<br />No cold searching.
+            <div className="flex items-center gap-2 mb-4">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#6dcc46]" />
+              <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500">The Process</p>
+            </div>
+            <h2
+              className="text-3xl sm:text-5xl font-black text-[#0d2318] leading-tight mb-5"
+              style={{ fontFamily: "var(--font-display), sans-serif" }}
+            >
+              No open<br />bidding.<br />No cold<br />searching.
             </h2>
             <p className="text-zinc-500 text-base leading-relaxed max-w-sm mb-8">
               We do the matching. A qualified human reviews every brief and every
@@ -163,27 +355,37 @@ function HowItWorks() {
             </p>
             <Link
               href="/get-started/client"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-zinc-900 text-white text-sm font-semibold hover:bg-zinc-700 transition-colors duration-150"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-bold text-white transition-colors duration-150"
+              style={{ backgroundColor: "#0d2318" }}
             >
-              Submit your brief <Arrow />
+              Submit your brief
+              <span className="w-5 h-5 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: "#6dcc46" }}>
+                <ArrowIcon />
+              </span>
             </Link>
           </div>
 
-          {/* Right — steps */}
-          <div className="space-y-0">
+          {/* Right — step cards */}
+          <div className="space-y-3">
             {steps.map((step, i) => (
               <div
                 key={step.n}
-                className={`relative flex gap-5 pb-10 ${i === steps.length - 1 ? "" : "border-l border-zinc-100 ml-5"}`}
+                className="group rounded-2xl border border-zinc-100 bg-zinc-50 hover:bg-[#0d2318] hover:border-[#0d2318] px-6 py-5 flex items-start gap-5 transition-all duration-200 cursor-default"
               >
-                {/* Number node */}
-                <div className={`absolute -left-5 top-0 flex items-center justify-center w-10 h-10 rounded-full font-bold text-sm border-2 ${i === 0 ? "bg-green-500 border-green-500 text-black" : "bg-white border-zinc-200 text-zinc-400"}`}>
-                  {step.n}
+                <span
+                  className="shrink-0 w-10 h-10 rounded-full border-2 flex items-center justify-center text-xs font-black transition-colors duration-200"
+                  style={{ fontFamily: "var(--font-display), sans-serif" }}
+                >
+                  <span className="group-hover:hidden">{step.n}</span>
+                  <span className="hidden group-hover:block text-[#6dcc46]">{step.n}</span>
+                </span>
+                <div>
+                  <h3 className="font-bold text-zinc-900 text-sm mb-1 group-hover:text-white transition-colors duration-200">{step.title}</h3>
+                  <p className="text-xs text-zinc-500 leading-relaxed group-hover:text-white/55 transition-colors duration-200">{step.body}</p>
                 </div>
-                <div className="pl-10">
-                  <h3 className="font-bold text-zinc-900 text-base mb-1.5">{step.title}</h3>
-                  <p className="text-sm text-zinc-500 leading-relaxed">{step.body}</p>
-                </div>
+                <svg className="ml-auto shrink-0 mt-1 text-zinc-300 group-hover:text-[#6dcc46] transition-colors duration-200" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                </svg>
               </div>
             ))}
           </div>
@@ -193,207 +395,140 @@ function HowItWorks() {
   );
 }
 
-// ─── Service modes ────────────────────────────────────────────────────────────
+// ─── Why Us ───────────────────────────────────────────────────────────────────
 
-function ServiceModes() {
-  return (
-    <section id="services" className="bg-zinc-50 py-24 sm:py-32">
-      <div className="max-w-6xl mx-auto px-5 sm:px-8">
-
-        <div className="mb-14">
-          <p className="text-xs font-semibold uppercase tracking-widest text-green-600 mb-4">Two ways to work</p>
-          <h2 className="text-4xl sm:text-5xl font-extrabold text-zinc-900 tracking-tight">
-            How much do you<br />want us to handle?
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-
-          {/* Direct Match */}
-          <div className="rounded-3xl bg-white border border-zinc-200 p-8 sm:p-10 flex flex-col">
-            <div className="inline-flex items-center rounded-full bg-zinc-100 px-3 py-1 text-xs font-bold text-zinc-600 mb-6 w-fit">
-              Direct Match
-            </div>
-            <h3 className="text-2xl font-extrabold text-zinc-900 mb-3">
-              We find it.<br />You manage it.
-            </h3>
-            <p className="text-zinc-500 text-sm leading-relaxed mb-6">
-              We qualify your brief, vet the talent, and give you a curated shortlist.
-              You own the day-to-day relationship with the professional.
-            </p>
-            <ul className="space-y-2.5 mb-8 flex-1">
-              {[
-                "Brief reviewed and qualified",
-                "Shortlist of 2–3 vetted professionals",
-                "Kickoff support included",
-                "You manage day-to-day work",
-                "Best when: you know what you want",
-              ].map((item) => (
-                <li key={item} className="flex items-start gap-2.5 text-sm text-zinc-600">
-                  <span className="w-4 h-4 rounded-full bg-zinc-100 text-zinc-500 flex items-center justify-center shrink-0 mt-0.5"><Check /></span>
-                  {item}
-                </li>
-              ))}
-            </ul>
-            <Link
-              href="/get-started/client"
-              className="inline-flex items-center gap-1.5 text-sm font-bold text-zinc-900 hover:text-green-600 transition-colors"
-            >
-              Submit a brief <Arrow />
-            </Link>
-          </div>
-
-          {/* Managed Project */}
-          <div className="rounded-3xl bg-zinc-900 p-8 sm:p-10 flex flex-col">
-            <div className="inline-flex items-center rounded-full bg-green-500/20 px-3 py-1 text-xs font-bold text-green-400 mb-6 w-fit">
-              Managed Project
-            </div>
-            <h3 className="text-2xl font-extrabold text-white mb-3">
-              We find it.<br />We run it.
-            </h3>
-            <p className="text-zinc-400 text-sm leading-relaxed mb-6">
-              We scope the project, select professionals, coordinate milestones,
-              check quality at every stage, and manage handover. You approve and
-              stay informed.
-            </p>
-            <ul className="space-y-2.5 mb-8 flex-1">
-              {[
-                "Full scope with milestones and deliverables",
-                "Platform project manager throughout",
-                "Quality review before every handover",
-                "Change order management included",
-                "Best when: you don't have bandwidth to manage",
-              ].map((item) => (
-                <li key={item} className="flex items-start gap-2.5 text-sm text-zinc-300">
-                  <span className="w-4 h-4 rounded-full bg-white/10 text-green-400 flex items-center justify-center shrink-0 mt-0.5"><Check /></span>
-                  {item}
-                </li>
-              ))}
-            </ul>
-            <Link
-              href="/get-started/client"
-              className="inline-flex items-center gap-1.5 text-sm font-bold text-white hover:text-green-400 transition-colors"
-            >
-              Submit a brief <Arrow />
-            </Link>
-          </div>
-        </div>
-
-        <p className="text-xs text-zinc-400 text-center mt-6">
-          Not sure which fits? Select &ldquo;Not sure yet&rdquo; in your brief — we&apos;ll recommend the right mode.
-        </p>
-      </div>
-    </section>
-  );
-}
-
-// ─── Categories ───────────────────────────────────────────────────────────────
-
-function Categories() {
-  const cats = [
-    {
-      num: "01",
-      title: "Branding & Graphic Design",
-      description: "Identity systems, logos, packaging, marketing materials, presentations, campaign assets.",
-      tags: ["Brand identity", "Logo", "Packaging", "Print", "Marketing collateral"],
-      accent: "text-green-600",
-    },
-    {
-      num: "02",
-      title: "Web & Digital",
-      description: "WordPress sites, landing pages, UI/UX design, web app interfaces, digital product design.",
-      tags: ["UI/UX", "WordPress", "Landing pages", "Web apps", "Design systems"],
-      accent: "text-blue-600",
-    },
-    {
-      num: "03",
-      title: "Visual Content",
-      description: "3D visualisation, product rendering, motion graphics, video editing, explainer content.",
-      tags: ["3D rendering", "Motion graphics", "Video editing", "Animation"],
-      accent: "text-amber-600",
-    },
+function WhyUs() {
+  const perks = [
+    "Reviewed by real people — every time",
+    "No race to the bottom on price",
+    "Managed Project option for hands-off delivery",
+    "All professionals are Ethiopia-based",
+    "Portfolio and identity manually reviewed",
   ];
 
   return (
-    <section className="bg-white py-24 sm:py-32 border-t border-zinc-100">
+    <section className="bg-[#f1f0ea] py-24 sm:py-32">
       <div className="max-w-6xl mx-auto px-5 sm:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
-        <div className="flex items-end justify-between gap-6 mb-14 flex-wrap">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-green-600 mb-4">What we cover</p>
-            <h2 className="text-4xl sm:text-5xl font-extrabold text-zinc-900 tracking-tight">
-              Three disciplines.<br />One network.
-            </h2>
-          </div>
-          <p className="text-sm text-zinc-400 max-w-xs leading-relaxed">
-            We launched with categories where we can reliably vet talent and deliver results. More follow as we grow.
-          </p>
-        </div>
+          {/* Left — stat mosaic */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="rounded-2xl bg-[#6dcc46] p-7 flex flex-col justify-between aspect-square">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "rgba(13,35,24,0.15)" }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0d2318" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+              </div>
+              <div>
+                <p className="font-black text-4xl text-[#0d2318] leading-none mb-1" style={{ fontFamily: "var(--font-display), sans-serif" }}>100%</p>
+                <p className="text-xs text-[#0d2318]/60 font-medium">Our Total<br />Completed Works</p>
+              </div>
+            </div>
 
-        <div className="divide-y divide-zinc-100">
-          {cats.map((cat) => (
-            <div key={cat.num} className="group py-8 grid grid-cols-1 sm:grid-cols-12 gap-4 sm:gap-8 hover:bg-zinc-50 -mx-5 px-5 sm:-mx-8 sm:px-8 rounded-2xl transition-colors duration-150 cursor-default">
-              <div className="sm:col-span-1">
-                <span className={`text-3xl font-extrabold ${cat.accent} leading-none opacity-30 group-hover:opacity-60 transition-opacity`}>{cat.num}</span>
+            <div className="grid grid-rows-2 gap-4">
+              <div className="rounded-2xl bg-white border border-zinc-200 p-5 flex flex-col justify-between">
+                <p className="text-xs text-zinc-400 font-medium">Avg. client rating</p>
+                <div>
+                  <p className="text-yellow-400 text-xs tracking-wider mb-0.5">★★★★★</p>
+                  <p className="font-black text-xl text-zinc-900 leading-none" style={{ fontFamily: "var(--font-display), sans-serif" }}>4.9<span className="text-xs font-normal text-zinc-400">/5.0</span></p>
+                </div>
               </div>
-              <div className="sm:col-span-4">
-                <h3 className="text-lg font-bold text-zinc-900">{cat.title}</h3>
+              <div className="rounded-2xl bg-[#0d2318] p-5 flex flex-col justify-between">
+                <p className="text-xs text-white/40 font-medium">Premium skills</p>
+                <div className="flex flex-wrap gap-1">
+                  {["Branding", "Web", "Motion", "3D"].map((s) => (
+                    <span key={s} className="px-2 py-0.5 rounded-full text-[10px] font-medium text-white/70 border border-white/10">{s}</span>
+                  ))}
+                </div>
               </div>
-              <div className="sm:col-span-4">
-                <p className="text-sm text-zinc-500 leading-relaxed">{cat.description}</p>
-              </div>
-              <div className="sm:col-span-3 flex flex-wrap gap-1.5 sm:justify-end">
-                {cat.tags.map((tag) => (
-                  <span key={tag} className="px-2.5 py-0.5 rounded-full bg-zinc-100 text-xs text-zinc-500 whitespace-nowrap">
-                    {tag}
-                  </span>
+            </div>
+
+            <div className="col-span-2 rounded-2xl bg-white border border-zinc-200 p-6">
+              <p className="text-xs text-zinc-400 font-medium uppercase tracking-wider mb-3">Why professionals choose us</p>
+              <div className="flex flex-wrap gap-2">
+                {["Ethiopia-first", "Curated, not crowdsourced", "No joining fee", "You set your rate", "Real projects"].map((tag) => (
+                  <span key={tag} className="px-3 py-1 rounded-full bg-[#f1f0ea] text-xs font-medium text-zinc-600">{tag}</span>
                 ))}
               </div>
             </div>
-          ))}
-        </div>
-
-        <div className="mt-10 rounded-2xl border border-dashed border-zinc-200 p-5 flex items-center justify-between gap-4 flex-wrap bg-zinc-50">
-          <div>
-            <p className="text-sm font-semibold text-zinc-700">Need something not listed?</p>
-            <p className="text-xs text-zinc-400 mt-0.5">CAD, copywriting, software development, and more are on the roadmap. Submit a brief and describe what you need — we&apos;ll be honest about whether we can help today.</p>
           </div>
-          <Link href="/contact" className="shrink-0 text-sm font-semibold text-green-700 hover:text-green-900 transition-colors">
-            Talk to us →
-          </Link>
+
+          {/* Right — copy */}
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#6dcc46]" />
+              <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500">Who We Are</p>
+            </div>
+            <h2
+              className="text-3xl sm:text-4xl font-black text-[#0d2318] leading-tight mb-5"
+              style={{ fontFamily: "var(--font-display), sans-serif" }}
+            >
+              Comprehensive solution for business excellence
+            </h2>
+            <p className="text-zinc-500 text-base leading-relaxed mb-8">
+              We&apos;re not a freelance marketplace. We&apos;re a concierge matching service
+              that takes the risk out of hiring creative talent in Ethiopia. Every
+              professional is vetted before they join, and every project is supported
+              from brief to handover.
+            </p>
+            <ul className="space-y-3 mb-10">
+              {perks.map((p) => (
+                <li key={p} className="flex items-start gap-3 text-sm text-zinc-600">
+                  <span className="w-5 h-5 rounded-full bg-[#6dcc46]/15 flex items-center justify-center shrink-0 mt-0.5">
+                    <CheckIcon />
+                  </span>
+                  {p}
+                </li>
+              ))}
+            </ul>
+            <Link
+              href="/get-started/client"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-bold transition-colors"
+              style={{ backgroundColor: "#6dcc46", color: "#0d2318" }}
+            >
+              Submit a Brief
+              <span className="w-5 h-5 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: "rgba(13,35,24,0.2)" }}>
+                <ArrowIcon />
+              </span>
+            </Link>
+          </div>
+
         </div>
       </div>
     </section>
   );
 }
 
-// ─── For professionals ────────────────────────────────────────────────────────
+// ─── For Professionals ────────────────────────────────────────────────────────
 
 function ForProfessionals() {
   const steps = [
-    "Submit your portfolio and application",
-    "We review your identity and portfolio quality",
-    "Skills assessed against category standards",
-    "Approved professionals are matched to projects",
+    { title: "Submit your application", body: "Share your portfolio, specialty, rates, and availability." },
+    { title: "Identity & portfolio review", body: "We verify who you are and assess the quality of your work." },
+    { title: "Skills assessment", body: "Your output is checked against the standards of your category." },
+    { title: "Match to projects", body: "Approved professionals receive relevant project opportunities." },
   ];
 
   return (
-    <section className="bg-zinc-950 py-24 sm:py-32">
+    <section className="bg-[#0d2318] py-24 sm:py-32">
       <div className="max-w-6xl mx-auto px-5 sm:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
           {/* Left */}
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-green-400 mb-4">
-              For professionals
-            </p>
-            <h2 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight mb-5">
-              Join Ethiopia&apos;s first curated talent network.
+            <div className="flex items-center gap-2 mb-4">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#6dcc46]" />
+              <p className="text-xs font-semibold uppercase tracking-widest text-[#6dcc46]/70">For Professionals</p>
+            </div>
+            <h2
+              className="text-3xl sm:text-4xl font-black text-white leading-tight mb-5"
+              style={{ fontFamily: "var(--font-display), sans-serif" }}
+            >
+              Join Ethiopia&apos;s first curated talent network
             </h2>
-            <p className="text-zinc-400 text-base leading-relaxed mb-8">
-              We&apos;re building a small, vetted network — not a race to the bottom.
-              If your portfolio is strong and you take your craft seriously, we want
-              to meet you.
+            <p className="text-white/50 text-base leading-relaxed mb-8">
+              We&apos;re building a small, quality network — not a race to the bottom.
+              If your portfolio is strong and you take your craft seriously, we want to work with you.
             </p>
 
             <ul className="space-y-3 mb-10">
@@ -401,43 +536,55 @@ function ForProfessionals() {
                 "Free to apply — no joining fees",
                 "Matched to vetted Ethiopian businesses",
                 "Set your own rates and availability",
-                "Managed Project option — less client management for you",
+                "Managed Project option means less client management",
                 "Quality reputation actively protected",
               ].map((item) => (
-                <li key={item} className="flex items-start gap-3 text-sm text-zinc-300">
-                  <span className="w-4 h-4 rounded-full bg-white/10 text-green-400 flex items-center justify-center shrink-0 mt-0.5"><Check /></span>
+                <li key={item} className="flex items-start gap-3 text-sm text-white/60">
+                  <span className="w-4 h-4 rounded-full flex items-center justify-center shrink-0 mt-0.5" style={{ backgroundColor: "rgba(109,204,70,0.15)" }}>
+                    <CheckIcon />
+                  </span>
                   {item}
                 </li>
               ))}
             </ul>
-
             <Link
               href="/get-started/designer"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-green-500 text-black text-sm font-bold hover:bg-green-400 transition-colors duration-150"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-bold transition-colors"
+              style={{ backgroundColor: "#6dcc46", color: "#0d2318" }}
             >
-              Apply to the network <Arrow />
+              Apply to the Network
+              <span className="w-5 h-5 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: "rgba(13,35,24,0.2)" }}>
+                <ArrowIcon />
+              </span>
             </Link>
           </div>
 
-          {/* Right — vetting steps visual */}
+          {/* Right — numbered step cards */}
           <div className="space-y-3">
             {steps.map((step, i) => (
-              <div key={i} className="flex items-center gap-4 rounded-xl bg-white/5 border border-white/10 px-5 py-4">
-                <span className="w-8 h-8 rounded-full bg-green-500/20 text-green-400 font-bold text-xs flex items-center justify-center shrink-0">
+              <div key={i} className="flex items-start gap-4 rounded-2xl border px-5 py-4" style={{ backgroundColor: "rgba(255,255,255,0.04)", borderColor: "rgba(255,255,255,0.08)" }}>
+                <span
+                  className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-xs font-black"
+                  style={{ backgroundColor: "rgba(109,204,70,0.15)", color: "#6dcc46", fontFamily: "var(--font-display), sans-serif" }}
+                >
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <span className="text-sm text-zinc-300">{step}</span>
-                <span className="ml-auto text-green-500 shrink-0">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>
-                </span>
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-sm font-bold text-white mb-0.5">{step.title}</h3>
+                  <p className="text-xs text-white/40 leading-relaxed">{step.body}</p>
+                </div>
+                <svg className="shrink-0 mt-1" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6dcc46" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
               </div>
             ))}
-            <div className="flex items-center gap-4 rounded-xl bg-white/5 border border-white/5 px-5 py-4 opacity-35">
-              <span className="w-8 h-8 rounded-full bg-zinc-700/40 font-bold text-xs flex items-center justify-center shrink-0 text-zinc-500">05</span>
-              <span className="text-sm text-zinc-500">Projects start arriving</span>
-              <span className="ml-auto text-zinc-700 shrink-0">→</span>
+            <div className="flex items-center gap-4 rounded-2xl px-5 py-4 opacity-30" style={{ backgroundColor: "rgba(255,255,255,0.04)", borderColor: "rgba(255,255,255,0.06)" }}>
+              <span className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-xs font-black text-white/40" style={{ backgroundColor: "rgba(255,255,255,0.06)", fontFamily: "var(--font-display), sans-serif" }}>05</span>
+              <span className="text-sm text-white/40">Projects start arriving</span>
+              <span className="ml-auto text-white/20 text-lg">→</span>
             </div>
           </div>
+
         </div>
       </div>
     </section>
@@ -448,28 +595,40 @@ function ForProfessionals() {
 
 function ClosingCta() {
   return (
-    <section className="bg-green-500 py-24 sm:py-32">
+    <section className="py-24 sm:py-32 overflow-hidden" style={{ backgroundColor: "#6dcc46" }}>
       <div className="max-w-6xl mx-auto px-5 sm:px-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-10 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
           <div>
-            <h2 className="text-4xl sm:text-5xl font-extrabold text-black tracking-tight leading-tight mb-4">
-              Ready to submit your brief?
+            <div className="flex items-center gap-2 mb-4">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#0d2318]" />
+              <p className="text-xs font-semibold uppercase tracking-widest text-[#0d2318]/60">Get Started</p>
+            </div>
+            <h2
+              className="text-3xl sm:text-5xl font-black text-[#0d2318] leading-tight mb-4"
+              style={{ fontFamily: "var(--font-display), sans-serif" }}
+            >
+              Experienced.<br />Vetted.<br />Ready.
             </h2>
-            <p className="text-black/70 text-base leading-relaxed">
-              Tell us what you need. A real person reviews it, reaches out within 48 hours,
-              and matches you with the right professional.
+            <p className="text-[#0d2318]/60 text-base leading-relaxed max-w-sm">
+              Tell us what you need. A real person reviews your brief, reaches out within
+              48 hours, and matches you with the right professional.
             </p>
           </div>
           <div className="flex flex-col sm:flex-row sm:justify-end gap-3">
             <Link
               href="/get-started/client"
-              className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-zinc-900 text-white text-sm font-bold hover:bg-zinc-700 transition-colors duration-150"
+              className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full text-sm font-bold text-white transition-colors duration-150"
+              style={{ backgroundColor: "#0d2318" }}
             >
-              Submit a Brief <Arrow />
+              Submit a Brief
+              <span className="w-6 h-6 rounded-full flex items-center justify-center" style={{ backgroundColor: "#6dcc46" }}>
+                <ArrowIcon />
+              </span>
             </Link>
             <Link
               href="/contact"
-              className="inline-flex items-center justify-center px-7 py-3.5 rounded-full border-2 border-black/20 text-black text-sm font-semibold hover:bg-black/10 transition-colors duration-150"
+              className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full border-2 text-sm font-bold transition-colors duration-150"
+              style={{ borderColor: "rgba(13,35,24,0.25)", color: "#0d2318" }}
             >
               Contact Us
             </Link>

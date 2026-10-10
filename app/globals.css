@@ -11,6 +11,7 @@
   --color-background: var(--color-background);
   --color-foreground: var(--color-foreground);
   --font-sans: var(--font-sans), system-ui, sans-serif;
+  --font-display: var(--font-display), system-ui, sans-serif;
 }
 
 @media (prefers-reduced-motion: reduce) {
