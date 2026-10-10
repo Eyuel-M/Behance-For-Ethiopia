@@ -4,6 +4,8 @@ import {
   getProject,
   getProjectMilestones,
   getProjectNotes,
+  getDesignerApplications,
+  getProposalByProject,
 } from "@/lib/supabase/admin-queries";
 import {
   PROJECT_STATUS_LABELS,
@@ -19,10 +21,11 @@ import {
   changeMilestoneStatus,
   postProjectNote,
 } from "@/app/actions/admin-projects";
+import { generateProposalLink } from "@/app/actions/admin-proposals";
 
 export const dynamic = "force-dynamic";
 
-type Props = { params: Promise<{ id: string }> };
+type Props = { params: Promise<{ id: string }>; searchParams: Promise<{ proposalToken?: string }> };
 
 function ProjectBadge({ status }: { status: ProjectStatus }) {
   return (
@@ -40,14 +43,18 @@ function MilestoneBadge({ status }: { status: MilestoneStatus }) {
   );
 }
 
-export default async function ProjectDetailPage({ params }: Props) {
+export default async function ProjectDetailPage({ params, searchParams }: Props) {
   const { id } = await params;
-  const [project, milestones, notes] = await Promise.all([
+  const { proposalToken } = await searchParams;
+  const [project, milestones, notes, allDesigners, existingProposal] = await Promise.all([
     getProject(id),
     getProjectMilestones(id),
     getProjectNotes(id),
+    getDesignerApplications(),
+    getProposalByProject(id),
   ]);
   if (!project) notFound();
+  const approvedDesigners = allDesigners.filter((d) => d.status === "approved");
 
   const status = project.status as ProjectStatus;
 
@@ -289,6 +296,96 @@ export default async function ProjectDetailPage({ params }: Props) {
             </div>
           </Section>
         </div>
+      </div>
+
+      {/* ── Professional Shortlist ─────────────────────────────── */}
+      <div className="mt-5">
+        <Section title="Professional Shortlist">
+
+          {/* New proposal token banner */}
+          {proposalToken && (
+            <div className="mb-5 rounded-xl border border-green-200 bg-green-50 px-5 py-4">
+              <p className="text-xs font-bold text-green-700 uppercase tracking-widest mb-1.5">Proposal link generated</p>
+              <p className="text-sm text-green-800 mb-2">Share this link with your client — it opens the anonymized shortlist:</p>
+              <div className="flex items-center gap-3 flex-wrap bg-white rounded-lg border border-green-200 px-4 py-2.5">
+                <code className="text-xs text-zinc-700 flex-1 break-all font-mono">
+                  /proposal/{proposalToken}
+                </code>
+                <Link href={`/proposal/${proposalToken}`} target="_blank"
+                  className="text-xs font-bold text-green-700 hover:text-green-900 shrink-0 transition-colors">
+                  Preview →
+                </Link>
+              </div>
+              <p className="text-xs text-green-700 mt-2 opacity-60">⚠ Link only persists once Supabase is connected.</p>
+            </div>
+          )}
+
+          {/* Existing proposal status (when not just generated) */}
+          {existingProposal && !proposalToken && (
+            <div className={`mb-5 rounded-xl border px-5 py-4 ${existingProposal.status === "selected" ? "border-green-200 bg-green-50" : "border-amber-100 bg-amber-50"}`}>
+              <div className="flex items-center justify-between gap-3 flex-wrap">
+                <div>
+                  <p className={`text-xs font-bold uppercase tracking-widest mb-0.5 ${existingProposal.status === "selected" ? "text-green-700" : "text-amber-700"}`}>
+                    Proposal {existingProposal.status === "selected" ? "— Client selected" : "— Awaiting client"}
+                  </p>
+                  <p className={`text-sm ${existingProposal.status === "selected" ? "text-green-800" : "text-amber-800"}`}>
+                    {existingProposal.status === "selected"
+                      ? `Client has chosen a designer. Update project status to In Progress.`
+                      : `Proposal sent. Waiting for client to choose a designer.`}
+                  </p>
+                </div>
+                <Link href={`/proposal/${existingProposal.id}`} target="_blank"
+                  className="text-xs font-bold text-zinc-500 hover:text-zinc-900 transition-colors shrink-0">
+                  View proposal →
+                </Link>
+              </div>
+            </div>
+          )}
+
+          {/* Picker form */}
+          {!existingProposal && approvedDesigners.length === 0 ? (
+            <div className="text-center py-6">
+              <p className="text-sm text-zinc-400 mb-3">No approved professionals yet.</p>
+              <Link href="/admin/applications" className="text-sm font-semibold text-green-700 hover:text-green-900 transition-colors">
+                Review applications →
+              </Link>
+            </div>
+          ) : !existingProposal ? (
+            <form action={generateProposalLink} className="space-y-4">
+              <input type="hidden" name="projectId" value={id} />
+              <p className="text-sm text-zinc-500 mb-3">Select 1–3 approved professionals to include in the client shortlist. Their identities will be anonymized as Designer A, B, C.</p>
+              <div className="space-y-2">
+                {approvedDesigners.map((d) => (
+                  <label key={d.id} className="flex items-center gap-4 p-4 rounded-xl border border-zinc-200 bg-zinc-50 hover:bg-zinc-100 transition-colors cursor-pointer group">
+                    <input type="checkbox" name="designerId" value={d.id}
+                      className="w-4 h-4 rounded accent-green-500 cursor-pointer shrink-0" />
+                    <div className="flex items-center gap-3 flex-1 min-w-0">
+                      <div className="w-8 h-8 rounded-full bg-zinc-900 flex items-center justify-center text-white text-xs font-bold shrink-0">
+                        {d.full_name.split(" ").map((n: string) => n[0]).join("").slice(0, 2).toUpperCase()}
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold text-zinc-900">{d.full_name}</p>
+                        <p className="text-xs text-zinc-400">{d.specialty} · {d.hourly_rate}</p>
+                      </div>
+                    </div>
+                    <span className="text-xs text-green-600 font-medium shrink-0">{d.city}</span>
+                  </label>
+                ))}
+              </div>
+              <button type="submit"
+                className="px-5 py-2.5 rounded-full bg-zinc-900 text-white text-sm font-bold hover:bg-zinc-700 transition-colors cursor-pointer">
+                Generate client proposal link →
+              </button>
+            </form>
+          ) : (
+            <p className="text-sm text-zinc-400 text-center py-4">
+              Proposal already active.{" "}
+              <Link href={`/proposal/${existingProposal.id}`} target="_blank" className="text-green-700 hover:text-green-900 font-medium transition-colors">
+                View it →
+              </Link>
+            </p>
+          )}
+        </Section>
       </div>
     </div>
   );

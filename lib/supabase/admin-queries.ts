@@ -6,6 +6,7 @@ import type {
   ProjectRow,
   MilestoneRow,
   ProjectNoteRow,
+  ClientProposalRow,
 } from "./project-types";
 
 // ─── Client briefs ────────────────────────────────────────────────────────────
@@ -155,8 +156,8 @@ const MOCK_APPLICATIONS: DesignerApplicationRow[] = [
     worked_with_ethiopian_biz: "Yes, multiple times",
     social_url: "https://linkedin.com/in/tigistbekele",
     work_samples: null,
-    status: "pending",
-    reviewer_notes: null,
+    status: "approved",
+    reviewer_notes: "Strong brand portfolio. Approved for brand identity and packaging projects.",
     created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
@@ -178,8 +179,8 @@ const MOCK_APPLICATIONS: DesignerApplicationRow[] = [
     worked_with_ethiopian_biz: "Currently working with one",
     social_url: "https://linkedin.com/in/natnaelhailu",
     work_samples: null,
-    status: "reviewing",
-    reviewer_notes: "Strong portfolio. Strong local startup experience. Schedule a call.",
+    status: "approved",
+    reviewer_notes: "Excellent product design skills. Approved for UI/UX and mobile projects.",
     created_at: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
@@ -677,3 +678,87 @@ export async function submitFeedbackResponse(input: {
   if (error) throw new Error(error.message);
 }
 
+// ─── Client proposals ─────────────────────────────────────────────────────────
+
+const MOCK_PROPOSALS: ClientProposalRow[] = [
+  {
+    id: "mock-proposal-1",
+    project_id: "mock-project-1",
+    designer_application_ids: ["mock-app-1", "mock-app-2", "mock-app-3"],
+    selected_designer_id: null,
+    status: "pending",
+    created_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+    selected_at: null,
+  },
+];
+
+export async function getProposalByProject(projectId: string): Promise<ClientProposalRow | null> {
+  if (!supabase) return MOCK_PROPOSALS.find((p) => p.project_id === projectId) ?? null;
+  const { data, error } = await supabase
+    .from("client_proposals")
+    .select("*")
+    .eq("project_id", projectId)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .single();
+  if (error) return null;
+  return data as ClientProposalRow;
+}
+
+export async function getProposalByToken(token: string): Promise<ClientProposalRow | null> {
+  if (!supabase) return MOCK_PROPOSALS.find((p) => p.id === token) ?? null;
+  const { data, error } = await supabase
+    .from("client_proposals")
+    .select("*")
+    .eq("id", token)
+    .single();
+  if (error) return null;
+  return data as ClientProposalRow;
+}
+
+export async function createProposal(
+  projectId: string,
+  designerIds: string[]
+): Promise<string> {
+  if (!supabase) {
+    console.warn("[createProposal] Supabase not configured — proposal not persisted.");
+    return "mock-proposal-1";
+  }
+  const token = crypto.randomUUID();
+  const { error } = await supabase.from("client_proposals").insert({
+    id: token,
+    project_id: projectId,
+    designer_application_ids: designerIds,
+    selected_designer_id: null,
+    status: "pending",
+  });
+  if (error) throw new Error(error.message);
+  return token;
+}
+
+export async function selectProposalDesigner(
+  token: string,
+  designerId: string
+): Promise<void> {
+  if (!supabase) {
+    console.warn("[selectProposalDesigner] Supabase not configured — selection not persisted.");
+    return;
+  }
+  await supabase.from("client_proposals").update({
+    selected_designer_id: designerId,
+    status: "selected",
+    selected_at: new Date().toISOString(),
+  }).eq("id", token);
+
+  const { data: proposal } = await supabase
+    .from("client_proposals")
+    .select("project_id")
+    .eq("id", token)
+    .single();
+  if (proposal) {
+    await supabase.from("projects").update({
+      assigned_professional_ids: [designerId],
+      updated_at: new Date().toISOString(),
+    }).eq("id", proposal.project_id);
+  }
+}

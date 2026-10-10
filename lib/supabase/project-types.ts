@@ -168,6 +168,16 @@ export type DesignerApplicationRow = {
   created_at: string;
 };
 
+export type ClientProposalRow = {
+  id: string; // UUID — also the URL token
+  project_id: string;
+  designer_application_ids: string[]; // 1–3 designer IDs (order = label A/B/C)
+  selected_designer_id: string | null;
+  status: "pending" | "viewed" | "selected";
+  created_at: string;
+  selected_at: string | null;
+};
+
 export type DesignerFeedbackRow = {
   id: string; // UUID — also the public token in the feedback URL
   designer_application_id: string;
