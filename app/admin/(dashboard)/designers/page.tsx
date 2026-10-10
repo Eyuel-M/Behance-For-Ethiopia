@@ -84,7 +84,7 @@ export default async function AdminProfessionalsPage() {
             const coverImg = getFirstSample(p.work_samples);
             const pct = profileCompletion(p);
             const color = completionColor(pct);
-            const radius = 10;
+            const radius = 11;
             const circ = 2 * Math.PI * radius;
             const dash = (pct / 100) * circ;
 
@@ -109,19 +109,29 @@ export default async function AdminProfessionalsPage() {
                       <span className="text-3xl font-bold text-zinc-300">{initials}</span>
                     </div>
                   )}
-                  {/* Profile completion ring — top right */}
-                  <div className="absolute top-2 right-2 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm shadow flex items-center justify-center">
-                    <svg width="40" height="40" viewBox="0 0 40 40">
-                      <circle cx="20" cy="20" r={radius} fill="none" stroke="#e4e4e7" strokeWidth="3" />
-                      <circle
-                        cx="20" cy="20" r={radius} fill="none"
-                        stroke={color} strokeWidth="3"
-                        strokeDasharray={`${dash} ${circ}`}
-                        strokeLinecap="round"
-                        transform="rotate(-90 20 20)"
-                      />
-                      <text x="20" y="24" textAnchor="middle" fontSize="9" fontWeight="700" fill={color}>{pct}</text>
-                    </svg>
+                  {/* Profile completion badge — top right */}
+                  <div className="absolute top-2 right-2" title={`Profile ${pct}% complete`}>
+                    {pct === 100 ? (
+                      <div className="w-7 h-7 rounded-full flex items-center justify-center shadow" style={{ backgroundColor: color }}>
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                          <polyline points="2.5,7 5.5,10 11.5,4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </div>
+                    ) : (
+                      <div className="rounded-full bg-white/90 backdrop-blur-sm shadow" style={{ width: 36, height: 36 }}>
+                        <svg width="36" height="36" viewBox="0 0 36 36">
+                          <circle cx="18" cy="18" r={radius} fill="none" stroke="#e4e4e7" strokeWidth="2.5" />
+                          <circle
+                            cx="18" cy="18" r={radius} fill="none"
+                            stroke={color} strokeWidth="2.5"
+                            strokeDasharray={`${dash} ${circ}`}
+                            strokeLinecap="round"
+                            transform="rotate(-90 18 18)"
+                          />
+                          <text x="18" y="22" textAnchor="middle" fontSize="9" fontWeight="700" fill={color}>{pct}</text>
+                        </svg>
+                      </div>
+                    )}
                   </div>
                 </div>
 
