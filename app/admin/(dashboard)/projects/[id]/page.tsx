@@ -141,6 +141,7 @@ export default async function ProjectDetailPage({ params, searchParams }: Props)
                         <input type="hidden" name="milestoneId" value={m.id} />
                         <input type="hidden" name="projectId" value={id} />
                         <AutoSubmitSelect
+                          key={m.status}
                           name="status"
                           defaultValue={m.status}
                           options={[
@@ -260,6 +261,7 @@ export default async function ProjectDetailPage({ params, searchParams }: Props)
               <input type="hidden" name="projectId" value={id} />
               <input type="hidden" name="notes" value="" />
               <AutoSubmitSelect
+                key={status}
                 name="status"
                 defaultValue={status}
                 autoSubmit={true}
