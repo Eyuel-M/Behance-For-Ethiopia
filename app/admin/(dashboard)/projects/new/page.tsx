@@ -59,27 +59,15 @@ export default function NewProjectPage() {
         </p>
       </div>
 
-      {/* What happens next */}
-      <div className="mb-6 rounded-2xl border border-zinc-200 bg-white overflow-hidden">
-        <div className="px-5 py-3.5 border-b border-zinc-100 bg-zinc-50/60">
-          <p className="text-xs font-bold uppercase tracking-widest text-zinc-400">What happens after you submit</p>
-        </div>
-        <div className="px-5 py-4 grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {[
-            { step: "1", label: "Project page", desc: "You land on the full project dashboard" },
-            { step: "2", label: "Add milestones", desc: "Break the work into deliverable stages" },
-            { step: "3", label: "Client link", desc: "Share /project/… so they can track progress" },
-            { step: "4", label: "Pro portal link", desc: "Generate /professional/… for the designer" },
-          ].map(({ step, label, desc }) => (
-            <div key={step} className="flex flex-col gap-1">
-              <div className="flex items-center gap-2 mb-0.5">
-                <span className="w-5 h-5 rounded-full bg-zinc-900 text-white text-xs font-bold flex items-center justify-center shrink-0">{step}</span>
-                <p className="text-xs font-semibold text-zinc-800">{label}</p>
-              </div>
-              <p className="text-xs text-zinc-400 leading-snug pl-7">{desc}</p>
-            </div>
-          ))}
-        </div>
+      {/* What happens next — compact strip */}
+      <div className="mb-6 flex items-center gap-2 flex-wrap">
+        <span className="text-xs text-zinc-400">After submitting →</span>
+        {["Project dashboard", "Add milestones", "Client tracking link", "Pro portal link"].map((step, i) => (
+          <span key={i} className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-zinc-100 text-zinc-500 text-xs font-medium">
+            <span className="w-3.5 h-3.5 rounded-full bg-zinc-300 text-zinc-600 text-[9px] font-bold flex items-center justify-center shrink-0">{i + 1}</span>
+            {step}
+          </span>
+        ))}
       </div>
 
       <form action={createProjectFromScratch} className="space-y-5">
