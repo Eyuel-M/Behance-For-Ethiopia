@@ -7,6 +7,8 @@ import {
   addMilestone,
   addProjectNote,
   generateProfessionalToken,
+  updateMilestoneStatus,
+  updateProjectStatus,
 } from "@/lib/supabase/admin-queries";
 
 export async function createProjectFromScratch(formData: FormData): Promise<void> {
@@ -63,6 +65,22 @@ export async function postProjectNote(formData: FormData): Promise<void> {
     isInternal: formData.get("isInternal") === "true",
   });
 
+  revalidatePath(`/admin/projects/${projectId}`);
+}
+
+export async function changeMilestoneStatus(formData: FormData): Promise<void> {
+  const milestoneId = ((formData.get("milestoneId") as string | null) ?? "").trim();
+  const projectId = ((formData.get("projectId") as string | null) ?? "").trim();
+  const status = ((formData.get("status") as string | null) ?? "").trim();
+  await updateMilestoneStatus(milestoneId, status);
+  revalidatePath(`/admin/projects/${projectId}`);
+}
+
+export async function changeProjectStatus(formData: FormData): Promise<void> {
+  const projectId = ((formData.get("projectId") as string | null) ?? "").trim();
+  const status = ((formData.get("status") as string | null) ?? "").trim();
+  const notes = ((formData.get("notes") as string | null) ?? "").trim() || undefined;
+  await updateProjectStatus(projectId, status, notes);
   revalidatePath(`/admin/projects/${projectId}`);
 }
 
