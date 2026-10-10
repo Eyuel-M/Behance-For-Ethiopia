@@ -16,15 +16,16 @@ export async function qualifyBrief(
 }
 
 export async function createProjectFromBrief(formData: FormData): Promise<void> {
+  const get = (k: string) => ((formData.get(k) as string | null) ?? "").trim();
   const briefId = formData.get("briefId") as string;
-  const title = (formData.get("title") as string).trim();
-  const deliverables = (formData.get("deliverables") as string).trim();
-  const exclusions = (formData.get("exclusions") as string).trim();
-  const assumptions = (formData.get("assumptions") as string).trim();
-  const acceptanceCriteria = (formData.get("acceptanceCriteria") as string).trim();
+  const title = get("title");
+  const deliverables = get("deliverables");
+  const exclusions = get("exclusions");
+  const assumptions = get("assumptions");
+  const acceptanceCriteria = get("acceptanceCriteria");
   const revisionLimit = parseInt(formData.get("revisionLimit") as string) || 2;
-  const deadline = (formData.get("deadline") as string).trim();
-  const managerNotes = (formData.get("managerNotes") as string).trim();
+  const deadline = get("deadline");
+  const managerNotes = get("managerNotes");
 
   const brief = await getClientBrief(briefId);
   if (!brief) throw new Error("Brief not found");
