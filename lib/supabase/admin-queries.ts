@@ -455,7 +455,22 @@ export async function addMilestone(input: {
   paymentCondition?: string;
   sortOrder?: number;
 }): Promise<void> {
-  if (!supabase) { console.warn("[demo] Supabase not configured — write skipped."); return; }
+  if (!supabase) {
+    const id = crypto.randomUUID();
+    const milestone: MilestoneRow = {
+      id,
+      project_id: input.projectId,
+      title: input.title,
+      description: input.description ?? null,
+      due_date: input.dueDate ?? null,
+      status: "pending",
+      payment_condition: input.paymentCondition ?? null,
+      sort_order: input.sortOrder ?? 0,
+      created_at: new Date().toISOString(),
+    };
+    getDemoStore().milestones.set(id, milestone);
+    return;
+  }
   const { error } = await supabase.from("project_milestones").insert({
     project_id: input.projectId,
     title: input.title,
