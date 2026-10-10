@@ -743,7 +743,8 @@ export async function getProjectByClientToken(token: string): Promise<ProjectRow
 
 export async function requestProposalRevision(token: string, note: string): Promise<void> {
   if (!supabase) {
-    console.warn("[requestProposalRevision] Supabase not configured — revision not persisted. Note:", note);
+    const p = MOCK_PROPOSALS.find((m) => m.id === token);
+    if (p) { p.status = "revision_requested"; p.client_note = note; }
     return;
   }
   await supabase.from("client_proposals").update({
@@ -757,7 +758,8 @@ export async function selectProposalDesigner(
   designerId: string
 ): Promise<void> {
   if (!supabase) {
-    console.warn("[selectProposalDesigner] Supabase not configured — selection not persisted.");
+    const p = MOCK_PROPOSALS.find((m) => m.id === token);
+    if (p) { p.selected_designer_id = designerId; p.status = "selected"; p.selected_at = new Date().toISOString(); }
     return;
   }
   await supabase.from("client_proposals").update({
