@@ -295,7 +295,7 @@ const MOCK_PROJECTS: ProjectRow[] = [
 ];
 
 export async function getProjects(): Promise<ProjectRow[]> {
-  if (!supabase) return MOCK_PROJECTS;
+  if (!supabase) return Array.from(getDemoStore().projects.values());
   const { data, error } = await supabase
     .from("projects")
     .select("*")
@@ -305,7 +305,7 @@ export async function getProjects(): Promise<ProjectRow[]> {
 }
 
 export async function getProject(id: string): Promise<ProjectRow | null> {
-  if (!supabase) return MOCK_PROJECTS.find((p) => p.id === id) ?? null;
+  if (!supabase) return getDemoStore().projects.get(id) ?? null;
   const { data, error } = await supabase
     .from("projects")
     .select("*")
@@ -368,7 +368,19 @@ export async function updateProjectStatus(
   status: string,
   notes?: string
 ): Promise<void> {
-  if (!supabase) { console.warn("[demo] Supabase not configured — write skipped."); return; }
+  if (!supabase) {
+    const store = getDemoStore();
+    const p = store.projects.get(id);
+    if (p) {
+      store.projects.set(id, {
+        ...p,
+        status,
+        manager_notes: notes ?? p.manager_notes,
+        updated_at: new Date().toISOString(),
+      });
+    }
+    return;
+  }
   const updates: Record<string, string> = { status, updated_at: new Date().toISOString() };
   if (notes !== undefined) updates.manager_notes = notes;
   const { error } = await supabase.from("projects").update(updates).eq("id", id);
@@ -687,12 +699,16 @@ const MOCK_PROPOSALS: ClientProposalRow[] = [
 
 // Turbopack re-evaluates modules per request, so module-level mutations don't
 // survive to the next request. globalThis is a true process-level singleton.
-type DemoStore = { proposals: Map<string, ClientProposalRow> };
+type DemoStore = {
+  proposals: Map<string, ClientProposalRow>;
+  projects: Map<string, ProjectRow>;
+};
 function getDemoStore(): DemoStore {
   const g = globalThis as typeof globalThis & { __demoStore?: DemoStore };
   if (!g.__demoStore) {
     g.__demoStore = {
       proposals: new Map(MOCK_PROPOSALS.map((p) => [p.id, { ...p }])),
+      projects: new Map(MOCK_PROJECTS.map((p) => [p.id, { ...p }])),
     };
   }
   return g.__demoStore;
