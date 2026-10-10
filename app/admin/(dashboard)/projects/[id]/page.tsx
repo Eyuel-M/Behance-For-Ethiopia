@@ -269,6 +269,23 @@ export default async function ProjectDetailPage({ params, searchParams }: Props)
             </form>
           </Section>
 
+          {/* Client progress link */}
+          <Section title="Client progress link">
+            <p className="text-xs text-zinc-500 mb-3 leading-relaxed">
+              Share this read-only link with your client so they can track milestones and project status.
+            </p>
+            <div className="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 mb-2">
+              <code className="text-xs text-zinc-600 break-all font-mono">/project/{id}</code>
+            </div>
+            <Link
+              href={`/project/${id}`}
+              target="_blank"
+              className="text-xs font-semibold text-green-700 hover:text-green-900 transition-colors"
+            >
+              Preview link →
+            </Link>
+          </Section>
+
           {project.manager_notes && (
             <Section title="Manager notes">
               <p className="text-sm text-zinc-700 leading-relaxed whitespace-pre-wrap">{project.manager_notes}</p>

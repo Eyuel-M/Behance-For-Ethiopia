@@ -728,6 +728,18 @@ export async function createProposal(
   return token;
 }
 
+export async function getProjectByClientToken(token: string): Promise<ProjectRow | null> {
+  // In demo mode the project ID is used directly as the token.
+  if (!supabase) return MOCK_PROJECTS.find((p) => p.id === token) ?? null;
+  const { data, error } = await supabase
+    .from("projects")
+    .select("*")
+    .eq("client_token", token)
+    .single();
+  if (error) return null;
+  return data as ProjectRow;
+}
+
 export async function selectProposalDesigner(
   token: string,
   designerId: string
