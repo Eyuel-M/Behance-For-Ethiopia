@@ -176,6 +176,7 @@ export type ClientProposalRow = {
 export type DesignerFeedbackRow = {
   id: string; // UUID — also the public token in the feedback URL
   designer_application_id: string;
+  project_id: string | null; // links feedback to a specific project
   project_title: string | null;
   client_name: string | null;
   client_email: string | null;

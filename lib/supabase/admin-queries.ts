@@ -595,6 +595,7 @@ const MOCK_FEEDBACK: DesignerFeedbackRow[] = [
   {
     id: "fb-tigist-001",
     designer_application_id: "mock-app-1",
+    project_id: null,
     project_title: "Brand Identity — Habesha Premium Coffee Exports",
     client_name: "Dawit Alemu",
     client_email: "dawit@habeshacoffee.et",
@@ -610,6 +611,7 @@ const MOCK_FEEDBACK: DesignerFeedbackRow[] = [
   {
     id: "fb-tigist-002",
     designer_application_id: "mock-app-1",
+    project_id: null,
     project_title: "Marketing Materials — Addis Organic Bakery",
     client_name: "Sara Tesfaye",
     client_email: "sara@addisbakery.com",
@@ -623,23 +625,9 @@ const MOCK_FEEDBACK: DesignerFeedbackRow[] = [
     submitted_at: new Date(Date.now() - 43 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
-    id: "fb-tigist-003",
-    designer_application_id: "mock-app-1",
-    project_title: "Website Redesign — Addis Flowers Import/Export",
-    client_name: "Hiwot Bekele",
-    client_email: "hiwot@addisflowers.et",
-    quality_rating: null,
-    communication_rating: null,
-    delivery_rating: null,
-    would_rehire: null,
-    comments: null,
-    status: "pending",
-    created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-    submitted_at: null,
-  },
-  {
     id: "fb-mekdes-001",
     designer_application_id: "mock-app-3",
+    project_id: null,
     project_title: "Social Media Campaign — EthioTech Solutions",
     client_name: "Yonas Girma",
     client_email: "yonas@ethiotech.et",
@@ -655,6 +643,7 @@ const MOCK_FEEDBACK: DesignerFeedbackRow[] = [
   {
     id: "fb-mekdes-002",
     designer_application_id: "mock-app-3",
+    project_id: null,
     project_title: "Explainer Video — Kifiya Financial Technology",
     client_name: "Nebiat Hailu",
     client_email: "nebiat@kifiya.et",
@@ -670,7 +659,7 @@ const MOCK_FEEDBACK: DesignerFeedbackRow[] = [
 ];
 
 export async function getAllFeedback(): Promise<DesignerFeedbackRow[]> {
-  if (!supabase) return MOCK_FEEDBACK;
+  if (!supabase) return Array.from(getDemoStore().feedback.values()).filter((f) => f.status === "submitted");
   const { data, error } = await supabase
     .from("designer_feedback")
     .select("*")
@@ -680,7 +669,11 @@ export async function getAllFeedback(): Promise<DesignerFeedbackRow[]> {
 }
 
 export async function getDesignerFeedback(designerApplicationId: string): Promise<DesignerFeedbackRow[]> {
-  if (!supabase) return MOCK_FEEDBACK.filter((f) => f.designer_application_id === designerApplicationId);
+  if (!supabase) {
+    return Array.from(getDemoStore().feedback.values())
+      .filter((f) => f.designer_application_id === designerApplicationId)
+      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  }
   const { data, error } = await supabase
     .from("designer_feedback")
     .select("*")
@@ -690,8 +683,22 @@ export async function getDesignerFeedback(designerApplicationId: string): Promis
   return data as DesignerFeedbackRow[];
 }
 
+export async function getFeedbackByProject(projectId: string): Promise<DesignerFeedbackRow | null> {
+  if (!supabase) {
+    return Array.from(getDemoStore().feedback.values()).find((f) => f.project_id === projectId) ?? null;
+  }
+  const { data, error } = await supabase
+    .from("designer_feedback")
+    .select("*")
+    .eq("project_id", projectId)
+    .limit(1)
+    .single();
+  if (error) return null;
+  return data as DesignerFeedbackRow;
+}
+
 export async function getFeedbackByToken(token: string): Promise<DesignerFeedbackRow | null> {
-  if (!supabase) return MOCK_FEEDBACK.find((f) => f.id === token) ?? null;
+  if (!supabase) return getDemoStore().feedback.get(token) ?? null;
   const { data, error } = await supabase
     .from("designer_feedback")
     .select("*")
@@ -709,12 +716,29 @@ export async function createFeedbackRequest(input: {
 }): Promise<string> {
   const token = crypto.randomUUID();
   if (!supabase) {
-    console.warn("[createFeedbackRequest] Supabase not configured — token not persisted:", token);
+    const row: DesignerFeedbackRow = {
+      id: token,
+      designer_application_id: input.designerApplicationId,
+      project_id: null,
+      project_title: input.projectTitle,
+      client_name: input.clientName,
+      client_email: input.clientEmail || null,
+      quality_rating: null,
+      communication_rating: null,
+      delivery_rating: null,
+      would_rehire: null,
+      comments: null,
+      status: "pending",
+      created_at: new Date().toISOString(),
+      submitted_at: null,
+    };
+    getDemoStore().feedback.set(token, row);
     return token;
   }
   const { error } = await supabase.from("designer_feedback").insert({
     id: token,
     designer_application_id: input.designerApplicationId,
+    project_id: null,
     project_title: input.projectTitle,
     client_name: input.clientName,
     client_email: input.clientEmail || null,
@@ -733,7 +757,20 @@ export async function submitFeedbackResponse(input: {
   comments: string;
 }): Promise<void> {
   if (!supabase) {
-    console.warn("[submitFeedbackResponse] Supabase not configured — response not persisted.");
+    const store = getDemoStore();
+    const existing = store.feedback.get(input.token);
+    if (existing) {
+      store.feedback.set(input.token, {
+        ...existing,
+        quality_rating: input.qualityRating,
+        communication_rating: input.communicationRating,
+        delivery_rating: input.deliveryRating,
+        would_rehire: input.wouldRehire,
+        comments: input.comments,
+        status: "submitted",
+        submitted_at: new Date().toISOString(),
+      });
+    }
     return;
   }
   const { error } = await supabase
@@ -749,6 +786,99 @@ export async function submitFeedbackResponse(input: {
     })
     .eq("id", input.token);
   if (error) throw new Error(error.message);
+}
+
+export async function submitClientProjectReview(input: {
+  clientToken: string;
+  qualityRating: number;
+  communicationRating: number;
+  deliveryRating: number;
+  wouldRehire: "yes" | "maybe" | "no";
+  comments: string;
+}): Promise<void> {
+  const store = getDemoStore();
+
+  // Resolve project
+  const project = !supabase
+    ? (Array.from(store.projects.values()).find((p) => p.client_token === input.clientToken) ?? store.projects.get(input.clientToken) ?? null)
+    : null;
+
+  // Find assigned professional: prefer proposal selection
+  let designerApplicationId: string | null = null;
+  if (!supabase && project) {
+    const proposal = Array.from(store.proposals.values()).find((p) => p.project_id === project.id);
+    designerApplicationId = proposal?.selected_designer_id ?? project.assigned_professional_ids?.[0] ?? null;
+  }
+
+  if (!supabase) {
+    if (!project || !designerApplicationId) return;
+    const existing = Array.from(store.feedback.values()).find((f) => f.project_id === project.id);
+    const id = existing?.id ?? crypto.randomUUID();
+    store.feedback.set(id, {
+      id,
+      designer_application_id: designerApplicationId,
+      project_id: project.id,
+      project_title: project.title,
+      client_name: project.client_name,
+      client_email: project.client_email,
+      quality_rating: input.qualityRating,
+      communication_rating: input.communicationRating,
+      delivery_rating: input.deliveryRating,
+      would_rehire: input.wouldRehire,
+      comments: input.comments,
+      status: "submitted",
+      created_at: existing?.created_at ?? new Date().toISOString(),
+      submitted_at: new Date().toISOString(),
+    });
+    return;
+  }
+
+  // Supabase path: resolve project and designer from DB
+  const { data: proj } = await supabase
+    .from("projects")
+    .select("id, title, client_name, client_email, assigned_professional_ids")
+    .or(`client_token.eq.${input.clientToken},id.eq.${input.clientToken}`)
+    .limit(1)
+    .single();
+  if (!proj) return;
+
+  const proId = proj.assigned_professional_ids?.[0] ?? null;
+  if (!proId) return;
+
+  const { data: existing } = await supabase
+    .from("designer_feedback")
+    .select("id")
+    .eq("project_id", proj.id)
+    .limit(1)
+    .single();
+
+  if (existing) {
+    await supabase.from("designer_feedback").update({
+      quality_rating: input.qualityRating,
+      communication_rating: input.communicationRating,
+      delivery_rating: input.deliveryRating,
+      would_rehire: input.wouldRehire,
+      comments: input.comments,
+      status: "submitted",
+      submitted_at: new Date().toISOString(),
+    }).eq("id", existing.id);
+  } else {
+    await supabase.from("designer_feedback").insert({
+      id: crypto.randomUUID(),
+      designer_application_id: proId,
+      project_id: proj.id,
+      project_title: proj.title,
+      client_name: proj.client_name,
+      client_email: proj.client_email,
+      quality_rating: input.qualityRating,
+      communication_rating: input.communicationRating,
+      delivery_rating: input.deliveryRating,
+      would_rehire: input.wouldRehire,
+      comments: input.comments,
+      status: "submitted",
+      submitted_at: new Date().toISOString(),
+    });
+  }
 }
 
 // ─── Client proposals ─────────────────────────────────────────────────────────
@@ -774,16 +904,18 @@ type DemoStore = {
   projects: Map<string, ProjectRow>;
   milestones: Map<string, MilestoneRow>;
   applications: Map<string, DesignerApplicationRow>;
+  feedback: Map<string, DesignerFeedbackRow>;
 };
 function getDemoStore(): DemoStore {
   const g = globalThis as typeof globalThis & { __demoStore?: DemoStore };
-  if (!g.__demoStore?.projects || !g.__demoStore?.milestones || !g.__demoStore?.briefs || !g.__demoStore?.applications) {
+  if (!g.__demoStore?.projects || !g.__demoStore?.milestones || !g.__demoStore?.briefs || !g.__demoStore?.applications || !g.__demoStore?.feedback) {
     g.__demoStore = {
       briefs: g.__demoStore?.briefs ?? new Map(MOCK_BRIEFS.map((b) => [b.id, { ...b }])),
       proposals: g.__demoStore?.proposals ?? new Map(MOCK_PROPOSALS.map((p) => [p.id, { ...p }])),
       projects: g.__demoStore?.projects ?? new Map(MOCK_PROJECTS.map((p) => [p.id, { ...p }])),
       milestones: g.__demoStore?.milestones ?? new Map(MOCK_MILESTONES.map((m) => [m.id, { ...m }])),
       applications: g.__demoStore?.applications ?? new Map(MOCK_APPLICATIONS.map((a) => [a.id, { ...a }])),
+      feedback: g.__demoStore?.feedback ?? new Map(MOCK_FEEDBACK.map((f) => [f.id, { ...f }])),
     };
   }
   return g.__demoStore;
