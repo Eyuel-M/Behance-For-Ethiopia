@@ -166,6 +166,7 @@ const MOCK_APPLICATIONS: DesignerApplicationRow[] = [
     certificate_files: null,
     status: "approved",
     reviewer_notes: "Strong brand portfolio. Approved for brand identity and packaging projects.",
+    review_requested: false,
     created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
@@ -192,6 +193,7 @@ const MOCK_APPLICATIONS: DesignerApplicationRow[] = [
     certificate_files: null,
     status: "approved",
     reviewer_notes: "Excellent product design skills. Approved for UI/UX and mobile projects.",
+    review_requested: false,
     created_at: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
@@ -218,6 +220,7 @@ const MOCK_APPLICATIONS: DesignerApplicationRow[] = [
     certificate_files: null,
     status: "approved",
     reviewer_notes: "Great reel. Approved for motion graphics and social media animation projects.",
+    review_requested: false,
     created_at: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
@@ -244,6 +247,7 @@ const MOCK_APPLICATIONS: DesignerApplicationRow[] = [
     certificate_files: null,
     status: "waitlisted",
     reviewer_notes: "Promising but portfolio needs more depth. Revisit in 3 months.",
+    review_requested: false,
     created_at: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(),
   },
 ];
@@ -930,6 +934,8 @@ const MOCK_PROPOSALS: ClientProposalRow[] = [
 
 // Turbopack re-evaluates modules per request, so module-level mutations don't
 // survive to the next request. globalThis is a true process-level singleton.
+type OtpRecord = { code: string; expiresAt: number };
+type SessionRecord = { applicationId: string; expiresAt: number };
 type DemoStore = {
   briefs: Map<string, ClientBriefRow>;
   proposals: Map<string, ClientProposalRow>;
@@ -937,6 +943,8 @@ type DemoStore = {
   milestones: Map<string, MilestoneRow>;
   applications: Map<string, DesignerApplicationRow>;
   feedback: Map<string, DesignerFeedbackRow>;
+  otps: Map<string, OtpRecord>;       // key = phone number
+  sessions: Map<string, SessionRecord>; // key = session token
 };
 function getDemoStore(): DemoStore {
   const g = globalThis as typeof globalThis & { __demoStore?: DemoStore };
@@ -948,6 +956,8 @@ function getDemoStore(): DemoStore {
       milestones: g.__demoStore?.milestones ?? new Map(MOCK_MILESTONES.map((m) => [m.id, { ...m }])),
       applications: g.__demoStore?.applications ?? new Map(MOCK_APPLICATIONS.map((a) => [a.id, { ...a }])),
       feedback: g.__demoStore?.feedback ?? new Map(MOCK_FEEDBACK.map((f) => [f.id, { ...f }])),
+      otps: g.__demoStore?.otps ?? new Map(),
+      sessions: g.__demoStore?.sessions ?? new Map(),
     };
   }
   return g.__demoStore;
@@ -1186,4 +1196,112 @@ export async function deleteApplicationById(id: string): Promise<void> {
     return;
   }
   await supabase.from("designer_applications").delete().eq("id", id);
+}
+
+// ─── Professional account auth ───────────────────────────────────────────────
+
+export async function requestOtp(phone: string): Promise<{ found: boolean; demoCode?: string }> {
+  // Normalise phone: strip spaces
+  const normalised = phone.replace(/\s+/g, "");
+
+  if (!supabase) {
+    const store = getDemoStore();
+    const app = Array.from(store.applications.values()).find(
+      (a) => a.phone.replace(/\s+/g, "") === normalised
+    );
+    if (!app) return { found: false };
+    const code = String(Math.floor(100000 + Math.random() * 900000));
+    store.otps.set(normalised, { code, expiresAt: Date.now() + 10 * 60 * 1000 });
+    return { found: true, demoCode: code };
+  }
+
+  // Real path: look up phone in DB
+  const { data } = await supabase
+    .from("designer_applications")
+    .select("id")
+    .eq("phone", phone)
+    .limit(1)
+    .maybeSingle();
+  if (!data) return { found: false };
+
+  const code = String(Math.floor(100000 + Math.random() * 900000));
+  // Store OTP in DB (supabase table `account_otps`) or send via WhatsApp API
+  // For WhatsApp: POST to Twilio / Africa's Talking with code
+  // await sendWhatsAppMessage(phone, `Your Hire Ethiopia's Best code: ${code}`);
+  return { found: true };
+}
+
+export async function verifyOtp(phone: string, code: string): Promise<{ success: boolean; sessionToken?: string }> {
+  const normalised = phone.replace(/\s+/g, "");
+
+  if (!supabase) {
+    const store = getDemoStore();
+    const otp = store.otps.get(normalised);
+    if (!otp || otp.code !== code.trim() || Date.now() > otp.expiresAt) return { success: false };
+    store.otps.delete(normalised);
+    const app = Array.from(store.applications.values()).find(
+      (a) => a.phone.replace(/\s+/g, "") === normalised
+    );
+    if (!app) return { success: false };
+    const token = crypto.randomUUID();
+    store.sessions.set(token, { applicationId: app.id, expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000 });
+    return { success: true, sessionToken: token };
+  }
+
+  // Real path: verify from DB, create session
+  return { success: false };
+}
+
+export async function getSessionApplication(token: string): Promise<DesignerApplicationRow | null> {
+  if (!supabase) {
+    const store = getDemoStore();
+    const session = store.sessions.get(token);
+    if (!session || Date.now() > session.expiresAt) return null;
+    return store.applications.get(session.applicationId) ?? null;
+  }
+  return null;
+}
+
+export async function updateProfessionalProfile(
+  applicationId: string,
+  updates: {
+    bio?: string;
+    skills?: string;
+    tools?: string;
+    availability?: string;
+    hourly_rate?: string;
+    portfolio_url?: string;
+    social_url?: string;
+    work_samples?: string; // JSON array string
+  }
+): Promise<void> {
+  if (!supabase) {
+    const store = getDemoStore();
+    const app = store.applications.get(applicationId);
+    if (!app) return;
+    store.applications.set(applicationId, {
+      ...app,
+      ...updates,
+      review_requested: true,
+    });
+    return;
+  }
+  const { error } = await supabase
+    .from("designer_applications")
+    .update({ ...updates, review_requested: true })
+    .eq("id", applicationId);
+  if (error) throw new Error(error.message);
+}
+
+export async function clearReviewRequest(applicationId: string): Promise<void> {
+  if (!supabase) {
+    const store = getDemoStore();
+    const app = store.applications.get(applicationId);
+    if (app) store.applications.set(applicationId, { ...app, review_requested: false });
+    return;
+  }
+  await supabase
+    .from("designer_applications")
+    .update({ review_requested: false })
+    .eq("id", applicationId);
 }

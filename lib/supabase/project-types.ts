@@ -159,6 +159,7 @@ export type DesignerApplicationRow = {
   certificate_files: string | null; // JSON array of uploaded file URLs
   status: ApplicationStatus;
   reviewer_notes: string | null;
+  review_requested: boolean; // professional updated profile, needs admin re-review
   created_at: string;
 };
 

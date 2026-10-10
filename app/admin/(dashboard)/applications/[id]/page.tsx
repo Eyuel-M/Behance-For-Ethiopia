@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getDesignerApplication, getDesignerFeedback, getProjects, getProposals } from "@/lib/supabase/admin-queries";
+import { getDesignerApplication, getDesignerFeedback, getProjects, getProposals, clearReviewRequest } from "@/lib/supabase/admin-queries";
 import {
   APPLICATION_STATUS_LABELS,
   APPLICATION_STATUS_COLORS,
@@ -159,7 +159,22 @@ export default async function ApplicationDetailPage({ params, searchParams }: Pr
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-3 flex-wrap mb-2">
             <div>
-              <h1 className="text-2xl font-black text-zinc-900">{app.full_name}</h1>
+              <div className="flex items-center gap-2 flex-wrap">
+                <h1 className="text-2xl font-black text-zinc-900">{app.full_name}</h1>
+                {app.review_requested && (
+                  <div className="flex items-center gap-2">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold" style={{ backgroundColor: "#fef9c3", color: "#92400e", border: "1px solid #fde68a" }}>
+                      <span style={{ width: 6, height: 6, borderRadius: "50%", backgroundColor: "#f59e0b", display: "inline-block" }} />
+                      Profile updated — re-review needed
+                    </span>
+                    <form action={async () => { "use server"; await clearReviewRequest(id); }}>
+                      <button type="submit" className="text-xs font-semibold px-2.5 py-1 rounded-full border border-zinc-200 text-zinc-500 hover:bg-zinc-50 cursor-pointer bg-white">
+                        Mark reviewed
+                      </button>
+                    </form>
+                  </div>
+                )}
+              </div>
               <p className="text-sm text-zinc-500 mt-0.5">{app.specialty} · {app.city}</p>
             </div>
             <div className="flex items-center gap-3">

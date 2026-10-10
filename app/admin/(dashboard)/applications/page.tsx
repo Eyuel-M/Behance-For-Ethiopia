@@ -96,7 +96,15 @@ export default async function ApplicationsPage({
               {visible.map((a) => (
                 <tr key={a.id} className="hover:bg-zinc-50 transition-colors duration-100">
                   <td className="px-4 py-3">
-                    <p className="font-medium text-zinc-900 leading-snug">{a.full_name}</p>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <p className="font-medium text-zinc-900 leading-snug">{a.full_name}</p>
+                      {a.review_requested && (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold" style={{ backgroundColor: "#fef9c3", color: "#92400e", border: "1px solid #fde68a" }}>
+                          <span style={{ width: 5, height: 5, borderRadius: "50%", backgroundColor: "#f59e0b", display: "inline-block" }} />
+                          Re-review
+                        </span>
+                      )}
+                    </div>
                     <p className="text-xs text-zinc-400 mt-0.5">{a.email}</p>
                   </td>
                   <td className="px-4 py-3 text-zinc-600 hidden sm:table-cell">
