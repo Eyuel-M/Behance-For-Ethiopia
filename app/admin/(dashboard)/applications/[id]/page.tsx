@@ -398,55 +398,65 @@ export default async function ApplicationDetailPage({ params, searchParams }: Pr
 
       {/* Assigned projects */}
       <div className="mt-5">
-        <SectionCard title={`Assigned Projects (${assignedProjects.length})`}>
+        <div className="rounded-2xl overflow-hidden border border-zinc-800 shadow-sm">
+          {/* Dark header */}
+          <div className="bg-zinc-900 px-6 py-4 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-2 rounded-full bg-green-400" />
+              <h2 className="text-sm font-bold text-white tracking-tight">Assigned Projects</h2>
+            </div>
+            <span className="text-xs font-bold text-zinc-400 tabular-nums">{assignedProjects.length} project{assignedProjects.length !== 1 ? "s" : ""}</span>
+          </div>
+
           {assignedProjects.length === 0 ? (
-            <p className="text-sm text-zinc-400 py-1">No projects assigned yet.</p>
+            <div className="bg-zinc-950 px-6 py-8 text-center">
+              <p className="text-sm text-zinc-500">No projects assigned yet.</p>
+            </div>
           ) : (
-            <div className="space-y-3">
+            <div className="bg-zinc-950 divide-y divide-zinc-800">
               {assignedProjects.map((p) => {
-                const statusColors: Record<string, string> = {
-                  ready_to_start: "bg-blue-50 text-blue-700 border-blue-100",
-                  in_progress: "bg-green-50 text-green-700 border-green-100",
-                  submitted_for_review: "bg-amber-50 text-amber-700 border-amber-100",
-                  revision_requested: "bg-orange-50 text-orange-700 border-orange-100",
-                  change_requested: "bg-orange-50 text-orange-700 border-orange-100",
-                  accepted: "bg-green-50 text-green-700 border-green-100",
-                  completed: "bg-green-50 text-green-700 border-green-100",
-                  disputed: "bg-red-50 text-red-700 border-red-100",
-                  cancelled: "bg-zinc-50 text-zinc-400 border-zinc-100",
+                const statusMeta: Record<string, { label: string; dot: string; text: string }> = {
+                  ready_to_start:       { label: "Starting soon",        dot: "bg-blue-400",   text: "text-blue-400" },
+                  in_progress:          { label: "In progress",          dot: "bg-green-400",  text: "text-green-400" },
+                  submitted_for_review: { label: "Under review",         dot: "bg-amber-400",  text: "text-amber-400" },
+                  revision_requested:   { label: "Revisions requested",  dot: "bg-orange-400", text: "text-orange-400" },
+                  change_requested:     { label: "Changes requested",    dot: "bg-orange-400", text: "text-orange-400" },
+                  accepted:             { label: "Accepted",             dot: "bg-green-400",  text: "text-green-400" },
+                  completed:            { label: "Completed",            dot: "bg-zinc-400",   text: "text-zinc-400" },
+                  disputed:             { label: "On hold",              dot: "bg-red-400",    text: "text-red-400" },
+                  cancelled:            { label: "Cancelled",            dot: "bg-zinc-600",   text: "text-zinc-500" },
                 };
-                const statusLabel: Record<string, string> = {
-                  ready_to_start: "Starting soon",
-                  in_progress: "In progress",
-                  submitted_for_review: "Under review",
-                  revision_requested: "Revisions requested",
-                  change_requested: "Changes requested",
-                  accepted: "Accepted",
-                  completed: "Completed",
-                  disputed: "On hold",
-                  cancelled: "Cancelled",
-                };
+                const meta = statusMeta[p.status] ?? { label: p.status, dot: "bg-zinc-500", text: "text-zinc-400" };
                 return (
-                  <div key={p.id} className="flex items-center gap-3 rounded-xl border border-zinc-100 bg-zinc-50 px-4 py-3">
+                  <div key={p.id} className="flex items-center gap-4 px-6 py-4 hover:bg-zinc-900/60 transition-colors group">
+                    <div className={`w-1.5 h-10 rounded-full shrink-0 ${meta.dot} opacity-80`} />
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-zinc-900 truncate">{p.title}</p>
-                      <p className="text-xs text-zinc-400 mt-0.5">
+                      <p className="text-sm font-semibold text-white truncate">{p.title}</p>
+                      <p className="text-xs text-zinc-500 mt-0.5">
                         {p.client_business} · {p.category}
-                        {p.deadline && ` · Due ${new Date(p.deadline).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}`}
+                        {p.deadline && (
+                          <> · <span className={new Date(p.deadline) < new Date() ? "text-red-400" : ""}>
+                            Due {new Date(p.deadline).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                          </span></>
+                        )}
                       </p>
                     </div>
-                    <span className={`shrink-0 text-xs font-semibold px-2.5 py-0.5 rounded-full border ${statusColors[p.status] ?? "bg-zinc-50 text-zinc-400 border-zinc-100"}`}>
-                      {statusLabel[p.status] ?? p.status}
+                    <span className={`shrink-0 text-xs font-semibold ${meta.text} flex items-center gap-1.5`}>
+                      <span className={`w-1.5 h-1.5 rounded-full ${meta.dot}`} />
+                      {meta.label}
                     </span>
-                    <Link href={`/admin/projects/${p.id}`} className="shrink-0 text-xs font-semibold text-zinc-400 hover:text-zinc-700 transition-colors">
-                      View →
+                    <Link
+                      href={`/admin/projects/${p.id}`}
+                      className="shrink-0 text-xs font-semibold text-zinc-500 group-hover:text-white transition-colors"
+                    >
+                      Open →
                     </Link>
                   </div>
                 );
               })}
             </div>
           )}
-        </SectionCard>
+        </div>
       </div>
 
       {/* Performance metrics */}
