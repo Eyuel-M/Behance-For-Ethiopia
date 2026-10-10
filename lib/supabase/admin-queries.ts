@@ -705,9 +705,9 @@ type DemoStore = {
 };
 function getDemoStore(): DemoStore {
   const g = globalThis as typeof globalThis & { __demoStore?: DemoStore };
-  if (!g.__demoStore) {
+  if (!g.__demoStore?.projects) {
     g.__demoStore = {
-      proposals: new Map(MOCK_PROPOSALS.map((p) => [p.id, { ...p }])),
+      proposals: g.__demoStore?.proposals ?? new Map(MOCK_PROPOSALS.map((p) => [p.id, { ...p }])),
       projects: new Map(MOCK_PROJECTS.map((p) => [p.id, { ...p }])),
     };
   }
