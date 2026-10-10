@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getDesignerApplication, getDesignerFeedback } from "@/lib/supabase/admin-queries";
+import { getDesignerApplication, getDesignerFeedback, getProjects, getProposals } from "@/lib/supabase/admin-queries";
 import {
   APPLICATION_STATUS_LABELS,
   APPLICATION_STATUS_COLORS,
@@ -87,12 +87,24 @@ function computeMetrics(feedback: DesignerFeedbackRow[]) {
 export default async function ApplicationDetailPage({ params, searchParams }: Props) {
   const { id } = await params;
   const { newToken } = await searchParams;
-  const [app, feedback] = await Promise.all([
+  const [app, feedback, allProjects, allProposals] = await Promise.all([
     getDesignerApplication(id),
     getDesignerFeedback(id),
+    getProjects(),
+    getProposals(),
   ]);
   if (!app) notFound();
   const metrics = computeMetrics(feedback);
+
+  // Projects where this professional is the selected designer (via proposal) or directly assigned
+  const proposalProjectIds = new Set(
+    allProposals
+      .filter((p) => p.selected_designer_id === id)
+      .map((p) => p.project_id)
+  );
+  const assignedProjects = allProjects.filter(
+    (p) => proposalProjectIds.has(p.id) || p.assigned_professional_ids?.includes(id)
+  );
 
   const status = app.status as ApplicationStatus;
   const initials = app.full_name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
@@ -368,6 +380,59 @@ export default async function ApplicationDetailPage({ params, searchParams }: Pr
           <p className="text-xs text-green-700 mt-2 opacity-70">⚠ Link only persists once Supabase is connected.</p>
         </div>
       )}
+
+      {/* Assigned projects */}
+      <div className="mt-5">
+        <SectionCard title={`Assigned Projects (${assignedProjects.length})`}>
+          {assignedProjects.length === 0 ? (
+            <p className="text-sm text-zinc-400 py-1">No projects assigned yet.</p>
+          ) : (
+            <div className="space-y-3">
+              {assignedProjects.map((p) => {
+                const statusColors: Record<string, string> = {
+                  ready_to_start: "bg-blue-50 text-blue-700 border-blue-100",
+                  in_progress: "bg-green-50 text-green-700 border-green-100",
+                  submitted_for_review: "bg-amber-50 text-amber-700 border-amber-100",
+                  revision_requested: "bg-orange-50 text-orange-700 border-orange-100",
+                  change_requested: "bg-orange-50 text-orange-700 border-orange-100",
+                  accepted: "bg-green-50 text-green-700 border-green-100",
+                  completed: "bg-green-50 text-green-700 border-green-100",
+                  disputed: "bg-red-50 text-red-700 border-red-100",
+                  cancelled: "bg-zinc-50 text-zinc-400 border-zinc-100",
+                };
+                const statusLabel: Record<string, string> = {
+                  ready_to_start: "Starting soon",
+                  in_progress: "In progress",
+                  submitted_for_review: "Under review",
+                  revision_requested: "Revisions requested",
+                  change_requested: "Changes requested",
+                  accepted: "Accepted",
+                  completed: "Completed",
+                  disputed: "On hold",
+                  cancelled: "Cancelled",
+                };
+                return (
+                  <div key={p.id} className="flex items-center gap-3 rounded-xl border border-zinc-100 bg-zinc-50 px-4 py-3">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-zinc-900 truncate">{p.title}</p>
+                      <p className="text-xs text-zinc-400 mt-0.5">
+                        {p.client_business} · {p.category}
+                        {p.deadline && ` · Due ${new Date(p.deadline).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}`}
+                      </p>
+                    </div>
+                    <span className={`shrink-0 text-xs font-semibold px-2.5 py-0.5 rounded-full border ${statusColors[p.status] ?? "bg-zinc-50 text-zinc-400 border-zinc-100"}`}>
+                      {statusLabel[p.status] ?? p.status}
+                    </span>
+                    <Link href={`/admin/projects/${p.id}`} className="shrink-0 text-xs font-semibold text-zinc-400 hover:text-zinc-700 transition-colors">
+                      View →
+                    </Link>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </SectionCard>
+      </div>
 
       {/* Performance metrics */}
       {metrics && (
