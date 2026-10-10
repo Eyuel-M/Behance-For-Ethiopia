@@ -1,11 +1,45 @@
 import Link from "next/link";
-import { getDesignerApplications } from "@/lib/supabase/admin-queries";
+import { getDesignerApplications, getAllFeedback } from "@/lib/supabase/admin-queries";
+import type { DesignerFeedbackRow } from "@/lib/supabase/project-types";
 
 export const dynamic = "force-dynamic";
 
+function avgRating(feedback: DesignerFeedbackRow[]): number | null {
+  const submitted = feedback.filter((f) => f.status === "submitted" && f.quality_rating);
+  if (!submitted.length) return null;
+  const sum = submitted.reduce(
+    (s, f) => s + ((f.quality_rating! + f.communication_rating! + f.delivery_rating!) / 3),
+    0
+  );
+  return sum / submitted.length;
+}
+
+function Stars({ score, count }: { score: number; count: number }) {
+  return (
+    <div className="flex items-center gap-1.5">
+      <span className="flex items-center">
+        {[1, 2, 3, 4, 5].map((n) => (
+          <span key={n} className={`text-sm leading-none ${n <= Math.round(score) ? "text-amber-400" : "text-zinc-200"}`}>★</span>
+        ))}
+      </span>
+      <span className="text-xs font-bold text-zinc-700">{score.toFixed(1)}</span>
+      <span className="text-xs text-zinc-400">({count})</span>
+    </div>
+  );
+}
+
 export default async function AdminProfessionalsPage() {
-  const all = await getDesignerApplications();
+  const [all, allFeedback] = await Promise.all([
+    getDesignerApplications(),
+    getAllFeedback(),
+  ]);
   const approved = all.filter((a) => a.status === "approved");
+
+  // Group feedback by designer id
+  const feedbackByDesigner = allFeedback.reduce<Record<string, DesignerFeedbackRow[]>>((acc, f) => {
+    (acc[f.designer_application_id] ??= []).push(f);
+    return acc;
+  }, {});
 
   return (
     <div>
@@ -37,44 +71,50 @@ export default async function AdminProfessionalsPage() {
                 <th className="text-left px-4 py-3 font-semibold text-zinc-500 text-xs uppercase tracking-wide">Name</th>
                 <th className="text-left px-4 py-3 font-semibold text-zinc-500 text-xs uppercase tracking-wide hidden sm:table-cell">Specialty</th>
                 <th className="text-left px-4 py-3 font-semibold text-zinc-500 text-xs uppercase tracking-wide hidden md:table-cell">City</th>
-                <th className="text-left px-4 py-3 font-semibold text-zinc-500 text-xs uppercase tracking-wide hidden sm:table-cell">Rate</th>
-                <th className="text-left px-4 py-3 font-semibold text-zinc-500 text-xs uppercase tracking-wide">Availability</th>
+                <th className="text-left px-4 py-3 font-semibold text-zinc-500 text-xs uppercase tracking-wide hidden sm:table-cell">Project rate</th>
+                <th className="text-left px-4 py-3 font-semibold text-zinc-500 text-xs uppercase tracking-wide">Rating</th>
                 <th className="px-4 py-3" />
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-100">
-              {approved.map((p) => (
-                <tr key={p.id} className="hover:bg-zinc-50 transition-colors duration-100">
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-zinc-200 flex items-center justify-center text-xs font-semibold text-zinc-600 shrink-0">
-                        {p.full_name.split(" ").map((n: string) => n[0]).join("").slice(0, 2).toUpperCase()}
+              {approved.map((p) => {
+                const pFeedback = feedbackByDesigner[p.id] ?? [];
+                const score = avgRating(pFeedback);
+                const ratedCount = pFeedback.filter((f) => f.status === "submitted").length;
+                return (
+                  <tr key={p.id} className="hover:bg-zinc-50 transition-colors duration-100">
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-zinc-200 flex items-center justify-center text-xs font-semibold text-zinc-600 shrink-0">
+                          {p.full_name.split(" ").map((n: string) => n[0]).join("").slice(0, 2).toUpperCase()}
+                        </div>
+                        <div>
+                          <p className="font-medium text-zinc-900">{p.full_name}</p>
+                          <p className="text-xs text-zinc-400">{p.email}</p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="font-medium text-zinc-900">{p.full_name}</p>
-                        <p className="text-xs text-zinc-400">{p.email}</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 text-zinc-600 hidden sm:table-cell">{p.specialty}</td>
-                  <td className="px-4 py-3 text-zinc-500 hidden md:table-cell">{p.city}</td>
-                  <td className="px-4 py-3 text-zinc-600 hidden sm:table-cell">{p.hourly_rate}</td>
-                  <td className="px-4 py-3">
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-green-50 text-green-700">
-                      <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
-                      {p.availability}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <Link
-                      href={`/admin/applications/${p.id}`}
-                      className="text-xs font-medium text-zinc-500 hover:text-zinc-900 transition-colors"
-                    >
-                      View
-                    </Link>
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                    <td className="px-4 py-3 text-zinc-600 hidden sm:table-cell">{p.specialty}</td>
+                    <td className="px-4 py-3 text-zinc-500 hidden md:table-cell">{p.city}</td>
+                    <td className="px-4 py-3 text-zinc-600 hidden sm:table-cell text-xs">{p.hourly_rate}</td>
+                    <td className="px-4 py-3">
+                      {score !== null ? (
+                        <Stars score={score} count={ratedCount} />
+                      ) : (
+                        <span className="text-xs text-zinc-300">No ratings yet</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3">
+                      <Link
+                        href={`/admin/applications/${p.id}`}
+                        className="text-xs font-medium text-zinc-500 hover:text-zinc-900 transition-colors"
+                      >
+                        View →
+                      </Link>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

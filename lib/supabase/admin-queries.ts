@@ -497,6 +497,16 @@ const MOCK_FEEDBACK: DesignerFeedbackRow[] = [
   },
 ];
 
+export async function getAllFeedback(): Promise<DesignerFeedbackRow[]> {
+  if (!supabase) return MOCK_FEEDBACK;
+  const { data, error } = await supabase
+    .from("designer_feedback")
+    .select("*")
+    .eq("status", "submitted");
+  if (error) { console.error("[getAllFeedback]", error.message); return []; }
+  return data as DesignerFeedbackRow[];
+}
+
 export async function getDesignerFeedback(designerApplicationId: string): Promise<DesignerFeedbackRow[]> {
   if (!supabase) return MOCK_FEEDBACK.filter((f) => f.designer_application_id === designerApplicationId);
   const { data, error } = await supabase
