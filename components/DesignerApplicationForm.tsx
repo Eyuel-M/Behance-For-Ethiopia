@@ -288,6 +288,7 @@ export default function DesignerApplicationForm() {
           </div>
           {portfolioMode === "link" ? (
             <input
+              key="portfolio-link"
               type="url"
               value={form.portfolioUrl}
               onChange={(e) => set("portfolioUrl", e.target.value)}
@@ -296,6 +297,7 @@ export default function DesignerApplicationForm() {
             />
           ) : (
             <input
+              key="portfolio-pdf"
               type="file"
               accept="application/pdf"
               onChange={(e) => {
