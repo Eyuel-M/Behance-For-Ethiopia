@@ -3,8 +3,11 @@ import {
   getProposalByToken,
   getDesignerApplication,
   getDesignerFeedback,
+  getProject,
+  getProjectMilestones,
 } from "@/lib/supabase/admin-queries";
 import type { DesignerFeedbackRow } from "@/lib/supabase/project-types";
+import { MILESTONE_STATUS_LABELS, type MilestoneStatus } from "@/lib/supabase/project-types";
 import { selectDesigner } from "@/app/actions/client-proposal";
 
 export const dynamic = "force-dynamic";
@@ -34,10 +37,12 @@ export default async function ProposalPage({ params }: Props) {
   const proposal = await getProposalByToken(token);
   if (!proposal) notFound();
 
-  const designers = (
-    await Promise.all(proposal.designer_application_ids.map((id) => getDesignerApplication(id)))
-  ).filter(Boolean) as NonNullable<Awaited<ReturnType<typeof getDesignerApplication>>>[];
-
+  const [rawDesigners, project, milestones] = await Promise.all([
+    Promise.all(proposal.designer_application_ids.map((id) => getDesignerApplication(id))),
+    getProject(proposal.project_id),
+    getProjectMilestones(proposal.project_id),
+  ]);
+  const designers = rawDesigners.filter(Boolean) as NonNullable<Awaited<ReturnType<typeof getDesignerApplication>>>[];
   const feedbackLists = await Promise.all(designers.map((d) => getDesignerFeedback(d.id)));
 
   const isSelected = proposal.status === "selected";
@@ -54,19 +59,108 @@ export default async function ProposalPage({ params }: Props) {
       </div>
 
       {/* Header */}
-      <div className="max-w-5xl mx-auto px-5 pt-12 pb-10">
+      <div className="max-w-5xl mx-auto px-5 pt-12 pb-6">
         <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "rgba(109,204,70,0.7)" }}>
           {isSelected ? "Selection confirmed" : "Your shortlist"}
         </p>
-        <h1 className="text-3xl sm:text-4xl font-black text-white mb-4">
-          {isSelected ? "Thank you for choosing!" : "Choose your creative professional"}
+        <h1 className="text-3xl sm:text-4xl font-black text-white mb-2">
+          {isSelected ? "Thank you for choosing!" : (project?.title ?? "Choose your creative professional")}
         </h1>
+        {project && (
+          <p className="text-sm mb-4" style={{ color: "rgba(255,255,255,0.35)" }}>
+            {project.category} · {project.service_mode}
+          </p>
+        )}
         <p className="text-sm leading-relaxed max-w-xl" style={{ color: "rgba(255,255,255,0.5)" }}>
           {isSelected
             ? "Our team has been notified. We'll confirm the details and introduce you to your designer within 1 business day."
-            : `We've curated ${designers.length} professional${designers.length !== 1 ? "s" : ""} who match your project. Review their work and select who you'd like to work with.`}
+            : `We've curated ${designers.length} professional${designers.length !== 1 ? "s" : ""} who match your project. Review their work samples and bio, then select who you'd like to work with.`}
         </p>
       </div>
+
+      {/* Project scope */}
+      {project && !isSelected && (
+        <div className="max-w-5xl mx-auto px-5 pb-10">
+          <div className="rounded-2xl p-6" style={{ backgroundColor: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.09)" }}>
+            <p className="text-xs font-bold uppercase tracking-widest mb-5" style={{ color: "rgba(109,204,70,0.6)" }}>
+              What you&apos;re getting
+            </p>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+              {/* Deliverables + meta */}
+              <div>
+                <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: "rgba(255,255,255,0.3)" }}>Deliverables</p>
+                <p className="text-sm leading-relaxed mb-5" style={{ color: "rgba(255,255,255,0.65)" }}>{project.deliverables}</p>
+
+                {project.acceptance_criteria && (
+                  <div className="mb-5">
+                    <p className="text-xs font-bold uppercase tracking-widest mb-1.5" style={{ color: "rgba(255,255,255,0.25)" }}>Done when</p>
+                    <p className="text-sm" style={{ color: "rgba(255,255,255,0.45)" }}>{project.acceptance_criteria}</p>
+                  </div>
+                )}
+
+                <div className="flex gap-6 flex-wrap">
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.25)" }}>Budget</p>
+                    <p className="text-sm font-black text-white mt-0.5">{project.budget}</p>
+                  </div>
+                  {project.deadline && (
+                    <div>
+                      <p className="text-xs font-bold uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.25)" }}>Deadline</p>
+                      <p className="text-sm font-black text-white mt-0.5">
+                        {new Date(project.deadline).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}
+                      </p>
+                    </div>
+                  )}
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.25)" }}>Revisions</p>
+                    <p className="text-sm font-black text-white mt-0.5">Up to {project.revision_limit}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Milestones */}
+              {milestones.length > 0 && (
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.3)" }}>Project timeline</p>
+                  <div className="space-y-2">
+                    {milestones.map((m, i) => (
+                      <div key={m.id} className="flex items-start gap-3 rounded-xl px-3 py-2.5"
+                        style={{ backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                        <span className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5"
+                          style={{ backgroundColor: "rgba(109,204,70,0.15)", color: "#6dcc46" }}>{i + 1}</span>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold text-white">{m.title}</p>
+                          {m.description && (
+                            <p className="text-xs mt-0.5 line-clamp-1" style={{ color: "rgba(255,255,255,0.35)" }}>{m.description}</p>
+                          )}
+                          {m.due_date && (
+                            <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.25)" }}>
+                              Due {new Date(m.due_date).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}
+                            </p>
+                          )}
+                        </div>
+                        {m.payment_condition && (
+                          <span className="text-xs font-semibold shrink-0 mt-0.5" style={{ color: "#6dcc46" }}>{m.payment_condition}</span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Divider */}
+          <div className="flex items-center gap-4 mt-10 mb-2">
+            <div className="flex-1 h-px" style={{ backgroundColor: "rgba(255,255,255,0.06)" }} />
+            <p className="text-xs font-bold uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.2)" }}>
+              Now choose your professional
+            </p>
+            <div className="flex-1 h-px" style={{ backgroundColor: "rgba(255,255,255,0.06)" }} />
+          </div>
+        </div>
+      )}
 
       {/* Cards */}
       <div className="max-w-5xl mx-auto px-5 pb-20">

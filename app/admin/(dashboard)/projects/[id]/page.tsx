@@ -55,6 +55,14 @@ export default async function ProjectDetailPage({ params, searchParams }: Props)
   ]);
   if (!project) notFound();
   const approvedDesigners = allDesigners.filter((d) => d.status === "approved");
+  const shortlistedDesigners = existingProposal
+    ? (existingProposal.designer_application_ids
+        .map((did) => allDesigners.find((d) => d.id === did))
+        .filter(Boolean))
+    : [];
+  const selectedDesigner = existingProposal?.selected_designer_id
+    ? allDesigners.find((d) => d.id === existingProposal.selected_designer_id) ?? null
+    : null;
 
   const status = project.status as ProjectStatus;
 
@@ -319,11 +327,11 @@ export default async function ProjectDetailPage({ params, searchParams }: Props)
       <div className="mt-5">
         <Section title="Professional Shortlist">
 
-          {/* New proposal token banner */}
+          {/* Proposal token banner (just generated) */}
           {proposalToken && (
             <div className="mb-5 rounded-xl border border-green-200 bg-green-50 px-5 py-4">
               <p className="text-xs font-bold text-green-700 uppercase tracking-widest mb-1.5">Proposal link generated</p>
-              <p className="text-sm text-green-800 mb-2">Share this link with your client — it opens the anonymized shortlist:</p>
+              <p className="text-sm text-green-800 mb-2">Share this link with your client — it shows the project scope, milestones, and anonymized shortlist:</p>
               <div className="flex items-center gap-3 flex-wrap bg-white rounded-lg border border-green-200 px-4 py-2.5">
                 <code className="text-xs text-zinc-700 flex-1 break-all font-mono">
                   /proposal/{proposalToken}
@@ -337,45 +345,84 @@ export default async function ProjectDetailPage({ params, searchParams }: Props)
             </div>
           )}
 
-          {/* Existing proposal status (when not just generated) */}
-          {existingProposal && !proposalToken && (
-            <div className={`mb-5 rounded-xl border px-5 py-4 ${existingProposal.status === "selected" ? "border-green-200 bg-green-50" : "border-amber-100 bg-amber-50"}`}>
-              <div className="flex items-center justify-between gap-3 flex-wrap">
-                <div>
-                  <p className={`text-xs font-bold uppercase tracking-widest mb-0.5 ${existingProposal.status === "selected" ? "text-green-700" : "text-amber-700"}`}>
-                    Proposal {existingProposal.status === "selected" ? "— Client selected" : "— Awaiting client"}
-                  </p>
-                  <p className={`text-sm ${existingProposal.status === "selected" ? "text-green-800" : "text-amber-800"}`}>
-                    {existingProposal.status === "selected"
-                      ? `Client has chosen a designer. Update project status to In Progress.`
-                      : `Proposal sent. Waiting for client to choose a designer.`}
-                  </p>
-                </div>
+          {/* ── State A: Client selected a designer ── */}
+          {existingProposal && existingProposal.status === "selected" && (
+            <div>
+              <div className="flex items-center justify-between gap-3 mb-4 flex-wrap">
+                <p className="text-xs font-semibold text-green-700 uppercase tracking-widest">Client selected a professional</p>
                 <Link href={`/proposal/${existingProposal.id}`} target="_blank"
-                  className="text-xs font-bold text-zinc-500 hover:text-zinc-900 transition-colors shrink-0">
+                  className="text-xs text-zinc-400 hover:text-zinc-700 transition-colors">
                   View proposal →
                 </Link>
               </div>
+              {selectedDesigner ? (
+                <div className="flex items-center gap-3 rounded-xl border border-green-200 bg-green-50 px-4 py-3.5">
+                  <div className="w-9 h-9 rounded-full bg-zinc-900 flex items-center justify-center text-white text-xs font-bold shrink-0">
+                    {selectedDesigner.full_name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-bold text-zinc-900">{selectedDesigner.full_name}</p>
+                    <p className="text-xs text-zinc-500 truncate">{selectedDesigner.specialty} · {selectedDesigner.hourly_rate}</p>
+                  </div>
+                  <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-green-100 text-green-700 border border-green-200 shrink-0">
+                    ✓ Selected
+                  </span>
+                </div>
+              ) : (
+                <p className="text-sm text-zinc-400">Designer data unavailable.</p>
+              )}
+              <p className="text-xs text-zinc-400 mt-3">Update the project status to &quot;In progress&quot; to kick things off.</p>
             </div>
           )}
 
-          {/* Picker */}
-          {!existingProposal && approvedDesigners.length === 0 ? (
+          {/* ── State B: Proposal sent, awaiting client ── */}
+          {existingProposal && existingProposal.status !== "selected" && (
+            <div>
+              <div className="flex items-center justify-between gap-3 mb-4 flex-wrap">
+                <p className="text-xs font-semibold text-amber-600 uppercase tracking-widest">Pending client selection</p>
+                <Link href={`/proposal/${existingProposal.id}`} target="_blank"
+                  className="text-xs text-zinc-400 hover:text-zinc-700 transition-colors">
+                  View proposal →
+                </Link>
+              </div>
+              <div className="space-y-2">
+                {shortlistedDesigners.map((d, i) => {
+                  if (!d) return null;
+                  const initials = d.full_name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
+                  return (
+                    <div key={d.id} className="flex items-center gap-3 rounded-xl border border-zinc-100 bg-zinc-50 px-4 py-3">
+                      <span className="text-xs font-bold text-zinc-400 w-6 text-center shrink-0">
+                        {["A","B","C"][i]}
+                      </span>
+                      <div className="w-8 h-8 rounded-full bg-zinc-900 flex items-center justify-center text-white text-xs font-bold shrink-0">
+                        {initials}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-zinc-900">{d.full_name}</p>
+                        <p className="text-xs text-zinc-400 truncate">{d.specialty} · {d.city}</p>
+                      </div>
+                      <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-amber-50 text-amber-600 border border-amber-100 shrink-0">
+                        Pending
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+              <p className="text-xs text-zinc-400 mt-3">Waiting for the client to choose from the shortlist above.</p>
+            </div>
+          )}
+
+          {/* ── State C: No proposal yet ── */}
+          {!existingProposal && approvedDesigners.length === 0 && (
             <div className="text-center py-6">
               <p className="text-sm text-zinc-400 mb-3">No approved professionals yet.</p>
               <Link href="/admin/applications" className="text-sm font-semibold text-green-700 hover:text-green-900 transition-colors">
                 Review applications →
               </Link>
             </div>
-          ) : !existingProposal ? (
+          )}
+          {!existingProposal && approvedDesigners.length > 0 && (
             <ProposalDesignerPicker projectId={id} designers={approvedDesigners} />
-          ) : (
-            <p className="text-sm text-zinc-400 text-center py-4">
-              Proposal already active.{" "}
-              <Link href={`/proposal/${existingProposal.id}`} target="_blank" className="text-green-700 hover:text-green-900 font-medium transition-colors">
-                View it →
-              </Link>
-            </p>
           )}
         </Section>
       </div>
