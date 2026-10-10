@@ -68,12 +68,12 @@ const AVAILABILITY_OPTIONS = [
 ];
 
 const RATE_OPTIONS = [
-  "Under $10/hr",
-  "$10–$20/hr",
-  "$20–$40/hr",
-  "$40–$60/hr",
-  "$60–$100/hr",
-  "$100+/hr",
+  "Under ETB 500/hr",
+  "ETB 500 – 1,500/hr",
+  "ETB 1,500 – 3,000/hr",
+  "ETB 3,000 – 5,500/hr",
+  "ETB 5,500 – 10,000/hr",
+  "ETB 10,000+/hr",
 ];
 
 const ONSITE_OPTIONS = [
