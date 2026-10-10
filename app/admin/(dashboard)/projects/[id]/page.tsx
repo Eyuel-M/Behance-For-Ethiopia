@@ -421,8 +421,8 @@ export default async function ProjectDetailPage({ params, searchParams }: Props)
             </div>
           )}
 
-          {/* ── State C: No proposal yet ── */}
-          {!existingProposal && approvedDesigners.length === 0 && (
+          {/* ── State C: No proposal yet (and link not just generated) ── */}
+          {!existingProposal && !proposalToken && approvedDesigners.length === 0 && (
             <div className="text-center py-6">
               <p className="text-sm text-zinc-400 mb-3">No approved professionals yet.</p>
               <Link href="/admin/applications" className="text-sm font-semibold text-green-700 hover:text-green-900 transition-colors">
@@ -430,7 +430,7 @@ export default async function ProjectDetailPage({ params, searchParams }: Props)
               </Link>
             </div>
           )}
-          {!existingProposal && approvedDesigners.length > 0 && (
+          {!existingProposal && !proposalToken && approvedDesigners.length > 0 && (
             <ProposalDesignerPicker projectId={id} designers={approvedDesigners} />
           )}
         </Section>
