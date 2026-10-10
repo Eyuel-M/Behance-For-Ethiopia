@@ -685,6 +685,19 @@ const MOCK_PROPOSALS: ClientProposalRow[] = [
   },
 ];
 
+// Turbopack re-evaluates modules per request, so module-level mutations don't
+// survive to the next request. globalThis is a true process-level singleton.
+type DemoStore = { proposals: Map<string, ClientProposalRow> };
+function getDemoStore(): DemoStore {
+  const g = globalThis as typeof globalThis & { __demoStore?: DemoStore };
+  if (!g.__demoStore) {
+    g.__demoStore = {
+      proposals: new Map(MOCK_PROPOSALS.map((p) => [p.id, { ...p }])),
+    };
+  }
+  return g.__demoStore;
+}
+
 export async function getProposalByProject(projectId: string): Promise<ClientProposalRow | null> {
   if (!supabase) return null; // demo: always show the picker so you can generate a link
   const { data, error } = await supabase
@@ -699,7 +712,7 @@ export async function getProposalByProject(projectId: string): Promise<ClientPro
 }
 
 export async function getProposalByToken(token: string): Promise<ClientProposalRow | null> {
-  if (!supabase) return MOCK_PROPOSALS.find((p) => p.id === token) ?? null;
+  if (!supabase) return getDemoStore().proposals.get(token) ?? null;
   const { data, error } = await supabase
     .from("client_proposals")
     .select("*")
@@ -743,8 +756,9 @@ export async function getProjectByClientToken(token: string): Promise<ProjectRow
 
 export async function requestProposalRevision(token: string, note: string): Promise<void> {
   if (!supabase) {
-    const p = MOCK_PROPOSALS.find((m) => m.id === token);
-    if (p) { p.status = "revision_requested"; p.client_note = note; }
+    const store = getDemoStore();
+    const p = store.proposals.get(token);
+    if (p) { store.proposals.set(token, { ...p, status: "revision_requested", client_note: note }); }
     return;
   }
   await supabase.from("client_proposals").update({
@@ -758,8 +772,16 @@ export async function selectProposalDesigner(
   designerId: string
 ): Promise<void> {
   if (!supabase) {
-    const p = MOCK_PROPOSALS.find((m) => m.id === token);
-    if (p) { p.selected_designer_id = designerId; p.status = "selected"; p.selected_at = new Date().toISOString(); }
+    const store = getDemoStore();
+    const p = store.proposals.get(token);
+    if (p) {
+      store.proposals.set(token, {
+        ...p,
+        selected_designer_id: designerId,
+        status: "selected",
+        selected_at: new Date().toISOString(),
+      });
+    }
     return;
   }
   await supabase.from("client_proposals").update({
