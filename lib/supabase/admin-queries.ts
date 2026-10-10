@@ -123,7 +123,7 @@ export async function updateBriefStatus(
   status: string,
   adminNotes?: string
 ): Promise<void> {
-  if (!supabase) throw new Error("Supabase not configured.");
+  if (!supabase) { console.warn("[demo] Supabase not configured — write skipped."); return; }
   const updates: Record<string, string> = { status };
   if (adminNotes !== undefined) updates.admin_notes = adminNotes;
   const { error } = await supabase
@@ -256,7 +256,7 @@ export async function updateApplicationStatus(
   status: string,
   reviewerNotes?: string
 ): Promise<void> {
-  if (!supabase) throw new Error("Supabase not configured.");
+  if (!supabase) { console.warn("[demo] Supabase not configured — write skipped."); return; }
   const updates: Record<string, string> = { status };
   if (reviewerNotes !== undefined) updates.reviewer_notes = reviewerNotes;
   const { error } = await supabase
@@ -367,7 +367,7 @@ export async function updateProjectStatus(
   status: string,
   notes?: string
 ): Promise<void> {
-  if (!supabase) throw new Error("Supabase not configured.");
+  if (!supabase) { console.warn("[demo] Supabase not configured — write skipped."); return; }
   const updates: Record<string, string> = { status, updated_at: new Date().toISOString() };
   if (notes !== undefined) updates.manager_notes = notes;
   const { error } = await supabase.from("projects").update(updates).eq("id", id);
@@ -442,7 +442,7 @@ export async function addMilestone(input: {
   paymentCondition?: string;
   sortOrder?: number;
 }): Promise<void> {
-  if (!supabase) throw new Error("Supabase not configured.");
+  if (!supabase) { console.warn("[demo] Supabase not configured — write skipped."); return; }
   const { error } = await supabase.from("project_milestones").insert({
     project_id: input.projectId,
     title: input.title,
@@ -459,7 +459,7 @@ export async function updateMilestoneStatus(
   id: string,
   status: string
 ): Promise<void> {
-  if (!supabase) throw new Error("Supabase not configured.");
+  if (!supabase) { console.warn("[demo] Supabase not configured — write skipped."); return; }
   const { error } = await supabase
     .from("project_milestones")
     .update({ status })
@@ -505,7 +505,7 @@ export async function addProjectNote(input: {
   content: string;
   isInternal?: boolean;
 }): Promise<void> {
-  if (!supabase) throw new Error("Supabase not configured.");
+  if (!supabase) { console.warn("[demo] Supabase not configured — write skipped."); return; }
   const { error } = await supabase.from("project_notes").insert({
     project_id: input.projectId,
     author: input.author,
