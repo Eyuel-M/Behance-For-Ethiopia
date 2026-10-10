@@ -59,16 +59,6 @@ export default function NewProjectPage() {
         </p>
       </div>
 
-      {/* What happens next — compact strip */}
-      <div className="mb-6 flex items-center gap-2 flex-wrap">
-        <span className="text-xs text-zinc-400">After submitting →</span>
-        {["Project dashboard", "Add milestones", "Client tracking link", "Pro portal link"].map((step, i) => (
-          <span key={i} className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-zinc-100 text-zinc-500 text-xs font-medium">
-            <span className="w-3.5 h-3.5 rounded-full bg-zinc-300 text-zinc-600 text-[9px] font-bold flex items-center justify-center shrink-0">{i + 1}</span>
-            {step}
-          </span>
-        ))}
-      </div>
 
       <form action={createProjectFromScratch} className="space-y-5">
 
