@@ -789,6 +789,16 @@ function getDemoStore(): DemoStore {
   return g.__demoStore;
 }
 
+export async function getProposals(): Promise<ClientProposalRow[]> {
+  if (!supabase) return Array.from(getDemoStore().proposals.values());
+  const { data, error } = await supabase
+    .from("client_proposals")
+    .select("*")
+    .order("created_at", { ascending: false });
+  if (error) { console.error("[getProposals]", error.message); return []; }
+  return data as ClientProposalRow[];
+}
+
 export async function getProposalByProject(projectId: string): Promise<ClientProposalRow | null> {
   if (!supabase) {
     const match = Array.from(getDemoStore().proposals.values()).find((p) => p.project_id === projectId);

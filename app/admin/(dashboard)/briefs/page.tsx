@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getClientBriefs, getProjects, getDesignerApplications } from "@/lib/supabase/admin-queries";
+import { getClientBriefs, getProjects, getDesignerApplications, getProposals } from "@/lib/supabase/admin-queries";
 import {
   BRIEF_STATUS_LABELS,
   BRIEF_STATUS_COLORS,
@@ -17,16 +17,35 @@ function StatusBadge({ status }: { status: BriefStatus }) {
 }
 
 export default async function BriefsPage() {
-  const [briefs, projects, applications] = await Promise.all([
+  const [briefs, projects, applications, proposals] = await Promise.all([
     getClientBriefs(),
     getProjects(),
     getDesignerApplications(),
+    getProposals(),
   ]);
 
   const appById = new Map(applications.map((a) => [a.id, a]));
+
+  // Map project_id → selected designer name from proposals (most reliable source)
+  const selectedByProject = new Map<string, string>();
+  for (const prop of proposals) {
+    if (prop.selected_designer_id) {
+      const pro = appById.get(prop.selected_designer_id);
+      if (pro) selectedByProject.set(prop.project_id, pro.full_name);
+    }
+  }
+
+  // Map project_id → brief_id so we can go brief → project → designer
   const assignedByBrief = new Map<string, string>();
   for (const p of projects) {
-    if (p.brief_id && p.assigned_professional_ids?.length) {
+    if (!p.brief_id) continue;
+    // prefer proposal selection; fall back to assigned_professional_ids on the project
+    const fromProposal = selectedByProject.get(p.id);
+    if (fromProposal) {
+      assignedByBrief.set(p.brief_id, fromProposal);
+      continue;
+    }
+    if (p.assigned_professional_ids?.length) {
       const pro = appById.get(p.assigned_professional_ids[0]);
       if (pro) assignedByBrief.set(p.brief_id, pro.full_name);
     }
