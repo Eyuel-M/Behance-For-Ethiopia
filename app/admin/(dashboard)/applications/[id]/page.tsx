@@ -8,7 +8,6 @@ import {
   type DesignerFeedbackRow,
 } from "@/lib/supabase/project-types";
 import { reviewApplication } from "@/app/actions/admin-applications";
-import { generateFeedbackLink } from "@/app/actions/designer-feedback";
 import { profileCompletion, completionColor } from "@/lib/profile-completion";
 
 export const dynamic = "force-dynamic";
@@ -449,36 +448,6 @@ export default async function ApplicationDetailPage({ params, searchParams }: Pr
         </div>
       )}
 
-      {/* Generate feedback link */}
-      <div className="mt-5">
-        <SectionCard title="Request Client Feedback" accent>
-          <p className="text-sm text-zinc-500 mb-4">Generate a unique feedback link to send to a client after a completed project.</p>
-          <form action={generateFeedbackLink} className="space-y-4">
-            <input type="hidden" name="designerId" value={id} />
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest block mb-2">Client name <span className="text-red-400">*</span></label>
-                <input type="text" name="clientName" required placeholder="Dawit Alemu"
-                  className="w-full rounded-xl border border-zinc-200 px-4 py-3 text-sm text-zinc-900 bg-white outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/10" />
-              </div>
-              <div>
-                <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest block mb-2">Client email (optional)</label>
-                <input type="email" name="clientEmail" placeholder="client@example.com"
-                  className="w-full rounded-xl border border-zinc-200 px-4 py-3 text-sm text-zinc-900 bg-white outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/10" />
-              </div>
-            </div>
-            <div>
-              <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest block mb-2">Project title <span className="text-red-400">*</span></label>
-              <input type="text" name="projectTitle" required placeholder="Brand Identity — Business Name"
-                className="w-full rounded-xl border border-zinc-200 px-4 py-3 text-sm text-zinc-900 bg-white outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/10" />
-            </div>
-            <button type="submit"
-              className="px-6 py-3 rounded-full bg-green-500 text-black text-sm font-bold hover:bg-green-400 transition-colors cursor-pointer">
-              Generate feedback link →
-            </button>
-          </form>
-        </SectionCard>
-      </div>
 
       {/* Review decision */}
       <div className="mt-5 mb-8">
