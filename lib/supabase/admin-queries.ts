@@ -693,7 +693,7 @@ const MOCK_PROPOSALS: ClientProposalRow[] = [
 ];
 
 export async function getProposalByProject(projectId: string): Promise<ClientProposalRow | null> {
-  if (!supabase) return MOCK_PROPOSALS.find((p) => p.project_id === projectId) ?? null;
+  if (!supabase) return null; // demo: always show the picker so you can generate a link
   const { data, error } = await supabase
     .from("client_proposals")
     .select("*")
