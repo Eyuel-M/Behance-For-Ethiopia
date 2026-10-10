@@ -6,6 +6,7 @@ import {
   getProjectNotes,
   getDesignerApplications,
   getProposalByProject,
+  getProposalByToken,
 } from "@/lib/supabase/admin-queries";
 import {
   PROJECT_STATUS_LABELS,
@@ -46,22 +47,26 @@ function MilestoneBadge({ status }: { status: MilestoneStatus }) {
 export default async function ProjectDetailPage({ params, searchParams }: Props) {
   const { id } = await params;
   const { proposalToken } = await searchParams;
-  const [project, milestones, notes, allDesigners, existingProposal] = await Promise.all([
+  const [project, milestones, notes, allDesigners, existingProposal, tokenProposal] = await Promise.all([
     getProject(id),
     getProjectMilestones(id),
     getProjectNotes(id),
     getDesignerApplications(),
     getProposalByProject(id),
+    proposalToken ? getProposalByToken(proposalToken) : Promise.resolve(null),
   ]);
   if (!project) notFound();
+  // Use whichever proposal we can find — DB-saved one takes priority,
+  // tokenProposal covers demo mode where getProposalByProject returns null.
+  const activeProposal = existingProposal ?? tokenProposal;
   const approvedDesigners = allDesigners.filter((d) => d.status === "approved");
-  const shortlistedDesigners = existingProposal
-    ? (existingProposal.designer_application_ids
+  const shortlistedDesigners = activeProposal
+    ? (activeProposal.designer_application_ids
         .map((did) => allDesigners.find((d) => d.id === did))
         .filter(Boolean))
     : [];
-  const selectedDesigner = existingProposal?.selected_designer_id
-    ? allDesigners.find((d) => d.id === existingProposal.selected_designer_id) ?? null
+  const selectedDesigner = activeProposal?.selected_designer_id
+    ? allDesigners.find((d) => d.id === activeProposal.selected_designer_id) ?? null
     : null;
 
   const status = project.status as ProjectStatus;
@@ -346,11 +351,11 @@ export default async function ProjectDetailPage({ params, searchParams }: Props)
           )}
 
           {/* ── State A: Client selected a designer ── */}
-          {existingProposal && existingProposal.status === "selected" && (
+          {activeProposal && activeProposal.status === "selected" && (
             <div>
               <div className="flex items-center justify-between gap-3 mb-4 flex-wrap">
                 <p className="text-xs font-semibold text-green-700 uppercase tracking-widest">Client selected a professional</p>
-                <Link href={`/proposal/${existingProposal.id}`} target="_blank"
+                <Link href={`/proposal/${activeProposal.id}`} target="_blank"
                   className="text-xs text-zinc-400 hover:text-zinc-700 transition-colors">
                   View proposal →
                 </Link>
@@ -376,20 +381,20 @@ export default async function ProjectDetailPage({ params, searchParams }: Props)
           )}
 
           {/* ── State B: Proposal sent, awaiting client ── */}
-          {existingProposal && existingProposal.status !== "selected" && (
+          {activeProposal && activeProposal.status !== "selected" && (
             <div>
-              {existingProposal.status === "revision_requested" && existingProposal.client_note && (
+              {activeProposal.status === "revision_requested" && activeProposal.client_note && (
                 <div className="mb-4 rounded-xl border border-orange-200 bg-orange-50 px-4 py-3">
                   <p className="text-xs font-bold text-orange-700 uppercase tracking-widest mb-1">Client requested changes</p>
-                  <p className="text-sm text-orange-800 leading-relaxed">&ldquo;{existingProposal.client_note}&rdquo;</p>
+                  <p className="text-sm text-orange-800 leading-relaxed">&ldquo;{activeProposal.client_note}&rdquo;</p>
                   <p className="text-xs text-orange-600 mt-2">Update the shortlist and generate a new proposal link for this client.</p>
                 </div>
               )}
               <div className="flex items-center justify-between gap-3 mb-4 flex-wrap">
-                <p className={`text-xs font-semibold uppercase tracking-widest ${existingProposal.status === "revision_requested" ? "text-orange-600" : "text-amber-600"}`}>
-                  {existingProposal.status === "revision_requested" ? "Revision requested" : "Pending client selection"}
+                <p className={`text-xs font-semibold uppercase tracking-widest ${activeProposal.status === "revision_requested" ? "text-orange-600" : "text-amber-600"}`}>
+                  {activeProposal.status === "revision_requested" ? "Revision requested" : "Pending client selection"}
                 </p>
-                <Link href={`/proposal/${existingProposal.id}`} target="_blank"
+                <Link href={`/proposal/${activeProposal.id}`} target="_blank"
                   className="text-xs text-zinc-400 hover:text-zinc-700 transition-colors">
                   View proposal →
                 </Link>
@@ -421,8 +426,8 @@ export default async function ProjectDetailPage({ params, searchParams }: Props)
             </div>
           )}
 
-          {/* ── State C: No proposal yet (and link not just generated) ── */}
-          {!existingProposal && !proposalToken && approvedDesigners.length === 0 && (
+          {/* ── State C: No proposal yet ── */}
+          {!activeProposal && approvedDesigners.length === 0 && (
             <div className="text-center py-6">
               <p className="text-sm text-zinc-400 mb-3">No approved professionals yet.</p>
               <Link href="/admin/applications" className="text-sm font-semibold text-green-700 hover:text-green-900 transition-colors">
@@ -430,7 +435,7 @@ export default async function ProjectDetailPage({ params, searchParams }: Props)
               </Link>
             </div>
           )}
-          {!existingProposal && !proposalToken && approvedDesigners.length > 0 && (
+          {!activeProposal && approvedDesigners.length > 0 && (
             <ProposalDesignerPicker projectId={id} designers={approvedDesigners} />
           )}
         </Section>
