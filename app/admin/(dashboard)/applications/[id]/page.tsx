@@ -9,7 +9,8 @@ import {
 } from "@/lib/supabase/project-types";
 import { reviewApplication, deleteApplication } from "@/app/actions/admin-applications";
 import { profileCompletion, completionColor } from "@/lib/profile-completion";
-import ConfirmDeleteButton from "@/components/ConfirmDeleteButton";
+import dynamic from "next/dynamic";
+const ConfirmDeleteButton = dynamic(() => import("@/components/ConfirmDeleteButton"), { ssr: false });
 
 export const dynamic = "force-dynamic";
 

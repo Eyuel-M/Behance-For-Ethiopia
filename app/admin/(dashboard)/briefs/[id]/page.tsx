@@ -7,7 +7,8 @@ import {
   type BriefStatus,
 } from "@/lib/supabase/project-types";
 import { qualifyBrief, createProjectFromBrief, deleteBrief } from "@/app/actions/admin-briefs";
-import ConfirmDeleteButton from "@/components/ConfirmDeleteButton";
+import dynamic from "next/dynamic";
+const ConfirmDeleteButton = dynamic(() => import("@/components/ConfirmDeleteButton"), { ssr: false });
 
 export const dynamic = "force-dynamic";
 

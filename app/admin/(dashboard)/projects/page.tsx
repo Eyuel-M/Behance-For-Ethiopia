@@ -28,17 +28,31 @@ export default async function ProjectsPage() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-xl font-bold text-zinc-900">Projects</h1>
-        <p className="text-sm text-zinc-400 mt-0.5">{projects.length} total · {active.length} active</p>
+      <div className="mb-6 flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-xl font-bold text-zinc-900">Projects</h1>
+          <p className="text-sm text-zinc-400 mt-0.5">{projects.length} total · {active.length} active</p>
+        </div>
+        <Link
+          href="/admin/projects/new"
+          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-zinc-900 text-white text-sm font-bold hover:bg-zinc-700 transition-colors cursor-pointer shrink-0"
+        >
+          + New project
+        </Link>
       </div>
 
       {projects.length === 0 ? (
         <div className="rounded-xl border border-zinc-200 bg-white p-16 text-center">
-          <p className="text-zinc-400 text-sm">No projects yet. Create one from a qualified brief.</p>
-          <Link href="/admin/briefs" className="mt-3 inline-block text-sm font-semibold text-green-700 hover:text-green-900 cursor-pointer">
-            Go to briefs →
-          </Link>
+          <p className="text-zinc-400 text-sm">No projects yet.</p>
+          <div className="mt-3 flex items-center justify-center gap-4">
+            <Link href="/admin/projects/new" className="text-sm font-semibold text-zinc-900 hover:text-zinc-600 transition-colors cursor-pointer">
+              Create from scratch →
+            </Link>
+            <span className="text-zinc-300 text-xs">or</span>
+            <Link href="/admin/briefs" className="text-sm font-semibold text-green-700 hover:text-green-900 cursor-pointer">
+              Create from a brief →
+            </Link>
+          </div>
         </div>
       ) : (
         <>
