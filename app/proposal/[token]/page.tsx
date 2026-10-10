@@ -32,7 +32,7 @@ function avgRating(feedback: DesignerFeedbackRow[]) {
 
 function getQuotes(feedback: DesignerFeedbackRow[]): Array<{ comment: string; project: string | null; rating: number }> {
   return feedback
-    .filter((f) => f.status === "submitted" && f.comments && f.comments.trim().length > 10)
+    .filter((f) => f.status === "submitted" && f.comments && f.comments.trim().length > 0)
     .sort((a, b) => {
       const aScore = ((a.quality_rating ?? 0) + (a.communication_rating ?? 0) + (a.delivery_rating ?? 0)) / 3;
       const bScore = ((b.quality_rating ?? 0) + (b.communication_rating ?? 0) + (b.delivery_rating ?? 0)) / 3;

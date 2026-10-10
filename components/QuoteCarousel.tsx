@@ -23,7 +23,7 @@ export default function QuoteCarousel({ quotes }: { quotes: Quote[] }) {
     >
       <p
         className="text-xs italic leading-relaxed line-clamp-3 mb-2.5"
-        style={{ color: "rgba(255,255,255,0.55)", minHeight: "3.6em" }}
+        style={{ color: "rgba(255,255,255,0.55)" }}
       >
         &ldquo;{q.comment}&rdquo;
       </p>
