@@ -332,16 +332,22 @@ export default async function ProjectDetailPage({ params, searchParams }: Props)
                 <Link href={`/proposal/${activeProposal.id}`} target="_blank" className="text-xs text-zinc-400 hover:text-zinc-700 transition-colors">View proposal →</Link>
               </div>
               {selectedDesigner ? (
-                <div className="flex items-center gap-3 rounded-xl border border-green-200 bg-green-50 px-4 py-4">
+                <Link
+                  href={`/admin/applications/${selectedDesigner.id}`}
+                  className="flex items-center gap-3 rounded-xl border border-green-200 bg-green-50 px-4 py-4 hover:bg-green-100 transition-colors group"
+                >
                   <div className="w-10 h-10 rounded-full bg-zinc-900 flex items-center justify-center text-white text-sm font-bold shrink-0">
                     {selectedDesigner.full_name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-bold text-zinc-900">{selectedDesigner.full_name}</p>
+                    <p className="text-sm font-bold text-zinc-900 group-hover:text-green-900 transition-colors">{selectedDesigner.full_name}</p>
                     <p className="text-xs text-zinc-500">{selectedDesigner.specialty}</p>
                   </div>
                   <span className="text-xs font-bold px-3 py-1 rounded-full bg-green-100 text-green-700 border border-green-200">✓ Selected</span>
-                </div>
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="text-green-400 shrink-0">
+                    <path d="M2.5 7h9M7.5 3.5L11 7l-3.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </Link>
               ) : (
                 <p className="text-sm text-zinc-400">Designer data unavailable.</p>
               )}
