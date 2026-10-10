@@ -162,6 +162,7 @@ export type DesignerApplicationRow = {
   why_join: string;
   worked_with_ethiopian_biz: string;
   social_url: string | null;
+  work_samples: string | null; // JSON array of public image URLs
   status: ApplicationStatus;
   reviewer_notes: string | null;
   created_at: string;

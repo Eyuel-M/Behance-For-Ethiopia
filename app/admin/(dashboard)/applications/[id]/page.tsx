@@ -97,6 +97,10 @@ export default async function ApplicationDetailPage({ params, searchParams }: Pr
   const initials = app.full_name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
   const isPdf = app.portfolio_url.startsWith("[PDF:");
   const pdfName = isPdf ? app.portfolio_url.replace(/^\[PDF:\s*/, "").replace(/\]$/, "") : null;
+  const workSamples: string[] = (() => {
+    if (!app.work_samples) return [];
+    try { return JSON.parse(app.work_samples) as string[]; } catch { return []; }
+  })();
 
   async function handleReview(formData: FormData) {
     "use server";
@@ -213,6 +217,33 @@ export default async function ApplicationDetailPage({ params, searchParams }: Pr
           )}
         </SectionCard>
       </div>
+
+      {/* Work Samples */}
+      {workSamples.length > 0 && (
+        <div className="mt-5">
+          <SectionCard title={`Work Samples (${workSamples.length})`}>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+              {workSamples.map((url, i) => (
+                <a
+                  key={i}
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group relative aspect-square overflow-hidden rounded-xl border border-zinc-200 hover:border-zinc-400 transition-colors cursor-pointer block"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={url}
+                    alt={`Work sample ${i + 1}`}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                  />
+                </a>
+              ))}
+            </div>
+            <p className="text-xs text-zinc-400 mt-3">Click any image to open full size. These may be shared with clients when recommending this professional.</p>
+          </SectionCard>
+        </div>
+      )}
 
       {/* About */}
       <div className="mt-5">

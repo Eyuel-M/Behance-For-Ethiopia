@@ -105,6 +105,8 @@ export default function DesignerApplicationForm() {
   const [selectedTools, setSelectedTools] = useState<string[]>([]);
   const [portfolioMode, setPortfolioMode] = useState<"link" | "pdf">("link");
   const [portfolioFile, setPortfolioFile] = useState<File | null>(null);
+  const [workSampleFiles, setWorkSampleFiles] = useState<File[]>([]);
+  const [workSamplePreviews, setWorkSamplePreviews] = useState<string[]>([]);
   const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof DesignerApplicationData, string>>>({});
   const [submitError, setSubmitError] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -119,6 +121,23 @@ export default function DesignerApplicationForm() {
     setSelectedTools((prev) =>
       prev.includes(tool) ? prev.filter((t) => t !== tool) : [...prev, tool]
     );
+  }
+
+  function addWorkSamples(files: FileList) {
+    const remaining = 5 - workSampleFiles.length;
+    if (remaining <= 0) return;
+    const newFiles = Array.from(files)
+      .filter((f) => f.type.startsWith("image/"))
+      .slice(0, remaining);
+    const newPreviews = newFiles.map((f) => URL.createObjectURL(f));
+    setWorkSampleFiles((prev) => [...prev, ...newFiles]);
+    setWorkSamplePreviews((prev) => [...prev, ...newPreviews]);
+  }
+
+  function removeWorkSample(index: number) {
+    URL.revokeObjectURL(workSamplePreviews[index]);
+    setWorkSampleFiles((prev) => prev.filter((_, i) => i !== index));
+    setWorkSamplePreviews((prev) => prev.filter((_, i) => i !== index));
   }
 
   function validate(): boolean {
@@ -154,11 +173,19 @@ export default function DesignerApplicationForm() {
     }
 
     startTransition(async () => {
-      const result = await submitDesignerApplication({
+      const formData = new FormData();
+      // Text fields
+      const textFields: Record<string, string> = {
         ...form,
         tools: selectedTools.join(", "),
-      });
+      };
+      Object.entries(textFields).forEach(([k, v]) => formData.append(k, v));
+      // Work sample images
+      workSampleFiles.forEach((file, i) => formData.append(`workSample_${i}`, file));
+
+      const result = await submitDesignerApplication(formData);
       if (result.success) {
+        workSamplePreviews.forEach((url) => URL.revokeObjectURL(url));
         setSubmitted(true);
         window.scrollTo({ top: 0, behavior: "smooth" });
       } else {
@@ -177,7 +204,16 @@ export default function DesignerApplicationForm() {
           we&apos;ll get back to you within 3–5 business days.
         </p>
         <button
-          onClick={() => { setForm(EMPTY); setSelectedTools([]); setPortfolioMode("link"); setPortfolioFile(null); setSubmitted(false); }}
+          onClick={() => {
+            setForm(EMPTY);
+            setSelectedTools([]);
+            setPortfolioMode("link");
+            setPortfolioFile(null);
+            workSamplePreviews.forEach((url) => URL.revokeObjectURL(url));
+            setWorkSampleFiles([]);
+            setWorkSamplePreviews([]);
+            setSubmitted(false);
+          }}
           className="mt-2 text-sm font-semibold text-green-700 hover:text-green-900 transition-colors cursor-pointer"
         >
           Submit another application
@@ -313,6 +349,56 @@ export default function DesignerApplicationForm() {
             />
           )}
         </Field>
+
+        {/* Work Samples */}
+        <div>
+          <p className="text-sm font-medium text-zinc-700 mb-1">
+            Work samples
+            <span className="ml-2 text-xs font-normal text-zinc-400">(up to 5 images — JPG, PNG, WebP)</span>
+          </p>
+          <p className="text-xs text-zinc-400 mb-4">
+            Upload examples of your best work. When you&apos;re recommended for a project, the client may see these — but never your contact details or PDF.
+          </p>
+          <div className="flex flex-wrap gap-3">
+            {workSamplePreviews.map((src, i) => (
+              <div key={i} className="relative group w-24 h-24 shrink-0">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={src}
+                  alt={`Work sample ${i + 1}`}
+                  className="w-24 h-24 rounded-xl object-cover border border-zinc-200"
+                />
+                <button
+                  type="button"
+                  onClick={() => removeWorkSample(i)}
+                  aria-label="Remove image"
+                  className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-red-500 text-white text-sm font-bold flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer leading-none"
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+            {workSampleFiles.length < 5 && (
+              <label className="w-24 h-24 rounded-xl border-2 border-dashed border-zinc-300 flex flex-col items-center justify-center cursor-pointer hover:border-green-400 hover:bg-green-50/50 transition-all text-zinc-400 hover:text-green-600 shrink-0">
+                <span className="text-2xl leading-none mb-1">+</span>
+                <span className="text-xs font-medium">Add image</span>
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  multiple
+                  onChange={(e) => {
+                    if (e.target.files) addWorkSamples(e.target.files);
+                    e.target.value = "";
+                  }}
+                  className="sr-only"
+                />
+              </label>
+            )}
+          </div>
+          {workSampleFiles.length > 0 && (
+            <p className="text-xs text-zinc-400 mt-2">{workSampleFiles.length} / 5 images added</p>
+          )}
+        </div>
       </Section>
 
       {/* ── Section 3: Availability & Rates ──────────────────── */}
