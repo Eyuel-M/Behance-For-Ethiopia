@@ -11,6 +11,7 @@ import { MILESTONE_STATUS_LABELS, type MilestoneStatus } from "@/lib/supabase/pr
 import { selectDesigner } from "@/app/actions/client-proposal";
 import WorkSampleViewer from "@/components/WorkSampleViewer";
 import ProposalFeedbackForm from "@/components/ProposalFeedbackForm";
+import QuoteCarousel from "@/components/QuoteCarousel";
 
 export const dynamic = "force-dynamic";
 
@@ -29,17 +30,19 @@ function avgRating(feedback: DesignerFeedbackRow[]) {
   };
 }
 
-function getTopQuote(feedback: DesignerFeedbackRow[]): { comment: string; project: string | null } | null {
-  const withComment = feedback.filter(
-    (f) => f.status === "submitted" && f.comments && f.comments.trim().length > 10
-  );
-  if (!withComment.length) return null;
-  const best = withComment.reduce((a, b) => {
-    const aScore = ((a.quality_rating ?? 0) + (a.communication_rating ?? 0) + (a.delivery_rating ?? 0)) / 3;
-    const bScore = ((b.quality_rating ?? 0) + (b.communication_rating ?? 0) + (b.delivery_rating ?? 0)) / 3;
-    return bScore > aScore ? b : a;
-  });
-  return { comment: best.comments!.trim(), project: best.project_title ?? null };
+function getQuotes(feedback: DesignerFeedbackRow[]): Array<{ comment: string; project: string | null; rating: number }> {
+  return feedback
+    .filter((f) => f.status === "submitted" && f.comments && f.comments.trim().length > 10)
+    .sort((a, b) => {
+      const aScore = ((a.quality_rating ?? 0) + (a.communication_rating ?? 0) + (a.delivery_rating ?? 0)) / 3;
+      const bScore = ((b.quality_rating ?? 0) + (b.communication_rating ?? 0) + (b.delivery_rating ?? 0)) / 3;
+      return bScore - aScore;
+    })
+    .map((f) => ({
+      comment: f.comments!.trim(),
+      project: f.project_title ?? null,
+      rating: ((f.quality_rating ?? 0) + (f.communication_rating ?? 0) + (f.delivery_rating ?? 0)) / 3,
+    }));
 }
 
 function parseWorkSamples(json: string | null): string[] {
@@ -191,7 +194,7 @@ export default async function ProposalPage({ params }: Props) {
           {designers.map((designer, i) => {
             const label = LABELS[i];
             const rating = avgRating(feedbackLists[i] ?? []);
-            const quote = getTopQuote(feedbackLists[i] ?? []);
+            const quotes = getQuotes(feedbackLists[i] ?? []);
             const samples = parseWorkSamples(designer.work_samples);
             const isChosen = proposal.selected_designer_id === designer.id;
 
@@ -236,30 +239,8 @@ export default async function ProposalPage({ params }: Props) {
                     {designer.bio}
                   </p>
 
-                  {/* Client quote */}
-                  {quote && (
-                    <div className="mb-5 rounded-xl px-4 py-3" style={{ backgroundColor: "rgba(255,255,255,0.04)", borderLeft: "3px solid rgba(109,204,70,0.4)" }}>
-                      <p className="text-xs italic leading-relaxed line-clamp-3 mb-2" style={{ color: "rgba(255,255,255,0.55)" }}>
-                        &ldquo;{quote.comment}&rdquo;
-                      </p>
-                      <div className="flex items-center gap-2">
-                        <span style={{ display: "inline-flex", gap: 1 }}>
-                          {[1,2,3,4,5].map((n) => (
-                            <svg key={n} width="10" height="10" viewBox="0 0 24 24" fill="none">
-                              <path d="M12 2l2.9 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l7.1-1.01L12 2z"
-                                fill={rating && n <= Math.round(rating.overall) ? "#f59e0b" : "rgba(255,255,255,0.12)"}
-                                stroke="none" />
-                            </svg>
-                          ))}
-                        </span>
-                        {quote.project && (
-                          <p className="text-xs" style={{ color: "rgba(255,255,255,0.25)" }}>
-                            {quote.project}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  )}
+                  {/* Client quotes carousel */}
+                  {quotes.length > 0 && <QuoteCarousel quotes={quotes} />}
 
                   {!isSelected && (
                     <form action={selectDesigner}>

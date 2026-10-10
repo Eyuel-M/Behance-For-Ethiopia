@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
-import { getProfessionalProject, getProjectMilestones } from "@/lib/supabase/admin-queries";
+import { getProfessionalProject, getProjectMilestones, getProposalByProject } from "@/lib/supabase/admin-queries";
 import type { ProjectStatus, MilestoneStatus } from "@/lib/supabase/project-types";
 import { MILESTONE_STATUS_LABELS } from "@/lib/supabase/project-types";
-import { submitMilestone } from "@/app/actions/professional-portal";
+import { submitMilestone, resubmitProject } from "@/app/actions/professional-portal";
 
 export const dynamic = "force-dynamic";
 
@@ -89,7 +89,10 @@ export default async function ProfessionalPortalPage({ params }: Props) {
   const project = await getProfessionalProject(token);
   if (!project) notFound();
 
-  const milestones = await getProjectMilestones(project.id);
+  const [milestones, proposal] = await Promise.all([
+    getProjectMilestones(project.id),
+    getProposalByProject(project.id),
+  ]);
   const status = project.status as ProjectStatus;
   const isCancelled = status === "cancelled";
   const isDone = status === "completed" || status === "accepted";
@@ -97,6 +100,8 @@ export default async function ProfessionalPortalPage({ params }: Props) {
   const submittedCount = milestones.filter((m) => m.status === "submitted").length;
   const progressPct = milestones.length > 0 ? Math.round((acceptedCount / milestones.length) * 100) : 0;
   const dotColor = STATUS_DOT[status] ?? "#3b82f6";
+  const isChangeRequested = status === "change_requested" || status === "revision_requested";
+  const changeNote = proposal?.client_note ?? null;
 
   return (
     <div style={{ minHeight: "100vh", backgroundColor: "#f8fafc", fontFamily: "inherit" }}>
@@ -164,6 +169,49 @@ export default async function ProfessionalPortalPage({ params }: Props) {
                 )}
                 <span style={{ fontSize: 11, color: "#9ca3af", fontWeight: 600 }}>{milestones.length} total</span>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* Client change request banner */}
+        {isChangeRequested && (
+          <div style={{ marginTop: 24, borderRadius: 14, border: "1px solid #fed7aa", backgroundColor: "#fff7ed", overflow: "hidden" }}>
+            <div style={{ padding: "12px 18px", borderBottom: "1px solid #fed7aa", display: "flex", alignItems: "center", gap: 8 }}>
+              <svg width="15" height="15" viewBox="0 0 15 15" fill="none" style={{ flexShrink: 0 }}>
+                <circle cx="7.5" cy="7.5" r="6.5" stroke="#f97316" strokeWidth="1.4" />
+                <path d="M7.5 4v4m0 2.5v.5" stroke="#f97316" strokeWidth="1.6" strokeLinecap="round" />
+              </svg>
+              <p style={{ fontSize: 12, fontWeight: 800, color: "#c2410c", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                Client requested changes
+              </p>
+            </div>
+            {changeNote && (
+              <div style={{ padding: "12px 18px", borderBottom: "1px solid #fed7aa" }}>
+                <p style={{ fontSize: 13, color: "#7c2d12", lineHeight: 1.6, fontStyle: "italic" }}>
+                  &ldquo;{changeNote}&rdquo;
+                </p>
+              </div>
+            )}
+            <div style={{ padding: "12px 18px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 10 }}>
+              <p style={{ fontSize: 12, color: "#9a3412" }}>
+                Review the feedback, update your work, then resubmit for review.
+              </p>
+              <form action={async () => { "use server"; await resubmitProject(project.id, token); }}>
+                <button
+                  type="submit"
+                  style={{
+                    fontSize: 12, fontWeight: 800, padding: "8px 18px", borderRadius: 8,
+                    background: "linear-gradient(135deg, #f97316, #fb923c)", color: "#fff",
+                    border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 6,
+                    letterSpacing: "-0.01em",
+                  }}
+                >
+                  Resubmit for review
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                    <path d="M2.5 6h7M6.5 3l3 3-3 3" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </button>
+              </form>
             </div>
           </div>
         )}
