@@ -21,7 +21,7 @@ import {
   changeMilestoneStatus,
   postProjectNote,
 } from "@/app/actions/admin-projects";
-import { generateProposalLink } from "@/app/actions/admin-proposals";
+import ProposalDesignerPicker from "@/components/ProposalDesignerPicker";
 
 export const dynamic = "force-dynamic";
 
@@ -342,7 +342,7 @@ export default async function ProjectDetailPage({ params, searchParams }: Props)
             </div>
           )}
 
-          {/* Picker form */}
+          {/* Picker */}
           {!existingProposal && approvedDesigners.length === 0 ? (
             <div className="text-center py-6">
               <p className="text-sm text-zinc-400 mb-3">No approved professionals yet.</p>
@@ -351,32 +351,7 @@ export default async function ProjectDetailPage({ params, searchParams }: Props)
               </Link>
             </div>
           ) : !existingProposal ? (
-            <form action={generateProposalLink} className="space-y-4">
-              <input type="hidden" name="projectId" value={id} />
-              <p className="text-sm text-zinc-500 mb-3">Select 1–3 approved professionals to include in the client shortlist. Their identities will be anonymized as Designer A, B, C.</p>
-              <div className="space-y-2">
-                {approvedDesigners.map((d) => (
-                  <label key={d.id} className="flex items-center gap-4 p-4 rounded-xl border border-zinc-200 bg-zinc-50 hover:bg-zinc-100 transition-colors cursor-pointer group">
-                    <input type="checkbox" name="designerId" value={d.id}
-                      className="w-4 h-4 rounded accent-green-500 cursor-pointer shrink-0" />
-                    <div className="flex items-center gap-3 flex-1 min-w-0">
-                      <div className="w-8 h-8 rounded-full bg-zinc-900 flex items-center justify-center text-white text-xs font-bold shrink-0">
-                        {d.full_name.split(" ").map((n: string) => n[0]).join("").slice(0, 2).toUpperCase()}
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-sm font-semibold text-zinc-900">{d.full_name}</p>
-                        <p className="text-xs text-zinc-400">{d.specialty} · {d.hourly_rate}</p>
-                      </div>
-                    </div>
-                    <span className="text-xs text-green-600 font-medium shrink-0">{d.city}</span>
-                  </label>
-                ))}
-              </div>
-              <button type="submit"
-                className="px-5 py-2.5 rounded-full bg-zinc-900 text-white text-sm font-bold hover:bg-zinc-700 transition-colors cursor-pointer">
-                Generate client proposal link →
-              </button>
-            </form>
+            <ProposalDesignerPicker projectId={id} designers={approvedDesigners} />
           ) : (
             <p className="text-sm text-zinc-400 text-center py-4">
               Proposal already active.{" "}
