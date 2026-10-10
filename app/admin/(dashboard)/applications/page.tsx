@@ -16,13 +16,22 @@ function Badge({ status }: { status: ApplicationStatus }) {
   );
 }
 
-export default async function ApplicationsPage() {
+export default async function ApplicationsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ status?: string }>;
+}) {
+  const { status: filterStatus } = await searchParams;
   const applications = await getDesignerApplications();
 
   const counts = applications.reduce<Record<string, number>>((acc, a) => {
     acc[a.status] = (acc[a.status] ?? 0) + 1;
     return acc;
   }, {});
+
+  const visible = filterStatus
+    ? applications.filter((a) => a.status === filterStatus)
+    : applications;
 
   return (
     <div>
@@ -31,22 +40,41 @@ export default async function ApplicationsPage() {
         <p className="text-sm text-zinc-400 mt-0.5">{applications.length} total submissions</p>
       </div>
 
-      {/* Summary */}
+      {/* Status filter pills */}
       <div className="flex flex-wrap gap-2 mb-7">
+        <Link
+          href="/admin/applications"
+          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-semibold transition-colors ${
+            !filterStatus
+              ? "bg-zinc-900 text-white border-zinc-900"
+              : "bg-white text-zinc-500 border-zinc-200 hover:border-zinc-400"
+          }`}
+        >
+          All <strong>{applications.length}</strong>
+        </Link>
         {(Object.entries(APPLICATION_STATUS_LABELS) as [ApplicationStatus, string][]).map(([status, label]) => {
           const count = counts[status] ?? 0;
           if (count === 0) return null;
+          const active = filterStatus === status;
           return (
-            <span key={status} className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-semibold ${APPLICATION_STATUS_COLORS[status]}`}>
+            <Link
+              key={status}
+              href={`/admin/applications?status=${status}`}
+              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-semibold transition-colors ${
+                active
+                  ? APPLICATION_STATUS_COLORS[status]
+                  : "bg-white text-zinc-500 border-zinc-200 hover:border-zinc-400"
+              }`}
+            >
               {label} <strong>{count}</strong>
-            </span>
+            </Link>
           );
         })}
       </div>
 
-      {applications.length === 0 ? (
+      {visible.length === 0 ? (
         <div className="rounded-xl border border-zinc-200 bg-white p-16 text-center">
-          <p className="text-zinc-400 text-sm">No applications yet.</p>
+          <p className="text-zinc-400 text-sm">No applications{filterStatus ? ` with status "${APPLICATION_STATUS_LABELS[filterStatus as ApplicationStatus] ?? filterStatus}"` : ""} yet.</p>
         </div>
       ) : (
         <div className="rounded-xl border border-zinc-200 bg-white overflow-hidden">
@@ -63,7 +91,7 @@ export default async function ApplicationsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-100">
-              {applications.map((a) => (
+              {visible.map((a) => (
                 <tr key={a.id} className="hover:bg-zinc-50 transition-colors duration-100">
                   <td className="px-4 py-3">
                     <p className="font-medium text-zinc-900 leading-snug">{a.full_name}</p>

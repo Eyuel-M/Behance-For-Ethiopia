@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { getDesignerApplications, getAllFeedback } from "@/lib/supabase/admin-queries";
 import type { DesignerFeedbackRow } from "@/lib/supabase/project-types";
 
@@ -28,6 +29,16 @@ function Stars({ score, count }: { score: number; count: number }) {
   );
 }
 
+function getFirstSample(workSamples: string | null): string | null {
+  if (!workSamples) return null;
+  try {
+    const arr = JSON.parse(workSamples);
+    return Array.isArray(arr) && arr[0] ? arr[0] : null;
+  } catch {
+    return null;
+  }
+}
+
 export default async function AdminProfessionalsPage() {
   const [all, allFeedback] = await Promise.all([
     getDesignerApplications(),
@@ -48,10 +59,10 @@ export default async function AdminProfessionalsPage() {
           <p className="text-sm text-zinc-500 mt-0.5">{approved.length} active in network</p>
         </div>
         <Link
-          href="/admin/applications"
+          href="/admin/applications?status=approved"
           className="px-4 py-2 rounded-lg border border-zinc-200 text-zinc-700 text-sm font-semibold hover:bg-zinc-50 transition-colors"
         >
-          View all applications →
+          View approved list →
         </Link>
       </div>
 
@@ -69,40 +80,56 @@ export default async function AdminProfessionalsPage() {
             const score = avgRating(pFeedback);
             const ratedCount = pFeedback.filter((f) => f.status === "submitted").length;
             const initials = p.full_name.split(" ").map((n: string) => n[0]).join("").slice(0, 2).toUpperCase();
+            const coverImg = getFirstSample(p.work_samples);
 
             return (
               <Link
                 key={p.id}
                 href={`/admin/applications/${p.id}`}
-                className="group rounded-2xl border border-zinc-200 bg-white p-5 hover:border-zinc-300 hover:shadow-sm transition-all duration-150 flex flex-col gap-4"
+                className="group rounded-2xl border border-zinc-200 bg-white overflow-hidden hover:border-zinc-300 hover:shadow-sm transition-all duration-150 flex flex-col"
               >
-                {/* Header */}
-                <div className="flex items-start gap-3">
-                  <div className="w-11 h-11 rounded-full bg-zinc-100 flex items-center justify-center text-sm font-bold text-zinc-600 shrink-0">
-                    {initials}
-                  </div>
-                  <div className="min-w-0">
-                    <p className="font-semibold text-zinc-900 group-hover:text-green-700 transition-colors truncate">{p.full_name}</p>
-                    <p className="text-xs text-zinc-400 truncate">{p.specialty}</p>
-                  </div>
-                </div>
-
-                {/* Meta row */}
-                <div className="flex items-center gap-3 text-xs text-zinc-500">
-                  <span className="flex items-center gap-1">
-                    <span className="text-zinc-300">📍</span> {p.city}
-                  </span>
-                  <span className="text-zinc-200">·</span>
-                  <span className="truncate">{p.hourly_rate}</span>
-                </div>
-
-                {/* Rating */}
-                <div className="mt-auto">
-                  {score !== null ? (
-                    <Stars score={score} count={ratedCount} />
+                {/* Cover image */}
+                <div className="relative h-36 bg-zinc-100 shrink-0">
+                  {coverImg ? (
+                    <Image
+                      src={coverImg}
+                      alt={p.full_name}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    />
                   ) : (
-                    <span className="text-xs text-zinc-300">No ratings yet</span>
+                    <div className="w-full h-full flex items-center justify-center">
+                      <span className="text-3xl font-bold text-zinc-300">{initials}</span>
+                    </div>
                   )}
+                </div>
+
+                {/* Body */}
+                <div className="p-4 flex flex-col gap-3">
+                  <div className="flex items-center gap-3">
+                    {/* Avatar over image */}
+                    <div className="w-10 h-10 rounded-full bg-zinc-200 border-2 border-white flex items-center justify-center text-sm font-bold text-zinc-600 shrink-0 -mt-8 relative z-10 shadow-sm">
+                      {initials}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="font-semibold text-zinc-900 group-hover:text-green-700 transition-colors truncate leading-tight">{p.full_name}</p>
+                      <p className="text-xs text-zinc-400 truncate">{p.specialty}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between text-xs text-zinc-500">
+                    <span>{p.city}</span>
+                    <span className="text-zinc-400">{p.hourly_rate}</span>
+                  </div>
+
+                  <div className="pt-1 border-t border-zinc-100">
+                    {score !== null ? (
+                      <Stars score={score} count={ratedCount} />
+                    ) : (
+                      <span className="text-xs text-zinc-300">No ratings yet</span>
+                    )}
+                  </div>
                 </div>
               </Link>
             );
