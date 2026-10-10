@@ -47,7 +47,7 @@ export default async function BriefDetailPage({ params }: Props) {
 
   const status = brief.status as BriefStatus;
   const initials = brief.business_name.split(" ").map((n: string) => n[0]).join("").slice(0, 2).toUpperCase();
-  const isActionable = ["new", "needs_clarification", "qualified"].includes(status);
+  const isActionable = ["new", "needs_clarification"].includes(status);
   const canCreateProject = status === "qualified";
 
   async function handleQualify(formData: FormData) {
@@ -176,8 +176,10 @@ export default async function BriefDetailPage({ params }: Props) {
                   <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest block mb-2">New status</label>
                   <select
                     name="status"
+                    defaultValue={status}
                     className="w-full rounded-xl border border-zinc-200 px-4 py-3 text-sm text-zinc-900 bg-white outline-none focus:border-zinc-900 focus:ring-2 focus:ring-zinc-900/10 cursor-pointer"
                   >
+                    <option value="new">New</option>
                     <option value="needs_clarification">Needs clarification</option>
                     <option value="qualified">Qualified ✓</option>
                     <option value="declined">Declined</option>

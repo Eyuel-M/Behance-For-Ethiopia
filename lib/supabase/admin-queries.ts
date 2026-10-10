@@ -99,7 +99,7 @@ const MOCK_BRIEFS: ClientBriefRow[] = [
 ];
 
 export async function getClientBriefs(): Promise<ClientBriefRow[]> {
-  if (!supabase) return MOCK_BRIEFS;
+  if (!supabase) return Array.from(getDemoStore().briefs.values()).sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
   const { data, error } = await supabase
     .from("client_applications")
     .select("*")
@@ -109,7 +109,7 @@ export async function getClientBriefs(): Promise<ClientBriefRow[]> {
 }
 
 export async function getClientBrief(id: string): Promise<ClientBriefRow | null> {
-  if (!supabase) return MOCK_BRIEFS.find((b) => b.id === id) ?? null;
+  if (!supabase) return getDemoStore().briefs.get(id) ?? null;
   const { data, error } = await supabase
     .from("client_applications")
     .select("*")
@@ -124,7 +124,12 @@ export async function updateBriefStatus(
   status: string,
   adminNotes?: string
 ): Promise<void> {
-  if (!supabase) { console.warn("[demo] Supabase not configured — write skipped."); return; }
+  if (!supabase) {
+    const store = getDemoStore();
+    const b = store.briefs.get(id);
+    if (b) store.briefs.set(id, { ...b, status, admin_notes: adminNotes ?? b.admin_notes });
+    return;
+  }
   const updates: Record<string, string> = { status };
   if (adminNotes !== undefined) updates.admin_notes = adminNotes;
   const { error } = await supabase
@@ -333,8 +338,31 @@ export async function createProject(input: {
   managerNotes?: string;
 }): Promise<string> {
   if (!supabase) {
-    console.warn("[createProject] Supabase not configured — project not persisted.");
-    return "mock-project-1";
+    const id = crypto.randomUUID();
+    const project: ProjectRow = {
+      id,
+      brief_id: input.briefId,
+      title: input.title,
+      client_name: input.clientName,
+      client_email: input.clientEmail,
+      client_business: input.clientBusiness,
+      assigned_professional_ids: [],
+      service_mode: input.serviceMode,
+      category: input.category,
+      deliverables: input.deliverables,
+      exclusions: input.exclusions ?? null,
+      assumptions: input.assumptions ?? null,
+      acceptance_criteria: input.acceptanceCriteria ?? null,
+      revision_limit: input.revisionLimit ?? 2,
+      status: "ready_to_start",
+      deadline: input.deadline ?? null,
+      budget: input.budget,
+      manager_notes: input.managerNotes ?? null,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+    getDemoStore().projects.set(id, project);
+    return id;
   }
   const { data, error } = await supabase
     .from("projects")
@@ -720,17 +748,19 @@ const MOCK_PROPOSALS: ClientProposalRow[] = [
 // Turbopack re-evaluates modules per request, so module-level mutations don't
 // survive to the next request. globalThis is a true process-level singleton.
 type DemoStore = {
+  briefs: Map<string, ClientBriefRow>;
   proposals: Map<string, ClientProposalRow>;
   projects: Map<string, ProjectRow>;
   milestones: Map<string, MilestoneRow>;
 };
 function getDemoStore(): DemoStore {
   const g = globalThis as typeof globalThis & { __demoStore?: DemoStore };
-  if (!g.__demoStore?.projects || !g.__demoStore?.milestones) {
+  if (!g.__demoStore?.projects || !g.__demoStore?.milestones || !g.__demoStore?.briefs) {
     g.__demoStore = {
+      briefs: g.__demoStore?.briefs ?? new Map(MOCK_BRIEFS.map((b) => [b.id, { ...b }])),
       proposals: g.__demoStore?.proposals ?? new Map(MOCK_PROPOSALS.map((p) => [p.id, { ...p }])),
       projects: g.__demoStore?.projects ?? new Map(MOCK_PROJECTS.map((p) => [p.id, { ...p }])),
-      milestones: new Map(MOCK_MILESTONES.map((m) => [m.id, { ...m }])),
+      milestones: g.__demoStore?.milestones ?? new Map(MOCK_MILESTONES.map((m) => [m.id, { ...m }])),
     };
   }
   return g.__demoStore;

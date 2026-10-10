@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import {
   updateBriefStatus,
   createProject,
@@ -13,6 +14,8 @@ export async function qualifyBrief(
   adminNotes: string
 ): Promise<void> {
   await updateBriefStatus(briefId, status, adminNotes);
+  revalidatePath(`/admin/briefs/${briefId}`);
+  revalidatePath("/admin/briefs");
 }
 
 export async function createProjectFromBrief(formData: FormData): Promise<void> {

@@ -5,9 +5,6 @@ export type BriefStatus =
   | "needs_clarification"
   | "qualified"
   | "declined"
-  | "scoping"
-  | "quote_sent"
-  | "awaiting_agreement"
   | "in_progress"
   | "completed"
   | "cancelled";
@@ -43,9 +40,6 @@ export const BRIEF_STATUS_LABELS: Record<BriefStatus, string> = {
   needs_clarification: "Needs clarification",
   qualified: "Qualified",
   declined: "Declined",
-  scoping: "Scoping",
-  quote_sent: "Quote sent",
-  awaiting_agreement: "Awaiting agreement",
   in_progress: "In progress",
   completed: "Completed",
   cancelled: "Cancelled",
@@ -56,9 +50,6 @@ export const BRIEF_STATUS_COLORS: Record<BriefStatus, string> = {
   needs_clarification: "bg-orange-50 text-orange-700 border-orange-100",
   qualified: "bg-green-50 text-green-700 border-green-100",
   declined: "bg-red-50 text-red-700 border-red-100",
-  scoping: "bg-purple-50 text-purple-700 border-purple-100",
-  quote_sent: "bg-amber-50 text-amber-700 border-amber-100",
-  awaiting_agreement: "bg-yellow-50 text-yellow-700 border-yellow-100",
   in_progress: "bg-green-50 text-green-700 border-green-100",
   completed: "bg-zinc-100 text-zinc-600 border-zinc-200",
   cancelled: "bg-zinc-100 text-zinc-500 border-zinc-200",
