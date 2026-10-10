@@ -111,7 +111,7 @@ export default async function ApplicationDetailPage({ params }: Props) {
       {/* Quick stats grid */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
         <StatCard label="Experience" value={app.experience} />
-        <StatCard label="Hourly rate" value={app.hourly_rate} />
+        <StatCard label="Project rate" value={app.hourly_rate} />
         <StatCard label="Availability" value={app.availability} />
         <StatCard label="On-site" value={app.can_work_on_site} />
       </div>

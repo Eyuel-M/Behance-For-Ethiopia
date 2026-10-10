@@ -42,7 +42,7 @@ export async function submitDesignerApplication(
   if (!data.skills.trim()) return { success: false, error: "Please describe your key skills." };
   if (!data.portfolioUrl.trim()) return { success: false, error: "Portfolio URL is required." };
   if (!data.availability) return { success: false, error: "Please select your availability." };
-  if (!data.hourlyRate) return { success: false, error: "Please select your expected hourly rate." };
+  if (!data.hourlyRate) return { success: false, error: "Please select your typical project rate." };
   if (!data.bio.trim() || data.bio.trim().length < 80)
     return { success: false, error: "Please write a bio of at least 80 characters." };
   if (!data.whyJoin.trim()) return { success: false, error: "Please tell us why you want to join." };

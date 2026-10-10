@@ -68,12 +68,12 @@ const AVAILABILITY_OPTIONS = [
 ];
 
 const RATE_OPTIONS = [
-  "Under ETB 500/hr",
-  "ETB 500 – 1,500/hr",
-  "ETB 1,500 – 3,000/hr",
-  "ETB 3,000 – 5,500/hr",
-  "ETB 5,500 – 10,000/hr",
-  "ETB 10,000+/hr",
+  "Under ETB 5,000 per project",
+  "ETB 5,000 – 20,000 per project",
+  "ETB 20,000 – 50,000 per project",
+  "ETB 50,000 – 150,000 per project",
+  "ETB 150,000+ per project",
+  "Monthly retainer — open to discuss",
 ];
 
 const ONSITE_OPTIONS = [
@@ -325,7 +325,7 @@ export default function DesignerApplicationForm() {
               {AVAILABILITY_OPTIONS.map((o) => <option key={o} value={o}>{o}</option>)}
             </select>
           </Field>
-          <Field label="Expected hourly rate" required error={fieldErrors.hourlyRate}>
+          <Field label="Typical project rate" required error={fieldErrors.hourlyRate}>
             <select value={form.hourlyRate} onChange={(e) => set("hourlyRate", e.target.value)}
               className={inputClass(!!fieldErrors.hourlyRate) + " cursor-pointer"}>
               <option value="" disabled>Select range…</option>
