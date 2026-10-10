@@ -317,19 +317,12 @@ export default function DesignerApplicationForm() {
 
       {/* ── Section 3: Availability & Rates ──────────────────── */}
       <Section title="Availability & Rates" step={3} total={4}>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <Field label="Work availability" required error={fieldErrors.availability}>
             <select value={form.availability} onChange={(e) => set("availability", e.target.value)}
               className={inputClass(!!fieldErrors.availability) + " cursor-pointer"}>
               <option value="" disabled>Select…</option>
               {AVAILABILITY_OPTIONS.map((o) => <option key={o} value={o}>{o}</option>)}
-            </select>
-          </Field>
-          <Field label="Typical project rate" required error={fieldErrors.hourlyRate}>
-            <select value={form.hourlyRate} onChange={(e) => set("hourlyRate", e.target.value)}
-              className={inputClass(!!fieldErrors.hourlyRate) + " cursor-pointer"}>
-              <option value="" disabled>Select range…</option>
-              {RATE_OPTIONS.map((o) => <option key={o} value={o}>{o}</option>)}
             </select>
           </Field>
           <Field label="Can work on-site?" required error={fieldErrors.canWorkOnSite}>
@@ -340,6 +333,14 @@ export default function DesignerApplicationForm() {
             </select>
           </Field>
         </div>
+        <Field label="Typical project rate" required error={fieldErrors.hourlyRate}
+          hint="Give clients an idea of your typical project budget range">
+          <select value={form.hourlyRate} onChange={(e) => set("hourlyRate", e.target.value)}
+            className={inputClass(!!fieldErrors.hourlyRate) + " cursor-pointer"}>
+            <option value="" disabled>Select a range…</option>
+            {RATE_OPTIONS.map((o) => <option key={o} value={o}>{o}</option>)}
+          </select>
+        </Field>
       </Section>
 
       {/* ── Section 4: About You ──────────────────────────────── */}
