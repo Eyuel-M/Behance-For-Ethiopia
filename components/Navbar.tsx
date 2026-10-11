@@ -8,9 +8,19 @@ export default function Navbar() {
   const pathname = usePathname();
   const [activeHash, setActiveHash] = useState<string | null>(null);
 
-  // Clear hash active state when navigating away from homepage
   useEffect(() => {
-    if (pathname !== "/") setActiveHash(null);
+    if (pathname !== "/") {
+      setActiveHash(null);
+      return;
+    }
+    // Sync with the current URL hash (handles cross-page navigation)
+    const sync = () => {
+      const hash = window.location.hash.replace("#", "");
+      setActiveHash(hash === "how-it-works" || hash === "services" ? hash : null);
+    };
+    sync();
+    window.addEventListener("hashchange", sync);
+    return () => window.removeEventListener("hashchange", sync);
   }, [pathname]);
 
   function navClass(href: string) {
