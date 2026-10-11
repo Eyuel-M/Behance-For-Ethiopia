@@ -57,23 +57,22 @@ export default function Footer() {
 
           {/* Brand column — spans 2 of 5 */}
           <div className="lg:col-span-2">
-            <a href="/" className="inline-flex items-center gap-2.5 mb-5 group">
-              <span className="w-9 h-9 rounded-xl flex items-center justify-center text-sm font-extrabold select-none transition-colors" style={{ backgroundColor: "#6dcc46", color: "#0d2318" }}>
+            <a href="/" className="inline-flex items-center gap-2.5 mb-5">
+              <span className="w-9 h-9 rounded-xl flex items-center justify-center text-sm font-extrabold select-none" style={{ backgroundColor: "#6dcc46", color: "#0d2318" }}>
                 H
               </span>
               <span className="font-extrabold text-white text-sm tracking-tight">
                 Hire Ethiopia&apos;s Best
               </span>
             </a>
-            <p className="text-sm leading-relaxed max-w-xs mb-6" style={{ color: "rgba(255,255,255,0.45)" }}>
+            <p className="text-sm leading-relaxed max-w-xs mb-6 text-white/45">
               Ethiopia&apos;s first curated network matching businesses with vetted creative and digital professionals.
             </p>
 
             {/* Email */}
             <a
               href="mailto:info@hireethiopiasbest.com"
-              className="inline-flex items-center gap-2 text-sm transition-colors"
-              style={{ color: "rgba(109,204,70,0.8)" }}
+              className="inline-flex items-center gap-2 text-sm text-[#6dcc46]/80 hover:text-[#6dcc46] transition-colors"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
@@ -89,16 +88,7 @@ export default function Footer() {
                   key={s.label}
                   href={s.href}
                   aria-label={s.label}
-                  className="w-9 h-9 rounded-full flex items-center justify-center transition-all duration-150"
-                  style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.4)" }}
-                  onMouseEnter={e => {
-                    (e.currentTarget as HTMLAnchorElement).style.borderColor = "#6dcc46";
-                    (e.currentTarget as HTMLAnchorElement).style.color = "#6dcc46";
-                  }}
-                  onMouseLeave={e => {
-                    (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(255,255,255,0.1)";
-                    (e.currentTarget as HTMLAnchorElement).style.color = "rgba(255,255,255,0.4)";
-                  }}
+                  className="w-9 h-9 rounded-full flex items-center justify-center text-white/40 border border-white/10 hover:text-[#6dcc46] hover:border-[#6dcc46] transition-all duration-150"
                 >
                   {s.icon}
                 </a>
@@ -106,24 +96,18 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Spacer on large screens */}
+          {/* Spacer */}
           <div className="hidden lg:block" />
 
           {/* For Businesses */}
           <div>
-            <p className="text-xs font-bold uppercase tracking-widest mb-5" style={{ color: "#6dcc46" }}>
+            <p className="text-xs font-bold uppercase tracking-widest mb-5 text-[#6dcc46]">
               For Businesses
             </p>
             <ul className="space-y-3">
               {businessLinks.map((l) => (
                 <li key={l.label}>
-                  <a
-                    href={l.href}
-                    className="text-sm transition-colors duration-150"
-                    style={{ color: "rgba(255,255,255,0.45)" }}
-                    onMouseEnter={e => (e.currentTarget as HTMLAnchorElement).style.color = "white"}
-                    onMouseLeave={e => (e.currentTarget as HTMLAnchorElement).style.color = "rgba(255,255,255,0.45)"}
-                  >
+                  <a href={l.href} className="text-sm text-white/45 hover:text-white transition-colors duration-150">
                     {l.label}
                   </a>
                 </li>
@@ -133,19 +117,13 @@ export default function Footer() {
 
           {/* For Professionals */}
           <div>
-            <p className="text-xs font-bold uppercase tracking-widest mb-5" style={{ color: "#6dcc46" }}>
+            <p className="text-xs font-bold uppercase tracking-widest mb-5 text-[#6dcc46]">
               For Professionals
             </p>
             <ul className="space-y-3">
               {proLinks.map((l) => (
                 <li key={l.label}>
-                  <a
-                    href={l.href}
-                    className="text-sm transition-colors duration-150"
-                    style={{ color: "rgba(255,255,255,0.45)" }}
-                    onMouseEnter={e => (e.currentTarget as HTMLAnchorElement).style.color = "white"}
-                    onMouseLeave={e => (e.currentTarget as HTMLAnchorElement).style.color = "rgba(255,255,255,0.45)"}
-                  >
+                  <a href={l.href} className="text-sm text-white/45 hover:text-white transition-colors duration-150">
                     {l.label}
                   </a>
                 </li>
@@ -156,12 +134,12 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3" style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }}>
-          <p className="text-xs" style={{ color: "rgba(255,255,255,0.25)" }}>
+        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-white/[0.07]">
+          <p className="text-xs text-white/25">
             © {new Date().getFullYear()} Hire Ethiopia&apos;s Best. All rights reserved.
           </p>
-          <div className="flex items-center gap-1.5 text-xs" style={{ color: "rgba(255,255,255,0.2)" }}>
-            <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: "#6dcc46" }} />
+          <div className="flex items-center gap-1.5 text-xs text-white/20">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#6dcc46]" />
             Ethiopia-first · Curated, not crowdsourced
           </div>
         </div>
