@@ -1,3 +1,4 @@
+import React from "react";
 import Link from "next/link";
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
@@ -39,8 +40,8 @@ export default function HomePage() {
 
 function Hero() {
   return (
-    <section className="bg-[#0d2318] overflow-hidden relative">
-      {/* Abstract organic background — inspired by overlapping botanical shapes */}
+    <section className="overflow-hidden relative" style={{ backgroundColor: "#071208" }}>
+      {/* Vertical stripe gradient — dark forest left → bright cyan right */}
       <svg
         aria-hidden="true"
         className="absolute inset-0 w-full h-full pointer-events-none select-none"
@@ -48,22 +49,46 @@ function Hero() {
         viewBox="0 0 1200 640"
         xmlns="http://www.w3.org/2000/svg"
       >
-        {/* Large rear circle — right upper */}
-        <circle cx="980" cy="120" r="340" fill="#1a3d26" />
-        {/* Mid circle — right centre */}
-        <circle cx="1080" cy="380" r="260" fill="#163322" />
-        {/* Botanical leaf arc — overlapping */}
-        <ellipse cx="820" cy="60" rx="280" ry="300" fill="#204d2e" transform="rotate(20 820 60)" />
-        {/* Foreground accent circle — lower right */}
-        <circle cx="1160" cy="560" r="200" fill="#1f472c" />
-        {/* Small highlight dot — upper right corner */}
-        <circle cx="1190" cy="30" r="80" fill="#255935" />
-        {/* Faint centre radial glow */}
-        <radialGradient id="hglow" cx="70%" cy="55%" r="40%">
-          <stop offset="0%" stopColor="#6dcc46" stopOpacity="0.07" />
-          <stop offset="100%" stopColor="#6dcc46" stopOpacity="0" />
-        </radialGradient>
-        <rect x="0" y="0" width="1200" height="640" fill="url(#hglow)" />
+        <defs>
+          <linearGradient id="stripeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%"   stopColor="#040d06" />
+            <stop offset="6%"   stopColor="#071810" />
+            <stop offset="12%"  stopColor="#0a2414" />
+            <stop offset="18%"  stopColor="#0d3018" />
+            <stop offset="24%"  stopColor="#104820" />
+            <stop offset="30%"  stopColor="#14602a" />
+            <stop offset="36%"  stopColor="#1a8035" />
+            <stop offset="42%"  stopColor="#22a440" />
+            <stop offset="48%"  stopColor="#2ecc50" />
+            <stop offset="54%"  stopColor="#3cda60" />
+            <stop offset="60%"  stopColor="#4ee470" />
+            <stop offset="66%"  stopColor="#60ec84" />
+            <stop offset="72%"  stopColor="#7aefa8" />
+            <stop offset="78%"  stopColor="#88f0c8" />
+            <stop offset="84%"  stopColor="#6aeae0" />
+            <stop offset="90%"  stopColor="#40e4f8" />
+            <stop offset="96%"  stopColor="#18dcff" />
+            <stop offset="100%" stopColor="#00d4ff" />
+          </linearGradient>
+          {/* Thin vertical stripe texture overlay */}
+          <pattern id="stripes" x="0" y="0" width="48" height="640" patternUnits="userSpaceOnUse">
+            <rect x="0"  y="0" width="20" height="640" fill="rgba(0,0,0,0.10)" />
+            <rect x="20" y="0" width="28" height="640" fill="rgba(255,255,255,0.04)" />
+          </pattern>
+          {/* Left dark scrim so text stays readable */}
+          <linearGradient id="scrim" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%"   stopColor="#030c05" stopOpacity="0.97" />
+            <stop offset="42%"  stopColor="#040e07" stopOpacity="0.85" />
+            <stop offset="58%"  stopColor="#040e07" stopOpacity="0.4" />
+            <stop offset="100%" stopColor="#040e07" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        {/* Base stripe gradient */}
+        <rect x="0" y="0" width="1200" height="640" fill="url(#stripeGrad)" />
+        {/* Stripe texture */}
+        <rect x="0" y="0" width="1200" height="640" fill="url(#stripes)" />
+        {/* Dark left scrim for text legibility */}
+        <rect x="0" y="0" width="1200" height="640" fill="url(#scrim)" />
       </svg>
 
       <div className="relative max-w-6xl mx-auto px-5 sm:px-8 py-20 sm:py-28 grid grid-cols-1 lg:grid-cols-[1fr_0.9fr] gap-12 lg:gap-10 items-center">
@@ -189,27 +214,147 @@ function Hero() {
 // ─── Clients ticker ───────────────────────────────────────────────────────────
 
 function ClientsTicker() {
-  const clients = [
-    "Sheba Organic",
-    "Tsehay Finance",
-    "Buna Roasters",
-    "Addis Blue Label",
-    "Habesha Homes",
-    "Zemen Studios",
-    "Nile Creative",
-    "Selam Tech",
-    "Admas Group",
-    "Abyssinia Bank",
-    "Ethio Telecom",
-    "Tikur Anbessa",
+  // SVG wordmarks: each is a small inline SVG ~120×36px
+  const wordmarks: { label: string; svg: React.ReactNode }[] = [
+    {
+      label: "Sheba Organic",
+      svg: (
+        <svg viewBox="0 0 130 36" width="130" height="36" aria-label="Sheba Organic">
+          <circle cx="10" cy="18" r="7" fill="#6dcc46" opacity="0.85" />
+          <circle cx="10" cy="18" r="4" fill="white" />
+          <text x="24" y="22" fontFamily="Georgia,serif" fontSize="13" fontWeight="700" fill="#1a1a1a" letterSpacing="0.3">SHEBA</text>
+          <text x="24" y="32" fontFamily="Georgia,serif" fontSize="8" fontWeight="400" fill="#888" letterSpacing="2">ORGANIC</text>
+        </svg>
+      ),
+    },
+    {
+      label: "Tsehay Finance",
+      svg: (
+        <svg viewBox="0 0 140 36" width="140" height="36" aria-label="Tsehay Finance">
+          <rect x="0" y="6" width="3" height="24" rx="1.5" fill="#f59e0b" />
+          <rect x="6" y="12" width="3" height="18" rx="1.5" fill="#f59e0b" opacity="0.6" />
+          <text x="16" y="23" fontFamily="Arial,sans-serif" fontSize="13" fontWeight="800" fill="#1a1a1a" letterSpacing="0.5">TSEHAY</text>
+          <text x="16" y="32" fontFamily="Arial,sans-serif" fontSize="8" fontWeight="400" fill="#aaa" letterSpacing="1.5">FINANCE</text>
+        </svg>
+      ),
+    },
+    {
+      label: "Buna Roasters",
+      svg: (
+        <svg viewBox="0 0 135 36" width="135" height="36" aria-label="Buna Roasters">
+          <path d="M8 26 Q5 18 8 12 Q11 18 14 12 Q17 18 14 26" fill="none" stroke="#7c3f00" strokeWidth="2" strokeLinecap="round"/>
+          <text x="22" y="20" fontFamily="Georgia,serif" fontSize="14" fontWeight="900" fill="#2a1500" letterSpacing="-0.5">Buna</text>
+          <text x="22" y="31" fontFamily="Georgia,serif" fontSize="8" fill="#9a7040" letterSpacing="2.5">ROASTERS</text>
+        </svg>
+      ),
+    },
+    {
+      label: "Addis Blue Label",
+      svg: (
+        <svg viewBox="0 0 150 36" width="150" height="36" aria-label="Addis Blue Label">
+          <rect x="0" y="10" width="14" height="16" rx="2" fill="#1e40af" />
+          <rect x="2" y="12" width="10" height="3" rx="1" fill="white" opacity="0.9"/>
+          <rect x="2" y="17" width="7" height="2" rx="1" fill="white" opacity="0.6"/>
+          <text x="20" y="22" fontFamily="Arial,sans-serif" fontSize="12" fontWeight="700" fill="#1a1a1a">ADDIS BLUE</text>
+          <text x="20" y="32" fontFamily="Arial,sans-serif" fontSize="7.5" fill="#888" letterSpacing="2">LABEL</text>
+        </svg>
+      ),
+    },
+    {
+      label: "Habesha Homes",
+      svg: (
+        <svg viewBox="0 0 145 36" width="145" height="36" aria-label="Habesha Homes">
+          <polygon points="9,26 2,26 9,12 16,26" fill="none" stroke="#0d2318" strokeWidth="2"/>
+          <rect x="6" y="20" width="6" height="6" fill="#0d2318" opacity="0.15"/>
+          <text x="22" y="22" fontFamily="Arial,sans-serif" fontSize="12" fontWeight="800" fill="#1a1a1a" letterSpacing="0.2">HABESHA</text>
+          <text x="22" y="32" fontFamily="Arial,sans-serif" fontSize="8" fill="#aaa" letterSpacing="1.5">HOMES</text>
+        </svg>
+      ),
+    },
+    {
+      label: "Zemen Studios",
+      svg: (
+        <svg viewBox="0 0 138 36" width="138" height="36" aria-label="Zemen Studios">
+          <text x="0" y="24" fontFamily="Arial,sans-serif" fontSize="18" fontWeight="900" fill="#0d2318" letterSpacing="-1">Z</text>
+          <line x1="10" y1="26" x2="16" y2="8" stroke="#6dcc46" strokeWidth="2"/>
+          <text x="20" y="22" fontFamily="Arial,sans-serif" fontSize="12" fontWeight="700" fill="#1a1a1a">ZEMEN</text>
+          <text x="20" y="32" fontFamily="Arial,sans-serif" fontSize="8" fill="#aaa" letterSpacing="1.5">STUDIOS</text>
+        </svg>
+      ),
+    },
+    {
+      label: "Nile Creative",
+      svg: (
+        <svg viewBox="0 0 132 36" width="132" height="36" aria-label="Nile Creative">
+          <path d="M2 26 Q8 8 14 18 Q18 26 22 10" fill="none" stroke="#2563eb" strokeWidth="2.5" strokeLinecap="round"/>
+          <text x="28" y="22" fontFamily="Georgia,serif" fontSize="13" fontWeight="700" fill="#1a1a1a">Nile</text>
+          <text x="28" y="32" fontFamily="Georgia,serif" fontSize="8" fill="#888" letterSpacing="2">CREATIVE</text>
+        </svg>
+      ),
+    },
+    {
+      label: "Selam Tech",
+      svg: (
+        <svg viewBox="0 0 120 36" width="120" height="36" aria-label="Selam Tech">
+          <rect x="0" y="8" width="16" height="20" rx="3" fill="#0d2318"/>
+          <rect x="3" y="11" width="10" height="2" rx="1" fill="#6dcc46"/>
+          <rect x="3" y="15" width="7" height="1.5" rx="0.75" fill="#6dcc46" opacity="0.6"/>
+          <rect x="3" y="19" width="8" height="1.5" rx="0.75" fill="#6dcc46" opacity="0.4"/>
+          <text x="22" y="21" fontFamily="Arial,sans-serif" fontSize="12" fontWeight="800" fill="#0d2318">SELAM</text>
+          <text x="22" y="31" fontFamily="Arial,sans-serif" fontSize="8.5" fontWeight="700" fill="#6dcc46" letterSpacing="1">TECH</text>
+        </svg>
+      ),
+    },
+    {
+      label: "Admas Group",
+      svg: (
+        <svg viewBox="0 0 130 36" width="130" height="36" aria-label="Admas Group">
+          <polygon points="10,8 18,26 2,26" fill="none" stroke="#dc2626" strokeWidth="2"/>
+          <text x="24" y="21" fontFamily="Arial,sans-serif" fontSize="12" fontWeight="800" fill="#1a1a1a" letterSpacing="0.3">ADMAS</text>
+          <text x="24" y="31" fontFamily="Arial,sans-serif" fontSize="8" fill="#aaa" letterSpacing="1.5">GROUP</text>
+        </svg>
+      ),
+    },
+    {
+      label: "Abyssinia Bank",
+      svg: (
+        <svg viewBox="0 0 145 36" width="145" height="36" aria-label="Abyssinia Bank">
+          <rect x="0" y="14" width="16" height="14" rx="1" fill="none" stroke="#1e3a8a" strokeWidth="2"/>
+          <rect x="3" y="8" width="10" height="8" rx="1" fill="none" stroke="#1e3a8a" strokeWidth="1.5"/>
+          <text x="22" y="22" fontFamily="Arial,sans-serif" fontSize="11" fontWeight="800" fill="#1e3a8a">ABYSSINIA</text>
+          <text x="22" y="32" fontFamily="Arial,sans-serif" fontSize="8" fill="#888" letterSpacing="1.5">BANK</text>
+        </svg>
+      ),
+    },
+    {
+      label: "Ethio Telecom",
+      svg: (
+        <svg viewBox="0 0 142 36" width="142" height="36" aria-label="Ethio Telecom">
+          <circle cx="10" cy="18" r="9" fill="none" stroke="#007a3d" strokeWidth="2"/>
+          <ellipse cx="10" cy="18" rx="4" ry="9" fill="none" stroke="#007a3d" strokeWidth="1.2"/>
+          <line x1="1" y1="18" x2="19" y2="18" stroke="#007a3d" strokeWidth="1.2"/>
+          <text x="25" y="21" fontFamily="Arial,sans-serif" fontSize="12" fontWeight="700" fill="#007a3d">ETHIO</text>
+          <text x="25" y="31" fontFamily="Arial,sans-serif" fontSize="8" fill="#555" letterSpacing="1.5">TELECOM</text>
+        </svg>
+      ),
+    },
+    {
+      label: "Tikur Anbessa",
+      svg: (
+        <svg viewBox="0 0 140 36" width="140" height="36" aria-label="Tikur Anbessa">
+          <path d="M6 28 C2 22 2 14 6 10 C9 6 13 8 14 12 C16 8 20 6 22 10 C26 14 22 26 14 30 Z" fill="#b45309" opacity="0.85"/>
+          <text x="30" y="21" fontFamily="Georgia,serif" fontSize="11" fontWeight="700" fill="#1a1a1a" letterSpacing="0.3">TIKUR</text>
+          <text x="30" y="31" fontFamily="Georgia,serif" fontSize="9" fill="#888" letterSpacing="1">ANBESSA</text>
+        </svg>
+      ),
+    },
   ];
 
-  // Duplicate for seamless loop
-  const items = [...clients, ...clients];
+  const items = [...wordmarks, ...wordmarks];
 
   return (
-    <div className="bg-white border-b border-zinc-100 overflow-hidden py-5 select-none">
-      <p className="text-center text-[10px] font-semibold uppercase tracking-widest text-zinc-300 mb-4">
+    <div className="bg-white border-b border-zinc-100 overflow-hidden py-6 select-none">
+      <p className="text-center text-[10px] font-semibold uppercase tracking-widest text-zinc-300 mb-5">
         Businesses we&apos;ve worked with
       </p>
       <div className="relative flex">
@@ -220,16 +365,16 @@ function ClientsTicker() {
           }
           .ticker-track {
             display: flex;
+            align-items: center;
             width: max-content;
-            animation: ticker 28s linear infinite;
+            animation: ticker 36s linear infinite;
           }
           .ticker-track:hover { animation-play-state: paused; }
         `}</style>
         <div className="ticker-track">
-          {items.map((name, i) => (
-            <span key={i} className="inline-flex items-center gap-3 px-6 whitespace-nowrap">
-              <span className="w-1 h-1 rounded-full bg-[#6dcc46] shrink-0" />
-              <span className="text-sm font-semibold text-zinc-700">{name}</span>
+          {items.map((item, i) => (
+            <span key={i} className="inline-flex items-center gap-0 px-8 whitespace-nowrap opacity-70 hover:opacity-100 transition-opacity duration-200">
+              {item.svg}
             </span>
           ))}
         </div>
