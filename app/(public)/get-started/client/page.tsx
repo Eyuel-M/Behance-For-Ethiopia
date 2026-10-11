@@ -21,7 +21,7 @@ export default async function ClientApplicationPage({ searchParams }: Props) {
       <div className="bg-white border-b border-zinc-100">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 py-10">
           <Link
-            href="/get-started"
+            href="/"
             className="inline-flex items-center gap-1.5 text-zinc-400 hover:text-zinc-700 text-sm transition-colors duration-150 cursor-pointer mb-6"
           >
             <ArrowLeftIcon />
