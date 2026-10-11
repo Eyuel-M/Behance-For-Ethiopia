@@ -51,24 +51,21 @@ function Hero() {
       >
         <defs>
           <linearGradient id="stripeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%"   stopColor="#040d06" />
-            <stop offset="6%"   stopColor="#071810" />
-            <stop offset="12%"  stopColor="#0a2414" />
-            <stop offset="18%"  stopColor="#0d3018" />
-            <stop offset="24%"  stopColor="#104820" />
-            <stop offset="30%"  stopColor="#14602a" />
-            <stop offset="36%"  stopColor="#1a8035" />
-            <stop offset="42%"  stopColor="#22a440" />
-            <stop offset="48%"  stopColor="#2ecc50" />
-            <stop offset="54%"  stopColor="#3cda60" />
-            <stop offset="60%"  stopColor="#4ee470" />
-            <stop offset="66%"  stopColor="#60ec84" />
-            <stop offset="72%"  stopColor="#7aefa8" />
-            <stop offset="78%"  stopColor="#88f0c8" />
-            <stop offset="84%"  stopColor="#6aeae0" />
-            <stop offset="90%"  stopColor="#40e4f8" />
-            <stop offset="96%"  stopColor="#18dcff" />
-            <stop offset="100%" stopColor="#00d4ff" />
+            <stop offset="0%"   stopColor="#020804" />
+            <stop offset="7%"   stopColor="#06120a" />
+            <stop offset="14%"  stopColor="#0a1e10" />
+            <stop offset="21%"  stopColor="#0d2c16" />
+            <stop offset="28%"  stopColor="#103c1e" />
+            <stop offset="35%"  stopColor="#145228" />
+            <stop offset="42%"  stopColor="#1a6c34" />
+            <stop offset="49%"  stopColor="#228a40" />
+            <stop offset="56%"  stopColor="#2eaa4e" />
+            <stop offset="63%"  stopColor="#40c058" />
+            <stop offset="70%"  stopColor="#54cc5a" />
+            <stop offset="77%"  stopColor="#66d452" />
+            <stop offset="84%"  stopColor="#78d848" />
+            <stop offset="91%"  stopColor="#88da3e" />
+            <stop offset="100%" stopColor="#96dc34" />
           </linearGradient>
           {/* Thin vertical stripe texture overlay */}
           <pattern id="stripes" x="0" y="0" width="48" height="640" patternUnits="userSpaceOnUse">
