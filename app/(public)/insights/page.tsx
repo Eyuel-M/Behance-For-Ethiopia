@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { FadeUp, StaggerGrid, StaggerItem } from "@/components/Motion";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
@@ -227,30 +228,36 @@ export default function InsightsPage() {
       <div className="max-w-6xl mx-auto px-5 sm:px-8 py-14 sm:py-20 space-y-14">
 
         {/* ── Featured ── */}
-        <FeaturedCard post={featured} />
+        <FadeUp>
+          <FeaturedCard post={featured} />
+        </FadeUp>
 
         {/* ── Category pills ── */}
-        <div className="flex flex-wrap items-center gap-2">
-          {(["All", "Industry", "Design", "Company", "Client Story"] as const).map((cat) => (
-            <span
-              key={cat}
-              className={`px-4 py-1.5 rounded-full text-xs font-semibold border cursor-default transition-colors ${
-                cat === "All"
-                  ? "bg-[#0d2318] text-white border-[#0d2318]"
-                  : "bg-white text-zinc-500 border-zinc-200 hover:border-zinc-400 hover:text-zinc-800"
-              }`}
-            >
-              {cat}
-            </span>
-          ))}
-        </div>
+        <FadeUp>
+          <div className="flex flex-wrap items-center gap-2">
+            {(["All", "Industry", "Design", "Company", "Client Story"] as const).map((cat) => (
+              <span
+                key={cat}
+                className={`px-4 py-1.5 rounded-full text-xs font-semibold border cursor-default transition-colors ${
+                  cat === "All"
+                    ? "bg-[#0d2318] text-white border-[#0d2318]"
+                    : "bg-white text-zinc-500 border-zinc-200 hover:border-zinc-400 hover:text-zinc-800"
+                }`}
+              >
+                {cat}
+              </span>
+            ))}
+          </div>
+        </FadeUp>
 
         {/* ── Grid ── */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+        <StaggerGrid className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
           {rest.map((post) => (
-            <PostCard key={post.slug} post={post} />
+            <StaggerItem key={post.slug}>
+              <PostCard post={post} />
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerGrid>
 
         {/* ── Newsletter strip ── */}
         <div className="rounded-3xl p-10 sm:p-14 flex flex-col sm:flex-row items-center justify-between gap-8" style={{ backgroundColor: "#0d2318" }}>

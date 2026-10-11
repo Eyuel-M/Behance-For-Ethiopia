@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import { FadeUp, StaggerGrid, StaggerItem } from "@/components/Motion";
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
 
@@ -93,66 +94,75 @@ function Hero() {
         {/* Left — copy */}
         <div>
           {/* Social proof badge */}
-          <div className="inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/5 px-4 py-2 mb-8">
-            <span className="text-yellow-400 text-xs tracking-wider">★★★★★</span>
-            <span className="text-white/60 text-xs font-medium">4.9 · 50+ vetted professionals</span>
-          </div>
+          <FadeUp delay={0.05}>
+            <div className="inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/5 px-4 py-2 mb-8">
+              <span className="text-yellow-400 text-xs tracking-wider">★★★★★</span>
+              <span className="text-white/60 text-xs font-medium">4.9 · 50+ vetted professionals</span>
+            </div>
+          </FadeUp>
 
           {/* Display headline */}
-          <h1
-            className="text-white uppercase leading-[0.85] tracking-tight mb-7"
-            style={{ fontFamily: "var(--font-display), sans-serif", fontSize: "clamp(2.6rem, 7vw, 5rem)", fontWeight: 900 }}
-          >
-            <span className="block">Ethiopia&apos;s</span>
-            <span className="block" style={{ color: "#6dcc46" }}>Top Creative</span>
-            <span className="block">Talent.</span>
-          </h1>
+          <FadeUp delay={0.15}>
+            <h1
+              className="text-white uppercase leading-[0.85] tracking-tight mb-7"
+              style={{ fontFamily: "var(--font-display), sans-serif", fontSize: "clamp(2.6rem, 7vw, 5rem)", fontWeight: 900 }}
+            >
+              <span className="block">Ethiopia&apos;s</span>
+              <span className="block" style={{ color: "#6dcc46" }}>Top Creative</span>
+              <span className="block">Talent.</span>
+            </h1>
+          </FadeUp>
 
           {/* Body */}
-          <p className="text-zinc-400 text-base sm:text-lg leading-relaxed max-w-[420px] mb-9">
-            A curated network of vetted Ethiopian professionals. Branding, web,
-            visual production, and architecture — matched to your brief or managed end-to-end.
-          </p>
+          <FadeUp delay={0.27}>
+            <p className="text-zinc-400 text-base sm:text-lg leading-relaxed max-w-[420px] mb-9">
+              A curated network of vetted Ethiopian professionals. Branding, web,
+              visual production, and architecture — matched to your brief or managed end-to-end.
+            </p>
+          </FadeUp>
 
           {/* CTAs */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-9">
-            <Link
-              href="/get-started/client"
-              className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full text-sm font-bold transition-colors duration-150"
-              style={{ backgroundColor: "#6dcc46", color: "#0d2318" }}
-            >
-              Submit a Brief
-              <span className="w-6 h-6 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: "rgba(13,35,24,0.2)" }}>
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#0d2318" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-                </svg>
-              </span>
-            </Link>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full border border-white/15 flex items-center justify-center shrink-0">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.31 8.91a19.79 19.79 0 01-3.07-8.59A2 2 0 012.22 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 9.91a16 16 0 006.12 6.12l1.27-.66a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 17.92z"/>
-                </svg>
-              </div>
-              <div>
-                <p className="text-[10px] uppercase tracking-widest text-white/35 font-semibold">Call Us</p>
-                <p className="text-sm font-semibold text-white">+251 911 000 000</p>
+          <FadeUp delay={0.38}>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-9">
+              <Link
+                href="/get-started/client"
+                className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full text-sm font-bold transition-colors duration-150"
+                style={{ backgroundColor: "#6dcc46", color: "#0d2318" }}
+              >
+                Submit a Brief
+                <span className="w-6 h-6 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: "rgba(13,35,24,0.2)" }}>
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#0d2318" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                  </svg>
+                </span>
+              </Link>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full border border-white/15 flex items-center justify-center shrink-0">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.31 8.91a19.79 19.79 0 01-3.07-8.59A2 2 0 012.22 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 9.91a16 16 0 006.12 6.12l1.27-.66a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 17.92z"/>
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-[10px] uppercase tracking-widest text-white/35 font-semibold">Call Us</p>
+                  <p className="text-sm font-semibold text-white">+251 911 000 000</p>
+                </div>
               </div>
             </div>
-          </div>
+          </FadeUp>
 
-          <p className="text-xs text-white/25 leading-relaxed">
-            Every brief reviewed by a real person · No auto-matching · No upfront fee
-          </p>
+          <FadeUp delay={0.48}>
+            <p className="text-xs text-white/25 leading-relaxed">
+              Every brief reviewed by a real person · No auto-matching · No upfront fee
+            </p>
+          </FadeUp>
         </div>
 
         {/* Right — mosaic grid */}
-        <div className="hidden lg:grid grid-cols-2 gap-3">
+        <StaggerGrid className="hidden lg:grid grid-cols-2 gap-3">
 
           {/* Tile 1 — vetted network stat (lime) */}
-          <div className="rounded-2xl p-6 flex flex-col justify-between aspect-square" style={{ backgroundColor: "#6dcc46" }}>
+          <StaggerItem className="rounded-2xl p-6 flex flex-col justify-between aspect-square" style={{ backgroundColor: "#6dcc46" }}>
             <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "rgba(13,35,24,0.15)" }}>
-              {/* Shield-check icon */}
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0d2318" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M12 2l7 4v5c0 5-3.5 9.7-7 11C8.5 20.7 5 16 5 11V6z"/><polyline points="9 12 11 14 15 10"/>
               </svg>
@@ -162,10 +172,10 @@ function Hero() {
               <h3 className="font-bold text-sm leading-snug" style={{ color: "#0d2318" }}>Vetted professionals</h3>
               <p className="text-xs mt-0.5" style={{ color: "rgba(13,35,24,0.55)" }}>Every portfolio manually reviewed</p>
             </div>
-          </div>
+          </StaggerItem>
 
-          {/* Tile 2 — 48h stat (dark) — unchanged */}
-          <div className="rounded-2xl p-6 flex flex-col justify-between aspect-square" style={{ backgroundColor: "#1a3e28" }}>
+          {/* Tile 2 — 48h stat (dark) */}
+          <StaggerItem className="rounded-2xl p-6 flex flex-col justify-between aspect-square" style={{ backgroundColor: "#1a3e28" }}>
             <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "rgba(255,255,255,0.1)" }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6dcc46" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
@@ -175,12 +185,11 @@ function Hero() {
               <p className="font-black text-3xl" style={{ color: "#6dcc46", fontFamily: "var(--font-display), sans-serif" }}>48h</p>
               <p className="text-xs text-white/50">Brief reviewed &amp; matched</p>
             </div>
-          </div>
+          </StaggerItem>
 
           {/* Tile 3 — zero fee (mid dark) */}
-          <div className="rounded-2xl p-6 flex flex-col justify-between aspect-square" style={{ backgroundColor: "#163222" }}>
+          <StaggerItem className="rounded-2xl p-6 flex flex-col justify-between aspect-square" style={{ backgroundColor: "#163222" }}>
             <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "rgba(109,204,70,0.15)" }}>
-              {/* Tag/price icon */}
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6dcc46" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/>
               </svg>
@@ -190,12 +199,11 @@ function Hero() {
               <h3 className="font-bold text-sm text-white leading-snug">Upfront placement fee</h3>
               <p className="text-xs text-white/40 mt-0.5">You pay only when work starts</p>
             </div>
-          </div>
+          </StaggerItem>
 
-          {/* Tile 4 — human review (less transparent) */}
-          <div className="rounded-2xl p-6 flex flex-col justify-between aspect-square" style={{ backgroundColor: "#1e4430", border: "1px solid rgba(109,204,70,0.15)" }}>
+          {/* Tile 4 — human review */}
+          <StaggerItem className="rounded-2xl p-6 flex flex-col justify-between aspect-square" style={{ backgroundColor: "#1e4430", border: "1px solid rgba(109,204,70,0.15)" }}>
             <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "rgba(109,204,70,0.12)" }}>
-              {/* User-check icon */}
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6dcc46" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/>
               </svg>
@@ -204,9 +212,9 @@ function Hero() {
               <h3 className="font-bold text-sm text-white leading-snug mb-0.5">No algorithm</h3>
               <p className="text-xs text-white/50 leading-relaxed">Every brief read &amp; matched by a real person — not a bot</p>
             </div>
-          </div>
+          </StaggerItem>
 
-        </div>
+        </StaggerGrid>
       </div>
     </section>
   );
@@ -464,28 +472,32 @@ function Services() {
 
         {/* Header */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-end mb-14">
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#6dcc46]" />
-              <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500">Our Services</p>
+          <FadeUp>
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#6dcc46]" />
+                <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500">Our Services</p>
+              </div>
+              <h2
+                className="text-3xl sm:text-5xl font-black text-[#0d2318] leading-tight"
+                style={{ fontFamily: "var(--font-display), sans-serif" }}
+              >
+                Essential services<br />for Ethiopian<br />businesses
+              </h2>
             </div>
-            <h2
-              className="text-3xl sm:text-5xl font-black text-[#0d2318] leading-tight"
-              style={{ fontFamily: "var(--font-display), sans-serif" }}
-            >
-              Essential services<br />for Ethiopian<br />businesses
-            </h2>
-          </div>
-          <p className="text-zinc-500 text-base leading-relaxed max-w-md lg:ml-auto">
-            We launched with four disciplines where we can reliably vet talent and
-            deliver results. Every professional is reviewed before they join our network.
-          </p>
+          </FadeUp>
+          <FadeUp delay={0.1}>
+            <p className="text-zinc-500 text-base leading-relaxed max-w-md lg:ml-auto">
+              We launched with four disciplines where we can reliably vet talent and
+              deliver results. Every professional is reviewed before they join our network.
+            </p>
+          </FadeUp>
         </div>
 
         {/* Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+        <StaggerGrid className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
           {cards.map((card) => (
-            <div key={card.title} className={`rounded-3xl p-7 sm:p-8 flex flex-col ${card.bg} ${card.border}`}>
+            <StaggerItem key={card.title} className={`rounded-3xl p-7 sm:p-8 flex flex-col ${card.bg} ${card.border}`}>
               <div className={`w-11 h-11 rounded-xl flex items-center justify-center mb-6 ${card.iconBg} ${card.iconColor}`}>
                 {card.icon}
               </div>
@@ -511,9 +523,9 @@ function Services() {
                   <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
                 </svg>
               </Link>
-            </div>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerGrid>
 
       </div>
     </section>
@@ -553,7 +565,7 @@ function HowItWorks() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
 
           {/* Left */}
-          <div className="lg:sticky lg:top-28">
+          <FadeUp className="lg:sticky lg:top-28">
             <div className="flex items-center gap-2 mb-4">
               <span className="w-1.5 h-1.5 rounded-full bg-[#6dcc46]" />
               <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500">The Process</p>
@@ -578,12 +590,12 @@ function HowItWorks() {
                 <ArrowIcon />
               </span>
             </Link>
-          </div>
+          </FadeUp>
 
           {/* Right — step cards */}
-          <div className="space-y-3">
+          <StaggerGrid className="space-y-3">
             {steps.map((step, i) => (
-              <div
+              <StaggerItem
                 key={step.n}
                 className="group rounded-2xl border border-zinc-100 bg-zinc-50 hover:bg-[#0d2318] hover:border-[#0d2318] px-6 py-5 flex items-start gap-5 transition-all duration-200 cursor-default"
               >
@@ -598,9 +610,9 @@ function HowItWorks() {
                   <h3 className="font-bold text-zinc-900 text-sm mb-1 group-hover:text-white transition-colors duration-200">{step.title}</h3>
                   <p className="text-xs text-zinc-500 leading-relaxed group-hover:text-white/55 transition-colors duration-200">{step.body}</p>
                 </div>
-              </div>
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerGrid>
         </div>
       </div>
     </section>
@@ -624,7 +636,7 @@ function WhyUs() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
           {/* Left — stat mosaic */}
-          <div className="grid grid-cols-2 gap-4">
+          <FadeUp className="grid grid-cols-2 gap-4">
             <div className="rounded-2xl bg-[#6dcc46] p-7 flex flex-col justify-between aspect-square">
               <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "rgba(13,35,24,0.15)" }}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0d2318" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -663,10 +675,10 @@ function WhyUs() {
                 ))}
               </div>
             </div>
-          </div>
+          </FadeUp>
 
           {/* Right — copy */}
-          <div>
+          <FadeUp delay={0.1}>
             <div className="flex items-center gap-2 mb-4">
               <span className="w-1.5 h-1.5 rounded-full bg-[#6dcc46]" />
               <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500">Who We Are</p>
@@ -703,7 +715,7 @@ function WhyUs() {
                 <ArrowIcon />
               </span>
             </Link>
-          </div>
+          </FadeUp>
 
         </div>
       </div>
@@ -727,7 +739,7 @@ function ForProfessionals() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
           {/* Left */}
-          <div>
+          <FadeUp>
             <div className="flex items-center gap-2 mb-4">
               <span className="w-1.5 h-1.5 rounded-full bg-[#6dcc46]" />
               <p className="text-xs font-semibold uppercase tracking-widest text-[#6dcc46]/70">For Professionals</p>
@@ -769,12 +781,12 @@ function ForProfessionals() {
                 <ArrowIcon />
               </span>
             </Link>
-          </div>
+          </FadeUp>
 
           {/* Right — numbered step cards */}
-          <div className="space-y-3">
+          <StaggerGrid className="space-y-3">
             {steps.map((step, i) => (
-              <div
+              <StaggerItem
                 key={i}
                 className="group rounded-2xl border px-6 py-5 flex items-start gap-5 transition-all duration-200 cursor-default hover:bg-[#6dcc46]/10 hover:border-[#6dcc46]/30"
                 style={{ backgroundColor: "rgba(255,255,255,0.04)", borderColor: "rgba(255,255,255,0.08)" }}
@@ -789,9 +801,9 @@ function ForProfessionals() {
                   <h3 className="font-bold text-white text-sm mb-1">{step.title}</h3>
                   <p className="text-xs text-white/45 leading-relaxed group-hover:text-white/65 transition-colors duration-200">{step.body}</p>
                 </div>
-              </div>
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerGrid>
 
         </div>
       </div>
@@ -838,32 +850,34 @@ function Testimonials() {
       <div className="max-w-6xl mx-auto px-5 sm:px-8">
 
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-14">
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#6dcc46]" />
-              <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500">Testimonials</p>
-            </div>
-            <h2
-              className="text-3xl sm:text-5xl font-black text-[#0d2318] leading-tight"
-              style={{ fontFamily: "var(--font-display), sans-serif" }}
-            >
-              Trusted by Ethiopian<br />businesses
-            </h2>
-          </div>
-          <div className="flex items-center gap-3 shrink-0">
-            <span className="text-yellow-400 text-sm tracking-wider">★★★★★</span>
+        <FadeUp>
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-14">
             <div>
-              <p className="font-black text-2xl text-[#0d2318] leading-none" style={{ fontFamily: "var(--font-display), sans-serif" }}>4.9</p>
-              <p className="text-xs text-zinc-400">average rating</p>
+              <div className="flex items-center gap-2 mb-4">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#6dcc46]" />
+                <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500">Testimonials</p>
+              </div>
+              <h2
+                className="text-3xl sm:text-5xl font-black text-[#0d2318] leading-tight"
+                style={{ fontFamily: "var(--font-display), sans-serif" }}
+              >
+                Trusted by Ethiopian<br />businesses
+              </h2>
+            </div>
+            <div className="flex items-center gap-3 shrink-0">
+              <span className="text-yellow-400 text-sm tracking-wider">★★★★★</span>
+              <div>
+                <p className="font-black text-2xl text-[#0d2318] leading-none" style={{ fontFamily: "var(--font-display), sans-serif" }}>4.9</p>
+                <p className="text-xs text-zinc-400">average rating</p>
+              </div>
             </div>
           </div>
-        </div>
+        </FadeUp>
 
         {/* Cards grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <StaggerGrid className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           {reviews.map((r, i) => (
-            <div
+            <StaggerItem
               key={i}
               className={`rounded-3xl p-7 sm:p-8 flex flex-col gap-5 ${i === 0 ? "bg-[#0d2318]" : i === 2 ? "bg-[#6dcc46]" : "bg-[#f1f0ea]"}`}
             >
@@ -891,9 +905,9 @@ function Testimonials() {
                   {r.tag}
                 </span>
               </div>
-            </div>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerGrid>
       </div>
     </section>
   );
@@ -906,7 +920,7 @@ function ClosingCta() {
     <section className="py-24 sm:py-32 overflow-hidden" style={{ backgroundColor: "#6dcc46" }}>
       <div className="max-w-6xl mx-auto px-5 sm:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-          <div>
+          <FadeUp>
             <div className="flex items-center gap-2 mb-4">
               <span className="w-1.5 h-1.5 rounded-full bg-[#0d2318]" />
               <p className="text-xs font-semibold uppercase tracking-widest text-[#0d2318]/60">Get Started</p>
@@ -921,7 +935,8 @@ function ClosingCta() {
               Tell us what you need. A real person reviews your brief, reaches out within
               48 hours, and matches you with the right professional.
             </p>
-          </div>
+          </FadeUp>
+          <FadeUp delay={0.12}>
           <div className="flex flex-col sm:flex-row sm:justify-end gap-3">
             <Link
               href="/get-started/client"
@@ -941,6 +956,7 @@ function ClosingCta() {
               Contact Us
             </Link>
           </div>
+          </FadeUp>
         </div>
       </div>
     </section>
