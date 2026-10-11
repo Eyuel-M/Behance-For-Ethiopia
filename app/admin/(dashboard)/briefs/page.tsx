@@ -3,7 +3,10 @@ import { getClientBriefs, getProjects, getDesignerApplications, getProposals } f
 import {
   BRIEF_STATUS_LABELS,
   BRIEF_STATUS_COLORS,
+  PROJECT_STATUS_LABELS,
+  PROJECT_STATUS_COLORS,
   type BriefStatus,
+  type ProjectStatus,
 } from "@/lib/supabase/project-types";
 
 export const dynamic = "force-dynamic";
@@ -51,6 +54,9 @@ export default async function BriefsPage() {
     }
   }
 
+  // Map brief_id → project for live status
+  const projectByBrief = new Map(projects.filter((p) => p.brief_id).map((p) => [p.brief_id!, p]));
+
   const counts = briefs.reduce<Record<string, number>>((acc, b) => {
     acc[b.status] = (acc[b.status] ?? 0) + 1;
     return acc;
@@ -90,11 +96,11 @@ export default async function BriefsPage() {
       ) : (
         <>
           {actionable.length > 0 && (
-            <BriefTable briefs={actionable} heading="Need action" assignedByBrief={assignedByBrief} />
+            <BriefTable briefs={actionable} heading="Need action" assignedByBrief={assignedByBrief} projectByBrief={projectByBrief} />
           )}
           {rest.length > 0 && (
             <div className="mt-8">
-              <BriefTable briefs={rest} heading="All others" assignedByBrief={assignedByBrief} />
+              <BriefTable briefs={rest} heading="All others" assignedByBrief={assignedByBrief} projectByBrief={projectByBrief} />
             </div>
           )}
         </>
@@ -107,10 +113,12 @@ function BriefTable({
   briefs,
   heading,
   assignedByBrief,
+  projectByBrief,
 }: {
   briefs: Awaited<ReturnType<typeof getClientBriefs>>;
   heading: string;
   assignedByBrief: Map<string, string>;
+  projectByBrief: Map<string, Awaited<ReturnType<typeof getProjects>>[number]>;
 }) {
   return (
     <div>
@@ -135,6 +143,7 @@ function BriefTable({
               const initials = assigned
                 ? assigned.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()
                 : null;
+              const project = projectByBrief.get(b.id);
               return (
                 <tr key={b.id} className="hover:bg-zinc-50 transition-colors duration-100">
                   <td className="px-4 py-3">
@@ -153,7 +162,13 @@ function BriefTable({
                     </span>
                   </td>
                   <td className="px-4 py-3">
-                    <StatusBadge status={b.status as BriefStatus} />
+                    {project ? (
+                      <span className={`inline-flex items-center px-2 py-0.5 rounded-full border text-xs font-semibold ${PROJECT_STATUS_COLORS[project.status as ProjectStatus]}`}>
+                        {PROJECT_STATUS_LABELS[project.status as ProjectStatus]}
+                      </span>
+                    ) : (
+                      <StatusBadge status={b.status as BriefStatus} />
+                    )}
                   </td>
                   <td className="px-4 py-3 hidden xl:table-cell">
                     {assigned ? (
