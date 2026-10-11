@@ -10,7 +10,11 @@ function ArrowLeftIcon() {
   );
 }
 
-export default function ClientApplicationPage() {
+type Props = { searchParams: Promise<{ service?: string }> };
+
+export default async function ClientApplicationPage({ searchParams }: Props) {
+  const { service = "" } = await searchParams;
+
   return (
     <div className="min-h-screen bg-zinc-50">
       {/* Page header */}
@@ -57,7 +61,7 @@ export default function ClientApplicationPage() {
 
       {/* Form */}
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-10">
-        <ClientApplicationForm />
+        <ClientApplicationForm initialService={service} />
       </div>
     </div>
   );

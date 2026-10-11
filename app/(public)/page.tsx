@@ -387,6 +387,7 @@ function ClientsTicker() {
 function Services() {
   const cards = [
     {
+      slug: "branding",
       icon: (
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
@@ -403,6 +404,7 @@ function Services() {
       linkColor: "text-[#0d2318] hover:text-[#6dcc46]",
     },
     {
+      slug: "web",
       icon: (
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/>
@@ -419,6 +421,7 @@ function Services() {
       linkColor: "text-[#0d2318] hover:text-[#0d2318]/70",
     },
     {
+      slug: "visual",
       icon: (
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/>
@@ -443,12 +446,13 @@ function Services() {
       title: "Architecture & Viz",
       body: "Architectural visualisation, CAD drawings, BIM models, floor plans, and photorealistic renders that bring spaces to life before a single brick is laid.",
       tags: ["Arch Viz", "CAD / BIM", "Floor Plans", "3D Renders"],
-      bg: "bg-[#f1f0ea]",
-      border: "border border-zinc-200",
-      iconBg: "bg-[#0d2318]/10",
-      iconColor: "text-[#0d2318]",
-      tagBg: "bg-white text-zinc-500",
-      linkColor: "text-[#0d2318] hover:text-[#6dcc46]",
+      bg: "bg-[#151515]",
+      border: "",
+      iconBg: "bg-[#6dcc46]/15",
+      iconColor: "text-[#6dcc46]",
+      tagBg: "bg-white/10 text-white/60",
+      slug: "architecture",
+      linkColor: "text-[#6dcc46] hover:text-white",
     },
   ];
 
@@ -483,10 +487,10 @@ function Services() {
               <div className={`w-11 h-11 rounded-xl flex items-center justify-center mb-6 ${card.iconBg} ${card.iconColor}`}>
                 {card.icon}
               </div>
-              <h3 className={`font-extrabold text-lg leading-tight mb-3 ${card.bg === "bg-white" || card.bg === "bg-[#f1f0ea]" ? "text-zinc-900" : card.bg === "bg-[#6dcc46]" ? "text-[#0d2318]" : "text-white"}`}>
+              <h3 className={`font-extrabold text-lg leading-tight mb-3 ${card.bg === "bg-white" ? "text-zinc-900" : card.bg === "bg-[#6dcc46]" ? "text-[#0d2318]" : "text-white"}`}>
                 {card.title}
               </h3>
-              <p className={`text-sm leading-relaxed mb-6 flex-1 ${card.bg === "bg-white" || card.bg === "bg-[#f1f0ea]" ? "text-zinc-500" : card.bg === "bg-[#6dcc46]" ? "text-[#0d2318]/70" : "text-white/55"}`}>
+              <p className={`text-sm leading-relaxed mb-6 flex-1 ${card.bg === "bg-white" ? "text-zinc-500" : card.bg === "bg-[#6dcc46]" ? "text-[#0d2318]/70" : "text-white/55"}`}>
                 {card.body}
               </p>
               <div className="flex flex-wrap gap-1.5 mb-7">
@@ -497,7 +501,7 @@ function Services() {
                 ))}
               </div>
               <Link
-                href="/get-started/client"
+                href={`/get-started/client?service=${card.slug}`}
                 className={`inline-flex items-center gap-1.5 text-sm font-bold transition-colors ${card.linkColor}`}
               >
                 Explore More

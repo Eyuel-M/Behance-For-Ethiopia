@@ -73,6 +73,11 @@ const CATEGORIES = [
     examples: "3D visualisation, motion graphics, video editing, product rendering",
   },
   {
+    value: "Architecture & Viz",
+    label: "Architecture & Viz",
+    examples: "Arch viz, CAD / BIM, floor plans, exterior & interior renders",
+  },
+  {
     value: "Multiple / combination",
     label: "Multiple / combination",
     examples: "Spans more than one category above",
@@ -97,12 +102,30 @@ const DESIGN_TYPES: Record<string, string[]> = {
     "3D visualisation", "Product rendering", "Motion graphics",
     "Explainer video", "Video editing", "Animation",
   ],
+  "Architecture & Viz": [
+    "Arch viz / 3D render", "Exterior visualisation", "Interior visualisation",
+    "Floor plan drawing", "CAD / BIM model", "Site plan / layout",
+  ],
   "Multiple / combination": [
     "Brand identity & logo", "UI/UX design", "Marketing materials",
     "3D visualisation", "Motion graphics", "Web design",
-    "Packaging design", "Social media assets",
+    "Packaging design", "Arch viz / 3D render",
   ],
   "Something else": [],
+};
+
+const SERVICE_TO_CATEGORY: Record<string, string> = {
+  branding: "Branding & Graphic Design",
+  web: "Web & Digital",
+  visual: "Visual Content",
+  architecture: "Architecture & Viz",
+};
+
+const SERVICE_TO_TYPES: Record<string, string[]> = {
+  branding: ["Brand identity & logo"],
+  web: ["UI/UX design"],
+  visual: ["3D visualisation"],
+  architecture: ["Arch viz / 3D render"],
 };
 
 const TIMELINES = [
@@ -169,9 +192,12 @@ const EMPTY: ClientApplicationData = {
 
 // ─── Component ─────────────────────────────────────────────────────────────────
 
-export default function ClientApplicationForm() {
-  const [form, setForm] = useState<ClientApplicationData>(EMPTY);
-  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+export default function ClientApplicationForm({ initialService = "" }: { initialService?: string }) {
+  const preCategory = SERVICE_TO_CATEGORY[initialService] ?? "";
+  const preTypes = SERVICE_TO_TYPES[initialService] ?? [];
+
+  const [form, setForm] = useState<ClientApplicationData>({ ...EMPTY, category: preCategory });
+  const [selectedTypes, setSelectedTypes] = useState<string[]>(preTypes);
   const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof ClientApplicationData, string>>>({});
   const [submitError, setSubmitError] = useState("");
   const [submitted, setSubmitted] = useState(false);
