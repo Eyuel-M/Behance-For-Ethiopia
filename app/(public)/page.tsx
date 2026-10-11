@@ -40,7 +40,7 @@ export default function HomePage() {
 
 function Hero() {
   return (
-    <section className="overflow-hidden relative min-h-[calc(100dvh-104px)] flex flex-col justify-center" style={{ backgroundColor: "#071208" }}>
+    <section className="overflow-hidden relative min-h-[calc(100dvh-64px)] flex flex-col justify-center" style={{ backgroundColor: "#071208" }}>
       {/* Vertical stripe gradient — dark forest left → bright cyan right */}
       <svg
         aria-hidden="true"

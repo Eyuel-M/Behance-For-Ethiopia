@@ -22,28 +22,6 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Announcement bar */}
-      <div className="bg-[#0d2318] py-2.5">
-        <div className="max-w-6xl mx-auto px-5 sm:px-8 flex items-center justify-between gap-4">
-          <p className="text-xs text-[#6dcc46] font-medium">
-            Ethiopia&apos;s first curated creative talent network
-          </p>
-          <div className="hidden sm:flex items-center gap-5 text-xs text-white/40">
-            <span>info@hireethiopiasbest.com</span>
-            <span className="flex items-center gap-2">
-              <span>Follow us</span>
-              <span className="flex gap-1.5">
-                {["f", "in", "ig"].map((s) => (
-                  <span key={s} className="w-5 h-5 rounded-full border border-white/20 flex items-center justify-center text-[9px] font-bold text-white/50">
-                    {s}
-                  </span>
-                ))}
-              </span>
-            </span>
-          </div>
-        </div>
-      </div>
-
       {/* Main navbar */}
       <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-sm border-b border-zinc-100 shadow-sm">
         <nav className="max-w-6xl mx-auto px-5 sm:px-8 flex items-center justify-between h-16">
