@@ -1,63 +1,114 @@
 "use client";
 
-import { motion, type HTMLMotionProps } from "framer-motion";
-import type { ReactNode } from "react";
+import { useEffect, useRef, type ReactNode, type CSSProperties } from "react";
 
-const ease = [0.22, 1, 0.36, 1] as const;
+const EASE = "cubic-bezier(0.22, 1, 0.36, 1)";
+const STAGGER_INTERVAL = 0.07;
 
-// Fades up from below when scrolled into view
+function applyHide(el: HTMLElement) {
+  el.style.opacity = "0";
+  el.style.transform = "translateY(24px)";
+}
+
+function applyReveal(el: HTMLElement, delay = 0) {
+  el.style.transition = `opacity 0.55s ${EASE} ${delay}s, transform 0.55s ${EASE} ${delay}s`;
+  el.style.opacity = "1";
+  el.style.transform = "translateY(0)";
+}
+
+// ── FadeUp ────────────────────────────────────────────────────────────────────
+// Fades up from below when the element scrolls into view (fires once).
 export function FadeUp({
   children,
   delay = 0,
   className,
+  style,
 }: {
   children: ReactNode;
   delay?: number;
   className?: string;
+  style?: CSSProperties;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    applyHide(el);
+
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          applyReveal(el, delay);
+          obs.disconnect();
+        }
+      },
+      { rootMargin: "-80px" }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [delay]);
+
+  return (
+    <div ref={ref} className={className} style={style}>
+      {children}
+    </div>
+  );
+}
+
+// ── StaggerGrid ───────────────────────────────────────────────────────────────
+// Container that reveals all [data-stagger] children in sequence when in view.
+export function StaggerGrid({
+  children,
+  className,
+  style,
+}: {
+  children: ReactNode;
+  className?: string;
+  style?: CSSProperties;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const items = Array.from(el.querySelectorAll<HTMLElement>("[data-stagger]"));
+    items.forEach(applyHide);
+
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          items.forEach((item, i) => applyReveal(item, i * STAGGER_INTERVAL));
+          obs.disconnect();
+        }
+      },
+      { rootMargin: "-60px" }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  return (
+    <div ref={ref} className={className} style={style}>
+      {children}
+    </div>
+  );
+}
+
+// ── StaggerItem ───────────────────────────────────────────────────────────────
+// Direct child of StaggerGrid — tagged so StaggerGrid can find and stagger it.
+export function StaggerItem({
+  children,
+  className,
+  style,
+}: {
+  children: ReactNode;
+  className?: string;
+  style?: CSSProperties;
 }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 28 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.55, ease, delay }}
-      className={className}
-    >
+    <div data-stagger className={className} style={style}>
       {children}
-    </motion.div>
-  );
-}
-
-// Stagger container — triggers all StaggerItem children in sequence
-const containerVariants = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.07 } },
-};
-
-const childVariants = {
-  hidden: { opacity: 0, y: 22 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease } },
-};
-
-export function StaggerGrid({ children, ...props }: HTMLMotionProps<"div"> & { children: ReactNode }) {
-  return (
-    <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, margin: "-60px" }}
-      {...props}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-// Direct child of StaggerGrid — inherits stagger timing
-export function StaggerItem({ children, ...props }: HTMLMotionProps<"div"> & { children: ReactNode }) {
-  return (
-    <motion.div variants={childVariants} {...props}>
-      {children}
-    </motion.div>
+    </div>
   );
 }
