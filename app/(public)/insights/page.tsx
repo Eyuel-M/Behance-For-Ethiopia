@@ -161,17 +161,6 @@ function PostCard({ post }: { post: Post }) {
       href={`/insights/${post.slug}`}
       className="group flex flex-col rounded-2xl border border-zinc-200 bg-white hover:border-zinc-300 hover:shadow-md transition-all duration-200 overflow-hidden"
     >
-      {/* Top color strip by category */}
-      <div
-        className="h-1 w-full"
-        style={{
-          backgroundColor:
-            post.category === "Industry"       ? "#6dcc46" :
-            post.category === "Design"         ? "#0d2318" :
-            post.category === "Client Story"   ? "#f59e0b" :
-                                                 "#a1a1aa",
-        }}
-      />
       <div className="p-6 flex flex-col flex-1">
         <CategoryPill category={post.category} />
         <h3 className="mt-3 text-base font-extrabold text-zinc-900 leading-snug group-hover:text-[#0d2318] transition-colors">
