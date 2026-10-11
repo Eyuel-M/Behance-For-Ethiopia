@@ -51,7 +51,7 @@ export default async function BriefDetailPage({ params }: Props) {
   const existingProject = projects.find((p) => p.brief_id === id) ?? null;
   const isTerminal = ["declined", "cancelled", "completed"].includes(status);
   const isActionable = !isTerminal;
-  const canCreateProject = !existingProject && !isTerminal;
+  const canCreateProject = !existingProject && status === "qualified";
 
   async function handleQualify(formData: FormData) {
     "use server";
