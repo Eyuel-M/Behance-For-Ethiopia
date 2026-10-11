@@ -30,14 +30,14 @@ export default function Navbar() {
         <nav className="max-w-6xl mx-auto px-5 sm:px-8 flex items-center justify-between h-16">
 
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 shrink-0 group cursor-pointer">
+          <a href="/" className="flex items-center gap-2.5 shrink-0 group cursor-pointer">
             <span className="w-8 h-8 rounded-lg bg-[#6dcc46] flex items-center justify-center text-[#0d2318] text-sm font-extrabold select-none group-hover:bg-[#7de055] transition-colors">
               H
             </span>
             <span className="font-extrabold text-zinc-900 text-sm tracking-tight">
               Hire Ethiopia&apos;s Best
             </span>
-          </Link>
+          </a>
 
           {/* Center links */}
           <ul className="hidden md:flex items-center gap-1">
