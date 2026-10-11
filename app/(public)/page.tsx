@@ -596,9 +596,6 @@ function HowItWorks() {
                   <h3 className="font-bold text-zinc-900 text-sm mb-1 group-hover:text-white transition-colors duration-200">{step.title}</h3>
                   <p className="text-xs text-zinc-500 leading-relaxed group-hover:text-white/55 transition-colors duration-200">{step.body}</p>
                 </div>
-                <svg className="ml-auto shrink-0 mt-1 text-zinc-300 group-hover:text-[#6dcc46] transition-colors duration-200" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-                </svg>
               </div>
             ))}
           </div>
@@ -775,27 +772,23 @@ function ForProfessionals() {
           {/* Right — numbered step cards */}
           <div className="space-y-3">
             {steps.map((step, i) => (
-              <div key={i} className="flex items-start gap-4 rounded-2xl border px-5 py-4" style={{ backgroundColor: "rgba(255,255,255,0.04)", borderColor: "rgba(255,255,255,0.08)" }}>
+              <div
+                key={i}
+                className="group rounded-2xl border px-6 py-5 flex items-start gap-5 transition-all duration-200 cursor-default hover:bg-[#6dcc46]/10 hover:border-[#6dcc46]/30"
+                style={{ backgroundColor: "rgba(255,255,255,0.04)", borderColor: "rgba(255,255,255,0.08)" }}
+              >
                 <span
-                  className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-xs font-black"
-                  style={{ backgroundColor: "rgba(109,204,70,0.15)", color: "#6dcc46", fontFamily: "var(--font-display), sans-serif" }}
+                  className="shrink-0 w-10 h-10 rounded-full border-2 border-[#6dcc46]/30 group-hover:border-[#6dcc46] flex items-center justify-center text-xs font-black text-[#6dcc46] transition-colors duration-200"
+                  style={{ fontFamily: "var(--font-display), sans-serif" }}
                 >
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-sm font-bold text-white mb-0.5">{step.title}</h3>
-                  <p className="text-xs text-white/40 leading-relaxed">{step.body}</p>
+                <div>
+                  <h3 className="font-bold text-white text-sm mb-1">{step.title}</h3>
+                  <p className="text-xs text-white/45 leading-relaxed group-hover:text-white/65 transition-colors duration-200">{step.body}</p>
                 </div>
-                <svg className="shrink-0 mt-1" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6dcc46" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <polyline points="20 6 9 17 4 12"/>
-                </svg>
               </div>
             ))}
-            <div className="flex items-center gap-4 rounded-2xl px-5 py-4 opacity-30" style={{ backgroundColor: "rgba(255,255,255,0.04)", borderColor: "rgba(255,255,255,0.06)" }}>
-              <span className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-xs font-black text-white/40" style={{ backgroundColor: "rgba(255,255,255,0.06)", fontFamily: "var(--font-display), sans-serif" }}>05</span>
-              <span className="text-sm text-white/40">Projects start arriving</span>
-              <span className="ml-auto text-white/20 text-lg">→</span>
-            </div>
           </div>
 
         </div>
