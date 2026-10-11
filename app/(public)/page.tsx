@@ -147,21 +147,22 @@ function Hero() {
         {/* Right — mosaic grid */}
         <div className="hidden lg:grid grid-cols-2 gap-3">
 
-          {/* Branding tile — lime */}
+          {/* Tile 1 — vetted network stat (lime) */}
           <div className="rounded-2xl p-6 flex flex-col justify-between aspect-square" style={{ backgroundColor: "#6dcc46" }}>
             <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "rgba(13,35,24,0.15)" }}>
+              {/* Shield-check icon */}
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0d2318" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                <path d="M12 2l7 4v5c0 5-3.5 9.7-7 11C8.5 20.7 5 16 5 11V6z"/><polyline points="9 12 11 14 15 10"/>
               </svg>
             </div>
             <div>
-              <h3 className="font-bold text-sm mb-0.5" style={{ color: "#0d2318" }}>Branding &amp; Design</h3>
-              <p className="text-xs" style={{ color: "rgba(13,35,24,0.6)" }}>Identity, logo, packaging</p>
-              <span className="font-black text-2xl mt-2 block" style={{ color: "#0d2318", fontFamily: "var(--font-display), sans-serif" }}>01</span>
+              <p className="font-black text-4xl leading-none mb-1" style={{ color: "#0d2318", fontFamily: "var(--font-display), sans-serif" }}>50+</p>
+              <h3 className="font-bold text-sm leading-snug" style={{ color: "#0d2318" }}>Vetted professionals</h3>
+              <p className="text-xs mt-0.5" style={{ color: "rgba(13,35,24,0.55)" }}>Every portfolio manually reviewed</p>
             </div>
           </div>
 
-          {/* Response stat tile — dark */}
+          {/* Tile 2 — 48h stat (dark) — unchanged */}
           <div className="rounded-2xl p-6 flex flex-col justify-between aspect-square" style={{ backgroundColor: "#1a3e28" }}>
             <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "rgba(255,255,255,0.1)" }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6dcc46" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -174,31 +175,32 @@ function Hero() {
             </div>
           </div>
 
-          {/* Web tile — mid */}
+          {/* Tile 3 — zero fee (mid dark) */}
           <div className="rounded-2xl p-6 flex flex-col justify-between aspect-square" style={{ backgroundColor: "#163222" }}>
             <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "rgba(109,204,70,0.15)" }}>
+              {/* Tag/price icon */}
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6dcc46" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/>
+                <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/>
               </svg>
             </div>
             <div>
-              <h3 className="font-bold text-sm text-white mb-0.5">Web &amp; Digital</h3>
-              <p className="text-xs text-white/40">UI/UX, WordPress, apps</p>
-              <span className="font-black text-2xl mt-2 block text-white/20" style={{ fontFamily: "var(--font-display), sans-serif" }}>02</span>
+              <p className="font-black text-3xl text-white leading-none mb-1" style={{ fontFamily: "var(--font-display), sans-serif" }}>ETB 0</p>
+              <h3 className="font-bold text-sm text-white leading-snug">Upfront placement fee</h3>
+              <p className="text-xs text-white/40 mt-0.5">You pay only when work starts</p>
             </div>
           </div>
 
-          {/* Visual tile — ghost */}
-          <div className="rounded-2xl p-6 flex flex-col justify-between aspect-square border" style={{ backgroundColor: "rgba(255,255,255,0.04)", borderColor: "rgba(255,255,255,0.08)" }}>
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "rgba(255,255,255,0.08)" }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/>
+          {/* Tile 4 — human review (less transparent) */}
+          <div className="rounded-2xl p-6 flex flex-col justify-between aspect-square" style={{ backgroundColor: "#1e4430", border: "1px solid rgba(109,204,70,0.15)" }}>
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "rgba(109,204,70,0.12)" }}>
+              {/* User-check icon */}
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6dcc46" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/>
               </svg>
             </div>
             <div>
-              <h3 className="font-bold text-sm text-white mb-0.5">Visual Content</h3>
-              <p className="text-xs text-white/40">3D, motion, video</p>
-              <span className="font-black text-2xl mt-2 block text-white/20" style={{ fontFamily: "var(--font-display), sans-serif" }}>03</span>
+              <h3 className="font-bold text-sm text-white leading-snug mb-0.5">No algorithm</h3>
+              <p className="text-xs text-white/50 leading-relaxed">Every brief read &amp; matched by a real person — not a bot</p>
             </div>
           </div>
 
