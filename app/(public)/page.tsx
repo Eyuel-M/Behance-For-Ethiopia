@@ -110,8 +110,8 @@ function Hero() {
 
           {/* Body */}
           <p className="text-zinc-400 text-base sm:text-lg leading-relaxed max-w-[420px] mb-9">
-            A curated network of vetted Ethiopian professionals. Branding, web, and
-            visual production — matched to your brief or managed end-to-end.
+            A curated network of vetted Ethiopian professionals. Branding, web,
+            visual production, and architecture — matched to your brief or managed end-to-end.
           </p>
 
           {/* CTAs */}
@@ -434,6 +434,22 @@ function Services() {
       tagBg: "bg-white/10 text-white/70",
       linkColor: "text-white hover:text-[#6dcc46]",
     },
+    {
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+      ),
+      title: "Architecture & Viz",
+      body: "Architectural visualisation, CAD drawings, BIM models, floor plans, and photorealistic renders that bring spaces to life before a single brick is laid.",
+      tags: ["Arch Viz", "CAD / BIM", "Floor Plans", "3D Renders"],
+      bg: "bg-[#f1f0ea]",
+      border: "border border-zinc-200",
+      iconBg: "bg-[#0d2318]/10",
+      iconColor: "text-[#0d2318]",
+      tagBg: "bg-white text-zinc-500",
+      linkColor: "text-[#0d2318] hover:text-[#6dcc46]",
+    },
   ];
 
   return (
@@ -455,22 +471,22 @@ function Services() {
             </h2>
           </div>
           <p className="text-zinc-500 text-base leading-relaxed max-w-md lg:ml-auto">
-            We launched with three disciplines where we can reliably vet talent and
+            We launched with four disciplines where we can reliably vet talent and
             deliver results. Every professional is reviewed before they join our network.
           </p>
         </div>
 
         {/* Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
           {cards.map((card) => (
             <div key={card.title} className={`rounded-3xl p-7 sm:p-8 flex flex-col ${card.bg} ${card.border}`}>
               <div className={`w-11 h-11 rounded-xl flex items-center justify-center mb-6 ${card.iconBg} ${card.iconColor}`}>
                 {card.icon}
               </div>
-              <h3 className={`font-extrabold text-lg leading-tight mb-3 ${card.bg === "bg-white" ? "text-zinc-900" : card.bg === "bg-[#6dcc46]" ? "text-[#0d2318]" : "text-white"}`}>
+              <h3 className={`font-extrabold text-lg leading-tight mb-3 ${card.bg === "bg-white" || card.bg === "bg-[#f1f0ea]" ? "text-zinc-900" : card.bg === "bg-[#6dcc46]" ? "text-[#0d2318]" : "text-white"}`}>
                 {card.title}
               </h3>
-              <p className={`text-sm leading-relaxed mb-6 flex-1 ${card.bg === "bg-white" ? "text-zinc-500" : card.bg === "bg-[#6dcc46]" ? "text-[#0d2318]/70" : "text-white/55"}`}>
+              <p className={`text-sm leading-relaxed mb-6 flex-1 ${card.bg === "bg-white" || card.bg === "bg-[#f1f0ea]" ? "text-zinc-500" : card.bg === "bg-[#6dcc46]" ? "text-[#0d2318]/70" : "text-white/55"}`}>
                 {card.body}
               </p>
               <div className="flex flex-wrap gap-1.5 mb-7">
@@ -629,7 +645,7 @@ function WhyUs() {
               <div className="rounded-2xl bg-[#0d2318] p-5 flex flex-col justify-between">
                 <p className="text-xs text-white/40 font-medium">Premium skills</p>
                 <div className="flex flex-wrap gap-1">
-                  {["Branding", "Web", "Motion", "3D"].map((s) => (
+                  {["Branding", "Web", "Motion", "3D", "Arch Viz"].map((s) => (
                     <span key={s} className="px-2 py-0.5 rounded-full text-[10px] font-medium text-white/70 border border-white/10">{s}</span>
                   ))}
                 </div>
