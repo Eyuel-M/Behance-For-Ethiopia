@@ -146,74 +146,66 @@ function Hero() {
           </p>
         </div>
 
-        {/* Right — service category grid */}
+        {/* Right — mosaic grid */}
         <div className="hidden lg:grid grid-cols-2 gap-3">
 
-          {/* Tile 1 — Branding (lime) */}
+          {/* Tile 1 — client testimonial (lime) */}
           <div className="rounded-2xl p-6 flex flex-col justify-between aspect-square" style={{ backgroundColor: "#6dcc46" }}>
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: "rgba(13,35,24,0.12)" }}>
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#0d2318" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
-              </svg>
-            </div>
+            <div className="text-[#0d2318]/15 font-black leading-none select-none" style={{ fontSize: "4.5rem", lineHeight: 1 }}>&ldquo;</div>
             <div>
-              <p className="font-black text-xl leading-tight mb-1.5" style={{ color: "#0d2318", fontFamily: "var(--font-display), sans-serif" }}>Branding &amp;<br/>Identity</p>
-              <div className="flex flex-wrap gap-1">
-                {["Logos", "Visual systems", "Packaging"].map((tag) => (
-                  <span key={tag} className="text-[10px] font-semibold px-2 py-0.5 rounded-full" style={{ backgroundColor: "rgba(13,35,24,0.1)", color: "rgba(13,35,24,0.65)" }}>{tag}</span>
-                ))}
+              <p className="text-sm font-semibold leading-snug mb-4" style={{ color: "#0d2318" }}>
+                Found our brand designer in 2 days. The quality matched global standards.
+              </p>
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-black shrink-0" style={{ backgroundColor: "rgba(13,35,24,0.18)", color: "#0d2318" }}>SM</div>
+                <div>
+                  <p className="text-xs font-bold leading-none mb-0.5" style={{ color: "#0d2318" }}>Sara M.</p>
+                  <p className="text-[10px]" style={{ color: "rgba(13,35,24,0.5)" }}>Founder, Orbit Studio</p>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Tile 2 — Web & Digital (dark) */}
+          {/* Tile 2 — satisfaction rating (dark) */}
           <div className="rounded-2xl p-6 flex flex-col justify-between aspect-square" style={{ backgroundColor: "#1a3e28" }}>
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: "rgba(255,255,255,0.08)" }}>
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#6dcc46" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <rect x="2" y="3" width="20" height="14" rx="2"/><polyline points="8 21 16 21"/><line x1="12" y1="17" x2="12" y2="21"/>
-              </svg>
+            <div className="flex items-center gap-0.5">
+              {[1,2,3,4,5].map((i) => (
+                <svg key={i} width="12" height="12" viewBox="0 0 24 24" fill="#6dcc46" stroke="none" aria-hidden="true">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+              ))}
             </div>
             <div>
-              <p className="font-black text-xl leading-tight mb-1.5 text-white" style={{ fontFamily: "var(--font-display), sans-serif" }}>Web &amp;<br/>Digital</p>
-              <div className="flex flex-wrap gap-1">
-                {["UI/UX", "Websites", "Apps"].map((tag) => (
-                  <span key={tag} className="text-[10px] font-semibold px-2 py-0.5 rounded-full" style={{ backgroundColor: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.45)" }}>{tag}</span>
-                ))}
-              </div>
+              <p className="font-black text-4xl leading-none mb-1" style={{ color: "#6dcc46", fontFamily: "var(--font-display), sans-serif" }}>4.9</p>
+              <p className="text-sm font-bold text-white">Client satisfaction</p>
+              <p className="text-xs text-white/40 mt-0.5">Across 40+ delivered projects</p>
             </div>
           </div>
 
-          {/* Tile 3 — Architecture (mid dark) */}
-          <div className="rounded-2xl p-6 flex flex-col justify-between aspect-square" style={{ backgroundColor: "#163222" }}>
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: "rgba(109,204,70,0.12)" }}>
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#6dcc46" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
-              </svg>
+          {/* Tile 3 — process preview (mid dark) */}
+          <div className="rounded-2xl p-5 flex flex-col aspect-square" style={{ backgroundColor: "#163222" }}>
+            <p className="text-[10px] uppercase tracking-widest font-semibold mb-4" style={{ color: "rgba(255,255,255,0.3)" }}>How it works</p>
+            <div className="flex flex-col gap-3 flex-1 justify-center">
+              {(["Share your brief", "We find your match", "Work begins"] as const).map((step, i) => (
+                <div key={i} className="flex items-center gap-2.5">
+                  <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-[9px] font-black" style={{ backgroundColor: "rgba(109,204,70,0.18)", color: "#6dcc46" }}>{i + 1}</div>
+                  <p className="text-xs font-medium" style={{ color: "rgba(255,255,255,0.65)" }}>{step}</p>
+                </div>
+              ))}
             </div>
-            <div>
-              <p className="font-black text-xl leading-tight mb-1.5 text-white" style={{ fontFamily: "var(--font-display), sans-serif" }}>Architecture<br/>&amp; Space</p>
-              <div className="flex flex-wrap gap-1">
-                {["Residential", "Commercial", "Interior"].map((tag) => (
-                  <span key={tag} className="text-[10px] font-semibold px-2 py-0.5 rounded-full" style={{ backgroundColor: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.4)" }}>{tag}</span>
-                ))}
-              </div>
-            </div>
+            <p className="text-[10px]" style={{ color: "rgba(255,255,255,0.2)" }}>As fast as 48 hours</p>
           </div>
 
-          {/* Tile 4 — Creative Production (dark, lime border) */}
-          <div className="rounded-2xl p-6 flex flex-col justify-between aspect-square" style={{ backgroundColor: "#1e4430", border: "1px solid rgba(109,204,70,0.18)" }}>
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: "rgba(109,204,70,0.1)" }}>
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#6dcc46" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/>
+          {/* Tile 4 — hand-picked quality (dark, lime border) */}
+          <div className="rounded-2xl p-6 flex flex-col justify-between aspect-square" style={{ backgroundColor: "#1e4430", border: "1px solid rgba(109,204,70,0.2)" }}>
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "rgba(109,204,70,0.12)" }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6dcc46" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M12 2l7 4v5c0 5-3.5 9.7-7 11C8.5 20.7 5 16 5 11V6z"/><polyline points="9 12 11 14 15 10"/>
               </svg>
             </div>
             <div>
-              <p className="font-black text-xl leading-tight mb-1.5 text-white" style={{ fontFamily: "var(--font-display), sans-serif" }}>Creative<br/>Production</p>
-              <div className="flex flex-wrap gap-1">
-                {["Photography", "Video", "Animation"].map((tag) => (
-                  <span key={tag} className="text-[10px] font-semibold px-2 py-0.5 rounded-full" style={{ backgroundColor: "rgba(109,204,70,0.1)", color: "rgba(109,204,70,0.55)" }}>{tag}</span>
-                ))}
-              </div>
+              <p className="font-black text-xl text-white leading-tight mb-1.5" style={{ fontFamily: "var(--font-display), sans-serif" }}>Hand-picked,<br/>not auto-matched</p>
+              <p className="text-xs leading-relaxed" style={{ color: "rgba(255,255,255,0.4)" }}>No self-signup. Every pro reviewed in-house before joining.</p>
             </div>
           </div>
 
