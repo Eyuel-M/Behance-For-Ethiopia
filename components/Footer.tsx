@@ -8,8 +8,6 @@ export default function Footer() {
 
   const proLinks = [
     { label: "Apply to the Network", href: "/get-started/designer" },
-    { label: "How Vetting Works", href: "/#how-it-works" },
-    { label: "Contact Us", href: "/contact" },
   ];
 
   const socialLinks = [
