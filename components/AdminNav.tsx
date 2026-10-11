@@ -49,22 +49,6 @@ const NAV = [
     ],
   },
   {
-    label: "System",
-    items: [
-      {
-        href: "/admin/archive",
-        label: "Archive",
-        icon: (
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="21 8 21 21 3 21 3 8" />
-            <rect x="1" y="3" width="22" height="5" rx="1" />
-            <line x1="10" y1="12" x2="14" y2="12" />
-          </svg>
-        ),
-      },
-    ],
-  },
-  {
     label: "Talent",
     items: [
       {
@@ -75,6 +59,22 @@ const NAV = [
             <circle cx="6" cy="5" r="2.5" stroke="currentColor" strokeWidth="1.4"/>
             <path d="M1.5 13c0-2.485 2.014-4 4.5-4s4.5 1.515 4.5 4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
             <path d="M11 7.5l1.5 1.5L15 6" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        ),
+      },
+    ],
+  },
+  {
+    label: "System",
+    items: [
+      {
+        href: "/admin/archive",
+        label: "Archive",
+        icon: (
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="21 8 21 21 3 21 3 8" />
+            <rect x="1" y="3" width="22" height="5" rx="1" />
+            <line x1="10" y1="12" x2="14" y2="12" />
           </svg>
         ),
       },
