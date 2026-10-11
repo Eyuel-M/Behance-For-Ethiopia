@@ -819,47 +819,108 @@ function Testimonials() {
 
 function ClosingCta() {
   return (
-    <section className="py-24 sm:py-32 overflow-hidden" style={{ backgroundColor: "#6dcc46" }}>
-      <div className="max-w-6xl mx-auto px-5 sm:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-          <FadeUp>
-            <div className="flex items-center gap-2 mb-4">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#0d2318]" />
-              <p className="text-xs font-semibold uppercase tracking-widest text-[#0d2318]/60">Get Started</p>
-            </div>
-            <h2
-              className="text-3xl sm:text-5xl font-black text-[#0d2318] leading-tight mb-4"
-              style={{ fontFamily: "var(--font-display), sans-serif" }}
-            >
-              Experienced.<br />Vetted.<br />Ready.
-            </h2>
-            <p className="text-[#0d2318]/60 text-base leading-relaxed max-w-sm">
-              Tell us what you need. A real person reviews your brief, reaches out within
-              48 hours, and matches you with the right professional.
-            </p>
-          </FadeUp>
-          <FadeUp delay={0.12}>
-          <div className="flex flex-col sm:flex-row sm:justify-end gap-3">
+    <section className="relative overflow-hidden py-28 sm:py-40" style={{ backgroundColor: "#071208" }}>
+
+      {/* Background: dot grid */}
+      <svg aria-hidden="true" className="absolute inset-0 w-full h-full pointer-events-none select-none" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="ctaDots" x="0" y="0" width="36" height="36" patternUnits="userSpaceOnUse">
+            <circle cx="1" cy="1" r="1" fill="#6dcc46" opacity="0.12" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#ctaDots)" />
+      </svg>
+
+      {/* Background: large decorative rings */}
+      <div aria-hidden="true" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+        <div className="w-[700px] h-[700px] rounded-full border border-white/[0.04]" />
+      </div>
+      <div aria-hidden="true" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+        <div className="w-[480px] h-[480px] rounded-full border border-[#6dcc46]/[0.07]" />
+      </div>
+
+      {/* Accent corner glows */}
+      <div aria-hidden="true" className="absolute top-0 right-0 w-80 h-80 rounded-full pointer-events-none" style={{ background: "radial-gradient(circle at top right, rgba(109,204,70,0.12) 0%, transparent 70%)" }} />
+      <div aria-hidden="true" className="absolute bottom-0 left-0 w-80 h-80 rounded-full pointer-events-none" style={{ background: "radial-gradient(circle at bottom left, rgba(109,204,70,0.08) 0%, transparent 70%)" }} />
+
+      <div className="relative max-w-3xl mx-auto px-5 sm:px-8 text-center">
+
+        {/* Badge */}
+        <FadeUp>
+          <div className="inline-flex items-center gap-2 rounded-full border border-[#6dcc46]/25 bg-[#6dcc46]/10 px-4 py-2 mb-10">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#6dcc46]" />
+            <p className="text-xs font-semibold uppercase tracking-widest text-[#6dcc46]/80">Now accepting projects</p>
+          </div>
+        </FadeUp>
+
+        {/* Headline */}
+        <FadeUp delay={0.1}>
+          <h2
+            className="text-5xl sm:text-7xl font-black leading-[0.88] tracking-tight text-white mb-7"
+            style={{ fontFamily: "var(--font-display), sans-serif" }}
+          >
+            Your next great<br />
+            <span style={{ color: "#6dcc46" }}>creative project</span><br />
+            starts here.
+          </h2>
+        </FadeUp>
+
+        {/* Sub */}
+        <FadeUp delay={0.18}>
+          <p className="text-white/45 text-base sm:text-lg leading-relaxed max-w-md mx-auto mb-12">
+            A real person reviews your brief, reaches out within 48 hours,
+            and matches you with exactly the right professional.
+          </p>
+        </FadeUp>
+
+        {/* CTAs */}
+        <FadeUp delay={0.26}>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
             <Link
               href="/get-started/client"
-              className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full text-sm font-bold text-white transition-colors duration-150"
-              style={{ backgroundColor: "#0d2318" }}
+              className="inline-flex items-center gap-2.5 px-8 py-4 rounded-full text-sm font-bold transition-all duration-150 hover:opacity-90"
+              style={{ backgroundColor: "#6dcc46", color: "#0d2318" }}
             >
               Submit a Brief
-              <span className="w-6 h-6 rounded-full flex items-center justify-center" style={{ backgroundColor: "#6dcc46" }}>
+              <span className="w-7 h-7 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: "rgba(13,35,24,0.2)" }}>
                 <ArrowIcon />
               </span>
             </Link>
             <Link
-              href="/contact"
-              className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full border-2 text-sm font-bold transition-colors duration-150"
-              style={{ borderColor: "rgba(13,35,24,0.25)", color: "#0d2318" }}
+              href="/get-started/designer"
+              className="inline-flex items-center gap-2.5 px-8 py-4 rounded-full border text-sm font-bold transition-all duration-150 hover:bg-white/5"
+              style={{ borderColor: "rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.75)" }}
             >
-              Contact Us
+              Apply as a Designer
             </Link>
           </div>
-          </FadeUp>
-        </div>
+        </FadeUp>
+
+        {/* Trust stats */}
+        <FadeUp delay={0.34}>
+          <div className="flex items-center justify-center gap-6 sm:gap-10 pt-10 border-t border-white/[0.08]">
+            <div className="text-center">
+              <p className="text-2xl sm:text-3xl font-black text-white leading-none" style={{ fontFamily: "var(--font-display), sans-serif" }}>50+</p>
+              <p className="text-[11px] text-white/35 font-medium mt-1.5 uppercase tracking-widest">Vetted pros</p>
+            </div>
+            <div className="w-px h-10 bg-white/10 shrink-0" />
+            <div className="text-center">
+              <p className="text-2xl sm:text-3xl font-black text-white leading-none" style={{ fontFamily: "var(--font-display), sans-serif" }}>48h</p>
+              <p className="text-[11px] text-white/35 font-medium mt-1.5 uppercase tracking-widest">Response</p>
+            </div>
+            <div className="w-px h-10 bg-white/10 shrink-0" />
+            <div className="text-center">
+              <p className="text-2xl sm:text-3xl font-black leading-none" style={{ color: "#6dcc46", fontFamily: "var(--font-display), sans-serif" }}>ETB 0</p>
+              <p className="text-[11px] text-white/35 font-medium mt-1.5 uppercase tracking-widest">Upfront fee</p>
+            </div>
+            <div className="w-px h-10 bg-white/10 shrink-0 hidden sm:block" />
+            <div className="text-center hidden sm:block">
+              <p className="text-yellow-400 text-sm tracking-wider leading-none">★★★★★</p>
+              <p className="text-[11px] text-white/35 font-medium mt-1.5 uppercase tracking-widest">4.9 rating</p>
+            </div>
+          </div>
+        </FadeUp>
+
       </div>
     </section>
   );
