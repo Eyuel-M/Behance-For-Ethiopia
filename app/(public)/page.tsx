@@ -402,7 +402,7 @@ function Services() {
       border: "border border-zinc-200",
       iconBg: "bg-zinc-100",
       iconColor: "text-zinc-600",
-      tagBg: "bg-zinc-50 text-zinc-500",
+      tagBg: "bg-zinc-200 text-zinc-700",
       linkColor: "text-[#0d2318] hover:text-[#6dcc46]",
     },
     {
