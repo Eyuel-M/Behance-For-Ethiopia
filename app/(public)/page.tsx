@@ -24,12 +24,11 @@ export default function HomePage() {
   return (
     <>
       <Hero />
-      <StatsBar />
+      <ClientsTicker />
       <Services />
       <HowItWorks />
       <WhyUs />
       <Testimonials />
-      <ClientsBar />
       <ForProfessionals />
       <ClosingCta />
     </>
@@ -187,29 +186,51 @@ function Hero() {
   );
 }
 
-// ─── Stats bar ────────────────────────────────────────────────────────────────
+// ─── Clients ticker ───────────────────────────────────────────────────────────
 
-function StatsBar() {
-  const stats = [
-    { value: "48h", label: "Average response time" },
-    { value: "100%", label: "Manually reviewed briefs" },
-    { value: "ETB 0", label: "Upfront placement fee" },
-    { value: "2", label: "Flexible service modes" },
+function ClientsTicker() {
+  const clients = [
+    "Sheba Organic",
+    "Tsehay Finance",
+    "Buna Roasters",
+    "Addis Blue Label",
+    "Habesha Homes",
+    "Zemen Studios",
+    "Nile Creative",
+    "Selam Tech",
+    "Admas Group",
+    "Abyssinia Bank",
+    "Ethio Telecom",
+    "Tikur Anbessa",
   ];
+
+  // Duplicate for seamless loop
+  const items = [...clients, ...clients];
+
   return (
-    <div className="bg-white border-b border-zinc-100">
-      <div className="max-w-6xl mx-auto px-5 sm:px-8 py-10">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8">
-          {stats.map((s) => (
-            <div key={s.label} className="text-center sm:text-left">
-              <p
-                className="text-3xl sm:text-4xl font-black text-[#0d2318] leading-none mb-1"
-                style={{ fontFamily: "var(--font-display), sans-serif" }}
-              >
-                {s.value}
-              </p>
-              <p className="text-xs text-zinc-400 leading-snug">{s.label}</p>
-            </div>
+    <div className="bg-white border-b border-zinc-100 overflow-hidden py-5 select-none">
+      <p className="text-center text-[10px] font-semibold uppercase tracking-widest text-zinc-300 mb-4">
+        Businesses we&apos;ve worked with
+      </p>
+      <div className="relative flex">
+        <style>{`
+          @keyframes ticker {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+          }
+          .ticker-track {
+            display: flex;
+            width: max-content;
+            animation: ticker 28s linear infinite;
+          }
+          .ticker-track:hover { animation-play-state: paused; }
+        `}</style>
+        <div className="ticker-track">
+          {items.map((name, i) => (
+            <span key={i} className="inline-flex items-center gap-3 px-6 whitespace-nowrap">
+              <span className="w-1 h-1 rounded-full bg-[#6dcc46] shrink-0" />
+              <span className="text-sm font-semibold text-zinc-700">{name}</span>
+            </span>
           ))}
         </div>
       </div>
@@ -711,42 +732,6 @@ function Testimonials() {
                   {r.tag}
                 </span>
               </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ─── Clients Bar ──────────────────────────────────────────────────────────────
-
-function ClientsBar() {
-  const clients = [
-    { name: "Sheba Organic", sector: "FMCG" },
-    { name: "Tsehay Finance", sector: "Finance" },
-    { name: "Buna Roasters", sector: "Hospitality" },
-    { name: "Addis Blue Label", sector: "Beverage" },
-    { name: "Habesha Homes", sector: "Real Estate" },
-    { name: "Zemen Studios", sector: "Media" },
-    { name: "Nile Creative", sector: "Agency" },
-    { name: "Selam Tech", sector: "Technology" },
-  ];
-
-  return (
-    <section className="bg-[#f1f0ea] py-16 border-t border-zinc-200/60">
-      <div className="max-w-6xl mx-auto px-5 sm:px-8">
-        <p className="text-center text-xs font-semibold uppercase tracking-widest text-zinc-400 mb-10">
-          Businesses we&apos;ve worked with
-        </p>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {clients.map((c) => (
-            <div
-              key={c.name}
-              className="rounded-2xl border border-zinc-200 bg-white px-5 py-4 flex flex-col gap-1 hover:border-[#6dcc46]/40 hover:bg-[#6dcc46]/5 transition-colors duration-150"
-            >
-              <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-300">{c.sector}</span>
-              <span className="text-sm font-bold text-zinc-800 leading-snug">{c.name}</span>
             </div>
           ))}
         </div>
