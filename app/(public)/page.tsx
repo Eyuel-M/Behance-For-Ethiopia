@@ -122,8 +122,10 @@ function Hero() {
               style={{ backgroundColor: "#6dcc46", color: "#0d2318" }}
             >
               Submit a Brief
-              <span className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-[#0d2318] font-bold" style={{ backgroundColor: "rgba(13,35,24,0.2)" }}>
-                »
+              <span className="w-6 h-6 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: "rgba(13,35,24,0.2)" }}>
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#0d2318" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                </svg>
               </span>
             </Link>
             <div className="flex items-center gap-3">
