@@ -99,10 +99,11 @@ const MOCK_BRIEFS: ClientBriefRow[] = [
 ];
 
 export async function getClientBriefs(): Promise<ClientBriefRow[]> {
-  if (!supabase) return Array.from(getDemoStore().briefs.values()).sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  if (!supabase) return Array.from(getDemoStore().briefs.values()).filter((b) => b.status !== "archived").sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
   const { data, error } = await supabase
     .from("client_applications")
     .select("*")
+    .neq("status", "archived")
     .order("created_at", { ascending: false });
   if (error) { console.error("[getClientBriefs]", error.message); return []; }
   return data as ClientBriefRow[];
@@ -253,10 +254,11 @@ const MOCK_APPLICATIONS: DesignerApplicationRow[] = [
 ];
 
 export async function getDesignerApplications(): Promise<DesignerApplicationRow[]> {
-  if (!supabase) return Array.from(getDemoStore().applications.values()).sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  if (!supabase) return Array.from(getDemoStore().applications.values()).filter((a) => a.status !== "archived").sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
   const { data, error } = await supabase
     .from("designer_applications")
     .select("*")
+    .neq("status", "archived")
     .order("created_at", { ascending: false });
   if (error) { console.error("[getDesignerApplications]", error.message); return []; }
   return data as DesignerApplicationRow[];
@@ -1193,19 +1195,43 @@ export function storeDemoApplicationSubmission(data: {
 // ─── Delete ───────────────────────────────────────────────────────────────────
 
 export async function deleteBriefById(id: string): Promise<void> {
-  if (!supabase) {
-    getDemoStore().briefs.delete(id);
-    return;
-  }
-  await supabase.from("client_applications").delete().eq("id", id);
+  await updateBriefStatus(id, "archived");
 }
 
 export async function deleteApplicationById(id: string): Promise<void> {
+  await updateApplicationStatus(id, "archived");
+}
+
+export async function getArchivedBriefs(): Promise<ClientBriefRow[]> {
   if (!supabase) {
-    getDemoStore().applications.delete(id);
-    return;
+    return Array.from(getDemoStore().briefs.values()).filter((b) => b.status === "archived");
   }
-  await supabase.from("designer_applications").delete().eq("id", id);
+  const { data } = await supabase
+    .from("client_applications")
+    .select("*")
+    .eq("status", "archived")
+    .order("created_at", { ascending: false });
+  return (data ?? []) as ClientBriefRow[];
+}
+
+export async function getArchivedApplications(): Promise<DesignerApplicationRow[]> {
+  if (!supabase) {
+    return Array.from(getDemoStore().applications.values()).filter((a) => a.status === "archived");
+  }
+  const { data } = await supabase
+    .from("designer_applications")
+    .select("*")
+    .eq("status", "archived")
+    .order("created_at", { ascending: false });
+  return (data ?? []) as DesignerApplicationRow[];
+}
+
+export async function restoreBrief(id: string): Promise<void> {
+  await updateBriefStatus(id, "new");
+}
+
+export async function restoreApplication(id: string): Promise<void> {
+  await updateApplicationStatus(id, "pending");
 }
 
 // ─── Professional account auth ───────────────────────────────────────────────

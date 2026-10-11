@@ -19,5 +19,14 @@ export async function deleteApplication(applicationId: string): Promise<void> {
   await deleteApplicationById(applicationId);
   revalidatePath("/admin/applications");
   revalidatePath("/admin/designers");
+  revalidatePath("/admin/archive");
   redirect("/admin/applications");
+}
+
+export async function restoreApplicationAction(applicationId: string): Promise<void> {
+  const { restoreApplication } = await import("@/lib/supabase/admin-queries");
+  await restoreApplication(applicationId);
+  revalidatePath("/admin/archive");
+  revalidatePath("/admin/applications");
+  redirect("/admin/archive");
 }

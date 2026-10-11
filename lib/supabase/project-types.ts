@@ -7,7 +7,8 @@ export type BriefStatus =
   | "declined"
   | "in_progress"
   | "completed"
-  | "cancelled";
+  | "cancelled"
+  | "archived";
 
 export type ApplicationStatus =
   | "pending"
@@ -15,7 +16,8 @@ export type ApplicationStatus =
   | "approved"
   | "conditionally_approved"
   | "waitlisted"
-  | "rejected";
+  | "rejected"
+  | "archived";
 
 export type ProjectStatus =
   | "ready_to_start"
@@ -43,6 +45,7 @@ export const BRIEF_STATUS_LABELS: Record<BriefStatus, string> = {
   in_progress: "In progress",
   completed: "Completed",
   cancelled: "Cancelled",
+  archived: "Archived",
 };
 
 export const BRIEF_STATUS_COLORS: Record<BriefStatus, string> = {
@@ -53,6 +56,7 @@ export const BRIEF_STATUS_COLORS: Record<BriefStatus, string> = {
   in_progress: "bg-green-50 text-green-700 border-green-100",
   completed: "bg-zinc-100 text-zinc-600 border-zinc-200",
   cancelled: "bg-zinc-100 text-zinc-500 border-zinc-200",
+  archived: "bg-zinc-100 text-zinc-400 border-zinc-200",
 };
 
 export const APPLICATION_STATUS_LABELS: Record<ApplicationStatus, string> = {
@@ -62,6 +66,7 @@ export const APPLICATION_STATUS_LABELS: Record<ApplicationStatus, string> = {
   conditionally_approved: "Conditional",
   waitlisted: "Waitlisted",
   rejected: "Rejected",
+  archived: "Archived",
 };
 
 export const APPLICATION_STATUS_COLORS: Record<ApplicationStatus, string> = {
@@ -71,6 +76,7 @@ export const APPLICATION_STATUS_COLORS: Record<ApplicationStatus, string> = {
   conditionally_approved: "bg-amber-50 text-amber-700 border-amber-100",
   waitlisted: "bg-yellow-50 text-yellow-700 border-yellow-100",
   rejected: "bg-red-50 text-red-700 border-red-100",
+  archived: "bg-zinc-100 text-zinc-400 border-zinc-200",
 };
 
 export const PROJECT_STATUS_LABELS: Record<ProjectStatus, string> = {

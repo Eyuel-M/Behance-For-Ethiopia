@@ -62,5 +62,14 @@ export async function createProjectFromBrief(formData: FormData): Promise<void> 
 export async function deleteBrief(briefId: string): Promise<void> {
   await deleteBriefById(briefId);
   revalidatePath("/admin/briefs");
+  revalidatePath("/admin/archive");
   redirect("/admin/briefs");
+}
+
+export async function restoreBriefAction(briefId: string): Promise<void> {
+  const { restoreBrief } = await import("@/lib/supabase/admin-queries");
+  await restoreBrief(briefId);
+  revalidatePath("/admin/archive");
+  revalidatePath("/admin/briefs");
+  redirect("/admin/archive");
 }
