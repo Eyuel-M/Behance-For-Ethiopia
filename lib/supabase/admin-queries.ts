@@ -1234,6 +1234,16 @@ export async function restoreApplication(id: string): Promise<void> {
   await updateApplicationStatus(id, "pending");
 }
 
+export async function hardDeleteBrief(id: string): Promise<void> {
+  if (!supabase) { getDemoStore().briefs.delete(id); return; }
+  await supabase.from("client_applications").delete().eq("id", id);
+}
+
+export async function hardDeleteApplication(id: string): Promise<void> {
+  if (!supabase) { getDemoStore().applications.delete(id); return; }
+  await supabase.from("designer_applications").delete().eq("id", id);
+}
+
 // ─── Professional account auth ───────────────────────────────────────────────
 
 export async function requestOtp(phone: string): Promise<{ found: boolean; demoCode?: string }> {

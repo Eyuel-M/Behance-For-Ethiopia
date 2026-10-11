@@ -5,14 +5,18 @@ import { useTransition, useState } from "react";
 type Props = {
   action: () => Promise<void>;
   label?: string;
+  title?: string;
   confirmMessage?: string;
+  confirmLabel?: string;
   className?: string;
 };
 
 export default function ConfirmDeleteButton({
   action,
   label = "Delete",
+  title = "Move to archive?",
   confirmMessage = "This will move the record to the archive. You can restore it later.",
+  confirmLabel = "Yes, archive it",
   className,
 }: Props) {
   const [open, setOpen] = useState(false);
@@ -55,7 +59,7 @@ export default function ConfirmDeleteButton({
               </svg>
             </div>
 
-            <h2 className="text-base font-extrabold text-zinc-900 text-center mb-1">Move to archive?</h2>
+            <h2 className="text-base font-extrabold text-zinc-900 text-center mb-1">{title}</h2>
             <p className="text-sm text-zinc-500 text-center leading-relaxed mb-6">{confirmMessage}</p>
 
             <div className="flex gap-3">
@@ -73,7 +77,7 @@ export default function ConfirmDeleteButton({
                 disabled={pending}
                 className="flex-1 px-4 py-2.5 rounded-full bg-red-500 text-white text-sm font-semibold hover:bg-red-600 transition-colors cursor-pointer disabled:opacity-50"
               >
-                {pending ? "Archiving…" : "Yes, archive it"}
+                {pending ? "Deleting…" : confirmLabel}
               </button>
             </div>
           </div>

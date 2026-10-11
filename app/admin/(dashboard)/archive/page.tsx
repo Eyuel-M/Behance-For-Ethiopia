@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { getArchivedBriefs, getArchivedApplications } from "@/lib/supabase/admin-queries";
-import { restoreBriefAction } from "@/app/actions/admin-briefs";
-import { restoreApplicationAction } from "@/app/actions/admin-applications";
+import { restoreBriefAction, permanentDeleteBriefAction } from "@/app/actions/admin-briefs";
+import { restoreApplicationAction, permanentDeleteApplicationAction } from "@/app/actions/admin-applications";
+import ConfirmDeleteButtonClient from "@/components/ConfirmDeleteButtonClient";
 
 export const dynamic = "force-dynamic";
 
@@ -97,6 +98,16 @@ export default async function ArchivePage() {
                           ↩ Restore
                         </button>
                       </form>
+                      <ConfirmDeleteButtonClient
+                        action={async () => {
+                          "use server";
+                          await permanentDeleteBriefAction(brief.id);
+                        }}
+                        label="Delete forever"
+                        title="Delete permanently?"
+                        confirmMessage="This will permanently delete the brief. It cannot be recovered."
+                        confirmLabel="Yes, delete forever"
+                      />
                     </div>
                   </div>
                 );
@@ -150,6 +161,16 @@ export default async function ArchivePage() {
                           ↩ Restore
                         </button>
                       </form>
+                      <ConfirmDeleteButtonClient
+                        action={async () => {
+                          "use server";
+                          await permanentDeleteApplicationAction(app.id);
+                        }}
+                        label="Delete forever"
+                        title="Delete permanently?"
+                        confirmMessage="This will permanently delete the application. It cannot be recovered."
+                        confirmLabel="Yes, delete forever"
+                      />
                     </div>
                   </div>
                 );

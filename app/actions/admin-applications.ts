@@ -30,3 +30,10 @@ export async function restoreApplicationAction(applicationId: string): Promise<v
   revalidatePath("/admin/applications");
   redirect("/admin/archive");
 }
+
+export async function permanentDeleteApplicationAction(applicationId: string): Promise<void> {
+  const { hardDeleteApplication } = await import("@/lib/supabase/admin-queries");
+  await hardDeleteApplication(applicationId);
+  revalidatePath("/admin/archive");
+  redirect("/admin/archive");
+}

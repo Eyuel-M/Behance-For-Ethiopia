@@ -73,3 +73,10 @@ export async function restoreBriefAction(briefId: string): Promise<void> {
   revalidatePath("/admin/briefs");
   redirect("/admin/archive");
 }
+
+export async function permanentDeleteBriefAction(briefId: string): Promise<void> {
+  const { hardDeleteBrief } = await import("@/lib/supabase/admin-queries");
+  await hardDeleteBrief(briefId);
+  revalidatePath("/admin/archive");
+  redirect("/admin/archive");
+}
