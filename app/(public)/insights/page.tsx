@@ -1,0 +1,293 @@
+import Link from "next/link";
+
+// ─── Data ─────────────────────────────────────────────────────────────────────
+
+type Category = "Industry" | "Design" | "Company" | "Client Story";
+
+interface Post {
+  slug: string;
+  category: Category;
+  title: string;
+  excerpt: string;
+  author: string;
+  date: string;
+  readTime: string;
+  featured?: boolean;
+}
+
+const POSTS: Post[] = [
+  {
+    slug: "why-ethiopian-design-is-having-a-moment",
+    category: "Industry",
+    title: "Why Ethiopian Creative Talent Is Having a Global Moment",
+    excerpt:
+      "A new generation of Ethiopian designers, illustrators, and brand strategists are landing work for international clients — and the quality gap is closing fast. Here's what's driving it.",
+    author: "Eyuel M.",
+    date: "Oct 2026",
+    readTime: "5 min read",
+    featured: true,
+  },
+  {
+    slug: "how-to-brief-a-designer",
+    category: "Design",
+    title: "How to Write a Brief That Gets You Great Design",
+    excerpt:
+      "Vague briefs produce vague results. We've reviewed thousands of them — here are the six things that separate a brief a designer loves from one they dread.",
+    author: "Eyuel M.",
+    date: "Sep 2026",
+    readTime: "4 min read",
+  },
+  {
+    slug: "managed-vs-direct-which-suits-you",
+    category: "Industry",
+    title: "Managed Project vs. Direct Match: Which One Suits Your Business?",
+    excerpt:
+      "Our two service modes exist because different businesses have fundamentally different needs. This guide helps you pick the right one before you submit a brief.",
+    author: "Eyuel M.",
+    date: "Sep 2026",
+    readTime: "3 min read",
+  },
+  {
+    slug: "sheba-organic-case-study",
+    category: "Client Story",
+    title: "How Sheba Organic Refreshed Its Brand in Under Two Weeks",
+    excerpt:
+      "When Sheba Organic needed a rebrand ahead of a product launch, they had 14 days and a tight budget. We matched them with a vetted brand designer on day one.",
+    author: "Eyuel M.",
+    date: "Aug 2026",
+    readTime: "6 min read",
+  },
+  {
+    slug: "vetting-process-explained",
+    category: "Company",
+    title: "Inside Our Vetting Process: What We Actually Look For",
+    excerpt:
+      "We reject more than 70% of applicants. Not because we're elitist — because quality matters. Here's the exact criteria we use to decide who joins the network.",
+    author: "Eyuel M.",
+    date: "Aug 2026",
+    readTime: "5 min read",
+  },
+  {
+    slug: "arch-viz-rising",
+    category: "Design",
+    title: "Architecture Visualisation Is the Fastest-Growing Brief We Receive",
+    excerpt:
+      "Real estate, urban planning, and interior design firms are all discovering the power of photorealistic renders. We break down why and who's producing the best work.",
+    author: "Eyuel M.",
+    date: "Jul 2026",
+    readTime: "4 min read",
+  },
+];
+
+const CATEGORY_COLORS: Record<Category, { bg: string; text: string }> = {
+  Industry:      { bg: "bg-[#6dcc46]/15",     text: "text-[#3a8f20]" },
+  Design:        { bg: "bg-[#0d2318]/10",      text: "text-[#0d2318]" },
+  Company:       { bg: "bg-zinc-200",          text: "text-zinc-600"  },
+  "Client Story":{ bg: "bg-amber-100",         text: "text-amber-700" },
+};
+
+// ─── Components ───────────────────────────────────────────────────────────────
+
+function CategoryPill({ category }: { category: Category }) {
+  const c = CATEGORY_COLORS[category];
+  return (
+    <span className={`inline-block text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full ${c.bg} ${c.text}`}>
+      {category}
+    </span>
+  );
+}
+
+function FeaturedCard({ post }: { post: Post }) {
+  return (
+    <Link
+      href={`/insights/${post.slug}`}
+      className="group block rounded-3xl overflow-hidden"
+      style={{ backgroundColor: "#0d2318" }}
+    >
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.1fr]">
+        {/* Left — visual */}
+        <div className="relative min-h-[260px] lg:min-h-[380px] overflow-hidden" style={{ background: "linear-gradient(135deg, #071208 0%, #1a6c34 50%, #6dcc46 100%)" }}>
+          {/* Abstract pattern */}
+          <svg className="absolute inset-0 w-full h-full opacity-20" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
+            <circle cx="350" cy="50"  r="180" fill="none" stroke="#6dcc46" strokeWidth="1" />
+            <circle cx="350" cy="50"  r="120" fill="none" stroke="#6dcc46" strokeWidth="0.5" />
+            <circle cx="50"  cy="280" r="150" fill="none" stroke="#6dcc46" strokeWidth="1" />
+            <line x1="0" y1="150" x2="400" y2="150" stroke="#6dcc46" strokeWidth="0.5" />
+          </svg>
+          <div className="absolute bottom-6 left-6">
+            <span className="text-xs font-bold uppercase tracking-widest text-[#6dcc46]/60">Featured</span>
+          </div>
+        </div>
+
+        {/* Right — content */}
+        <div className="p-8 lg:p-12 flex flex-col justify-between">
+          <div>
+            <CategoryPill category={post.category} />
+            <h2
+              className="mt-4 text-2xl sm:text-3xl font-black text-white leading-tight group-hover:text-[#6dcc46] transition-colors duration-200"
+              style={{ fontFamily: "var(--font-display), sans-serif" }}
+            >
+              {post.title}
+            </h2>
+            <p className="mt-4 text-white/50 text-sm leading-relaxed">
+              {post.excerpt}
+            </p>
+          </div>
+          <div className="mt-8 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <span className="w-8 h-8 rounded-full bg-[#6dcc46] flex items-center justify-center text-[#0d2318] text-xs font-extrabold">
+                {post.author[0]}
+              </span>
+              <div>
+                <p className="text-xs font-semibold text-white/70">{post.author}</p>
+                <p className="text-xs text-white/35">{post.date} · {post.readTime}</p>
+              </div>
+            </div>
+            <span className="w-9 h-9 rounded-full border border-white/15 flex items-center justify-center text-white/40 group-hover:border-[#6dcc46] group-hover:text-[#6dcc46] transition-all duration-200">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </span>
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+function PostCard({ post }: { post: Post }) {
+  return (
+    <Link
+      href={`/insights/${post.slug}`}
+      className="group flex flex-col rounded-2xl border border-zinc-200 bg-white hover:border-zinc-300 hover:shadow-md transition-all duration-200 overflow-hidden"
+    >
+      {/* Top color strip by category */}
+      <div
+        className="h-1 w-full"
+        style={{
+          backgroundColor:
+            post.category === "Industry"       ? "#6dcc46" :
+            post.category === "Design"         ? "#0d2318" :
+            post.category === "Client Story"   ? "#f59e0b" :
+                                                 "#a1a1aa",
+        }}
+      />
+      <div className="p-6 flex flex-col flex-1">
+        <CategoryPill category={post.category} />
+        <h3 className="mt-3 text-base font-extrabold text-zinc-900 leading-snug group-hover:text-[#0d2318] transition-colors">
+          {post.title}
+        </h3>
+        <p className="mt-2 text-sm text-zinc-500 leading-relaxed flex-1">
+          {post.excerpt}
+        </p>
+        <div className="mt-5 pt-4 border-t border-zinc-100 flex items-center justify-between">
+          <span className="text-xs text-zinc-400">{post.date} · {post.readTime}</span>
+          <span className="text-xs font-semibold text-[#0d2318] group-hover:text-[#6dcc46] transition-colors">
+            Read →
+          </span>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+// ─── Page ─────────────────────────────────────────────────────────────────────
+
+export default function InsightsPage() {
+  const featured = POSTS.find((p) => p.featured)!;
+  const rest = POSTS.filter((p) => !p.featured);
+
+  return (
+    <div className="min-h-screen bg-zinc-50">
+
+      {/* ── Page header ── */}
+      <div style={{ backgroundColor: "#071208" }} className="border-b border-white/5">
+        <div className="max-w-6xl mx-auto px-5 sm:px-8 py-16 sm:py-20">
+          <div className="flex items-center gap-2 mb-4">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#6dcc46]" />
+            <p className="text-xs font-semibold uppercase tracking-widest text-[#6dcc46]/70">Insights</p>
+          </div>
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
+            <div>
+              <h1
+                className="text-4xl sm:text-6xl font-black text-white leading-none tracking-tight"
+                style={{ fontFamily: "var(--font-display), sans-serif" }}
+              >
+                Thinking out<br />
+                <span style={{ color: "#6dcc46" }}>loud.</span>
+              </h1>
+              <p className="mt-4 text-white/45 text-base max-w-md leading-relaxed">
+                Design, industry, and the craft of matching great work to the right people.
+              </p>
+            </div>
+            <div className="flex items-center gap-6 text-xs text-white/30 shrink-0">
+              <div className="text-center">
+                <p className="text-2xl font-black text-white">{POSTS.length}</p>
+                <p className="mt-0.5">Articles</p>
+              </div>
+              <div className="w-px h-8 bg-white/10" />
+              <div className="text-center">
+                <p className="text-2xl font-black text-white">4</p>
+                <p className="mt-0.5">Categories</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-6xl mx-auto px-5 sm:px-8 py-14 sm:py-20 space-y-14">
+
+        {/* ── Featured ── */}
+        <FeaturedCard post={featured} />
+
+        {/* ── Category pills ── */}
+        <div className="flex flex-wrap items-center gap-2">
+          {(["All", "Industry", "Design", "Company", "Client Story"] as const).map((cat) => (
+            <span
+              key={cat}
+              className={`px-4 py-1.5 rounded-full text-xs font-semibold border cursor-default transition-colors ${
+                cat === "All"
+                  ? "bg-[#0d2318] text-white border-[#0d2318]"
+                  : "bg-white text-zinc-500 border-zinc-200 hover:border-zinc-400 hover:text-zinc-800"
+              }`}
+            >
+              {cat}
+            </span>
+          ))}
+        </div>
+
+        {/* ── Grid ── */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+          {rest.map((post) => (
+            <PostCard key={post.slug} post={post} />
+          ))}
+        </div>
+
+        {/* ── Newsletter strip ── */}
+        <div className="rounded-3xl p-10 sm:p-14 flex flex-col sm:flex-row items-center justify-between gap-8" style={{ backgroundColor: "#0d2318" }}>
+          <div>
+            <p className="text-xs font-bold uppercase tracking-widest text-[#6dcc46] mb-2">Stay in the loop</p>
+            <h2 className="text-2xl sm:text-3xl font-black text-white leading-tight">
+              New posts, straight<br />to your inbox.
+            </h2>
+          </div>
+          <form className="flex items-center gap-2 w-full sm:w-auto">
+            <input
+              type="email"
+              placeholder="your@email.com"
+              className="flex-1 sm:w-64 px-4 py-3 rounded-full text-sm bg-white/10 text-white placeholder-white/30 border border-white/15 focus:outline-none focus:border-[#6dcc46] transition-colors"
+            />
+            <button
+              type="submit"
+              className="shrink-0 px-5 py-3 rounded-full text-sm font-bold transition-colors"
+              style={{ backgroundColor: "#6dcc46", color: "#0d2318" }}
+            >
+              Subscribe
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  );
+}

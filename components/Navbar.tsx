@@ -52,6 +52,11 @@ export default function Navbar() {
               </a>
             </li>
             <li>
+              <Link href="/insights" className="px-4 py-2 rounded-full text-sm text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50 transition-all duration-150">
+                Insights
+              </Link>
+            </li>
+            <li>
               <Link href="/contact" className="px-4 py-2 rounded-full text-sm text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50 transition-all duration-150">
                 Contact
               </Link>

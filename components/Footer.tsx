@@ -3,6 +3,7 @@ export default function Footer() {
     { label: "Submit a Brief", href: "/get-started/client" },
     { label: "How It Works", href: "/#how-it-works" },
     { label: "Our Services", href: "/#services" },
+    { label: "Insights", href: "/insights" },
     { label: "Contact Us", href: "/contact" },
   ];
 
