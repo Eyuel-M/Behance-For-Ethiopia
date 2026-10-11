@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { FadeUp, StaggerGrid, StaggerItem } from "@/components/Motion";
 import ServicesCarousel from "@/components/ServicesCarousel";
@@ -42,181 +43,123 @@ export default function HomePage() {
 
 function Hero() {
   return (
-    <section className="overflow-hidden relative min-h-[calc(100dvh-64px)] flex flex-col justify-center" style={{ backgroundColor: "#071208" }}>
-      {/* Vertical stripe gradient — dark forest left → bright cyan right */}
-      <svg
+    <section className="relative min-h-[calc(100dvh-64px)] flex flex-col overflow-hidden">
+
+      {/* Background photo — replace src with actual photo of Ethiopian creative professionals */}
+      <Image
+        src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=2000&q=80"
+        alt="Creative professionals collaborating"
+        fill
+        className="object-cover object-center"
+        priority
+        sizes="100vw"
+      />
+
+      {/* Left-to-right dark scrim so headline stays readable */}
+      <div
         aria-hidden="true"
-        className="absolute inset-0 w-full h-full pointer-events-none select-none"
-        preserveAspectRatio="xMidYMid slice"
-        viewBox="0 0 1200 640"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <defs>
-          <linearGradient id="stripeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%"   stopColor="#020804" />
-            <stop offset="7%"   stopColor="#06120a" />
-            <stop offset="14%"  stopColor="#0a1e10" />
-            <stop offset="21%"  stopColor="#0d2c16" />
-            <stop offset="28%"  stopColor="#103c1e" />
-            <stop offset="35%"  stopColor="#145228" />
-            <stop offset="42%"  stopColor="#1a6c34" />
-            <stop offset="49%"  stopColor="#228a40" />
-            <stop offset="56%"  stopColor="#2eaa4e" />
-            <stop offset="63%"  stopColor="#40c058" />
-            <stop offset="70%"  stopColor="#54cc5a" />
-            <stop offset="77%"  stopColor="#66d452" />
-            <stop offset="84%"  stopColor="#78d848" />
-            <stop offset="91%"  stopColor="#88da3e" />
-            <stop offset="100%" stopColor="#96dc34" />
-          </linearGradient>
-          {/* Thin vertical stripe texture overlay */}
-          <pattern id="stripes" x="0" y="0" width="48" height="640" patternUnits="userSpaceOnUse">
-            <rect x="0"  y="0" width="20" height="640" fill="rgba(0,0,0,0.10)" />
-            <rect x="20" y="0" width="28" height="640" fill="rgba(255,255,255,0.04)" />
-          </pattern>
-          {/* Left dark scrim so text stays readable */}
-          <linearGradient id="scrim" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%"   stopColor="#030c05" stopOpacity="0.97" />
-            <stop offset="42%"  stopColor="#040e07" stopOpacity="0.85" />
-            <stop offset="58%"  stopColor="#040e07" stopOpacity="0.4" />
-            <stop offset="100%" stopColor="#040e07" stopOpacity="0" />
-          </linearGradient>
-        </defs>
-        {/* Base stripe gradient */}
-        <rect x="0" y="0" width="1200" height="640" fill="url(#stripeGrad)" />
-        {/* Stripe texture */}
-        <rect x="0" y="0" width="1200" height="640" fill="url(#stripes)" />
-        {/* Dark left scrim for text legibility */}
-        <rect x="0" y="0" width="1200" height="640" fill="url(#scrim)" />
-      </svg>
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(105deg, rgba(3,12,5,0.96) 0%, rgba(3,12,5,0.82) 38%, rgba(3,12,5,0.50) 62%, rgba(3,12,5,0.15) 100%)",
+        }}
+      />
+      {/* Bottom vignette */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0"
+        style={{
+          background: "linear-gradient(to top, rgba(3,12,5,0.75) 0%, transparent 48%)",
+        }}
+      />
 
-      <div className="relative max-w-6xl mx-auto px-5 sm:px-8 py-20 sm:py-28 grid grid-cols-1 lg:grid-cols-[1fr_0.9fr] gap-12 lg:gap-10 items-center">
+      {/* Content — anchored to bottom-left */}
+      <div className="relative flex-1 flex flex-col justify-end max-w-6xl mx-auto px-5 sm:px-8 w-full pb-16 sm:pb-24">
 
-        {/* Left — copy */}
-        <div>
-          {/* Social proof badge */}
-          <FadeUp delay={0.05}>
-            <div className="inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/5 px-4 py-2 mb-8">
-              <span className="text-yellow-400 text-xs tracking-wider">★★★★★</span>
-              <span className="text-white/60 text-xs font-medium">4.9 · 50+ vetted professionals</span>
-            </div>
-          </FadeUp>
+        {/* Social proof badge */}
+        <FadeUp delay={0.05}>
+          <div className="inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/5 px-4 py-2 mb-8 w-fit backdrop-blur-sm">
+            <span className="text-yellow-400 text-xs tracking-wider">★★★★★</span>
+            <span className="text-white/60 text-xs font-medium">4.9 · 50+ vetted professionals</span>
+          </div>
+        </FadeUp>
 
-          {/* Display headline */}
-          <FadeUp delay={0.15}>
-            <h1
-              className="text-white uppercase leading-[0.85] tracking-tight mb-7"
-              style={{ fontFamily: "var(--font-display), sans-serif", fontSize: "clamp(2.6rem, 7vw, 5rem)", fontWeight: 900 }}
-            >
-              <span className="block">Ethiopia&apos;s</span>
-              <span className="block" style={{ color: "#6dcc46" }}>Top Creative</span>
-              <span className="block">Talent.</span>
-            </h1>
-          </FadeUp>
+        {/* Display headline */}
+        <FadeUp delay={0.14}>
+          <h1
+            className="text-white uppercase leading-[0.85] tracking-tight mb-7"
+            style={{
+              fontFamily: "var(--font-display), sans-serif",
+              fontSize: "clamp(3rem, 8.5vw, 6.5rem)",
+              fontWeight: 900,
+            }}
+          >
+            <span className="block">Ethiopia&apos;s</span>
+            <span className="block" style={{ color: "#6dcc46" }}>Top Creative</span>
+            <span className="block">Talent.</span>
+          </h1>
+        </FadeUp>
 
-          {/* Body */}
-          <FadeUp delay={0.27}>
-            <p className="text-zinc-400 text-base sm:text-lg leading-relaxed max-w-[420px] mb-9">
-              A curated network of vetted Ethiopian professionals. Branding, web,
-              visual production, and architecture — matched to your brief or managed end-to-end.
-            </p>
-          </FadeUp>
+        {/* Body */}
+        <FadeUp delay={0.24}>
+          <p className="text-white/55 text-base sm:text-lg leading-relaxed max-w-[440px] mb-10">
+            A curated network of vetted Ethiopian designers — branding, web,
+            visual production, and architecture — matched to your brief.
+          </p>
+        </FadeUp>
 
-          {/* CTAs */}
-          <FadeUp delay={0.38}>
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-9">
-              <Link
-                href="/get-started/client"
-                className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full text-sm font-bold transition-colors duration-150"
-                style={{ backgroundColor: "#6dcc46", color: "#0d2318" }}
-              >
-                Submit a Brief
-                <span className="w-6 h-6 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: "rgba(13,35,24,0.2)" }}>
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#0d2318" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-                  </svg>
-                </span>
-              </Link>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full border border-white/15 flex items-center justify-center shrink-0">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.31 8.91a19.79 19.79 0 01-3.07-8.59A2 2 0 012.22 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 9.91a16 16 0 006.12 6.12l1.27-.66a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 17.92z"/>
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-[10px] uppercase tracking-widest text-white/35 font-semibold">Call Us</p>
-                  <p className="text-sm font-semibold text-white">+251 911 000 000</p>
-                </div>
-              </div>
-            </div>
-          </FadeUp>
-
-          <FadeUp delay={0.48}>
-            <p className="text-xs text-white/25 leading-relaxed">
-              Every brief reviewed by a real person · No auto-matching · No upfront fee
-            </p>
-          </FadeUp>
-        </div>
-
-        {/* Right — mosaic grid */}
-        <StaggerGrid className="hidden lg:grid grid-cols-2 gap-3">
-
-          {/* Tile 1 — vetted network stat (lime) */}
-          <StaggerItem className="rounded-2xl p-6 flex flex-col justify-between aspect-square" style={{ backgroundColor: "#6dcc46" }}>
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "rgba(13,35,24,0.15)" }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0d2318" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M12 2l7 4v5c0 5-3.5 9.7-7 11C8.5 20.7 5 16 5 11V6z"/><polyline points="9 12 11 14 15 10"/>
+        {/* Single primary CTA */}
+        <FadeUp delay={0.32}>
+          <Link
+            href="/get-started/client"
+            className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full text-sm font-bold w-fit transition-opacity duration-150 hover:opacity-90"
+            style={{ backgroundColor: "#6dcc46", color: "#0d2318" }}
+          >
+            Submit a Brief
+            <span className="w-6 h-6 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: "rgba(13,35,24,0.2)" }}>
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#0d2318" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
               </svg>
-            </div>
-            <div>
-              <p className="font-black text-4xl leading-none mb-1" style={{ color: "#0d2318", fontFamily: "var(--font-display), sans-serif" }}>50+</p>
-              <h3 className="font-bold text-sm leading-snug" style={{ color: "#0d2318" }}>Vetted professionals</h3>
-              <p className="text-xs mt-0.5" style={{ color: "rgba(13,35,24,0.55)" }}>Every portfolio manually reviewed</p>
-            </div>
-          </StaggerItem>
-
-          {/* Tile 2 — 48h stat (dark) */}
-          <StaggerItem className="rounded-2xl p-6 flex flex-col justify-between aspect-square" style={{ backgroundColor: "#1a3e28" }}>
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "rgba(255,255,255,0.1)" }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6dcc46" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-              </svg>
-            </div>
-            <div>
-              <p className="font-black text-3xl" style={{ color: "#6dcc46", fontFamily: "var(--font-display), sans-serif" }}>48h</p>
-              <p className="text-xs text-white/50">Brief reviewed &amp; matched</p>
-            </div>
-          </StaggerItem>
-
-          {/* Tile 3 — zero fee (mid dark) */}
-          <StaggerItem className="rounded-2xl p-6 flex flex-col justify-between aspect-square" style={{ backgroundColor: "#163222" }}>
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "rgba(109,204,70,0.15)" }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6dcc46" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/>
-              </svg>
-            </div>
-            <div>
-              <p className="font-black text-3xl text-white leading-none mb-1" style={{ fontFamily: "var(--font-display), sans-serif" }}>ETB 0</p>
-              <h3 className="font-bold text-sm text-white leading-snug">Upfront placement fee</h3>
-              <p className="text-xs text-white/40 mt-0.5">You pay only when work starts</p>
-            </div>
-          </StaggerItem>
-
-          {/* Tile 4 — human review */}
-          <StaggerItem className="rounded-2xl p-6 flex flex-col justify-between aspect-square" style={{ backgroundColor: "#1e4430", border: "1px solid rgba(109,204,70,0.15)" }}>
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "rgba(109,204,70,0.12)" }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6dcc46" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/>
-              </svg>
-            </div>
-            <div>
-              <h3 className="font-bold text-sm text-white leading-snug mb-0.5">No algorithm</h3>
-              <p className="text-xs text-white/50 leading-relaxed">Every brief read &amp; matched by a real person — not a bot</p>
-            </div>
-          </StaggerItem>
-
-        </StaggerGrid>
+            </span>
+          </Link>
+        </FadeUp>
       </div>
+
+      {/* Bottom stats strip */}
+      <FadeUp>
+        <div
+          className="relative border-t"
+          style={{
+            backgroundColor: "rgba(3,12,5,0.70)",
+            borderColor: "rgba(255,255,255,0.06)",
+            backdropFilter: "blur(14px)",
+          }}
+        >
+          <div className="max-w-6xl mx-auto px-5 sm:px-8 py-4 sm:py-5">
+            <div className="flex items-center gap-5 sm:gap-10 overflow-x-auto" style={{ scrollbarWidth: "none" }}>
+              {[
+                { value: "50+",    label: "Vetted professionals" },
+                { value: "48 hrs", label: "Brief reviewed & matched" },
+                { value: "ETB 0",  label: "Upfront placement fee" },
+                { value: "4.9",    label: "Average client rating" },
+              ].map((stat, i) => (
+                <React.Fragment key={stat.label}>
+                  {i > 0 && <div className="w-px h-5 bg-white/10 shrink-0" />}
+                  <div className="shrink-0 flex items-baseline gap-2.5">
+                    <p
+                      className="text-sm font-black text-white"
+                      style={{ fontFamily: "var(--font-display), sans-serif" }}
+                    >
+                      {stat.value}
+                    </p>
+                    <p className="text-xs text-white/35 whitespace-nowrap">{stat.label}</p>
+                  </div>
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
+        </div>
+      </FadeUp>
     </section>
   );
 }
