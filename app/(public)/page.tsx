@@ -495,9 +495,9 @@ function Services() {
               <p className={`text-sm leading-relaxed mb-6 flex-1 ${card.bg === "bg-white" ? "text-zinc-500" : card.bg === "bg-[#6dcc46]" ? "text-[#0d2318]/70" : "text-white/55"}`}>
                 {card.body}
               </p>
-              <div className="flex flex-wrap gap-1.5 mb-7">
+              <div className="flex flex-col gap-1.5 mb-7">
                 {card.tags.map((tag) => (
-                  <span key={tag} className={`px-2.5 py-1 rounded-full text-xs font-medium ${card.tagBg}`}>
+                  <span key={tag} className={`px-2.5 py-1 rounded-full text-xs font-medium w-fit ${card.tagBg}`}>
                     {tag}
                   </span>
                 ))}
