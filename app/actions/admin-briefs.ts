@@ -17,6 +17,7 @@ export async function qualifyBrief(
   await updateBriefStatus(briefId, status, adminNotes);
   revalidatePath(`/admin/briefs/${briefId}`);
   revalidatePath("/admin/briefs");
+  redirect(`/admin/briefs/${briefId}`);
 }
 
 export async function createProjectFromBrief(formData: FormData): Promise<void> {

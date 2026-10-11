@@ -79,6 +79,61 @@ export default async function BriefDetailPage({ params }: Props) {
         />
       </div>
 
+      {/* ── Status action bar — always on top ── */}
+      {isActionable && (
+        <form action={handleQualify} className="mb-5 rounded-2xl overflow-hidden border-2 border-[#0d2318]">
+          <div className="bg-[#0d2318] px-6 py-4 flex items-center justify-between gap-4 flex-wrap">
+            <div className="flex items-center gap-3">
+              <span className="w-2 h-2 rounded-full bg-[#6dcc46] animate-pulse" />
+              <p className="text-sm font-bold text-white">Update Brief Status</p>
+              <span className="hidden sm:inline text-white/30">·</span>
+              <span className="hidden sm:inline text-xs text-white/40">Current:</span>
+              <StatusBadge status={status} />
+            </div>
+            <button
+              type="submit"
+              className="shrink-0 inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-bold transition-colors cursor-pointer"
+              style={{ backgroundColor: "#6dcc46", color: "#0d2318" }}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              Save changes
+            </button>
+          </div>
+          <div className="bg-white px-6 py-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest block mb-2">New status</label>
+              <select
+                name="status"
+                defaultValue={status}
+                className="w-full rounded-xl border-2 border-zinc-200 px-4 py-3 text-sm font-semibold text-zinc-900 bg-white outline-none focus:border-[#0d2318] cursor-pointer"
+              >
+                <option value="new">New</option>
+                <option value="needs_clarification">Needs clarification</option>
+                <option value="qualified">Qualified ✓</option>
+                <option value="in_progress">In progress</option>
+                <option value="completed">Completed</option>
+                <option value="declined">Declined</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
+            <div>
+              <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest block mb-2">
+                Internal notes <span className="font-normal normal-case text-zinc-400">(team only)</span>
+              </label>
+              <textarea
+                name="adminNotes"
+                defaultValue={brief.admin_notes ?? ""}
+                rows={1}
+                placeholder="Why declined, clarification needed, qualification rationale…"
+                className="w-full rounded-xl border-2 border-zinc-200 px-4 py-3 text-sm text-zinc-900 bg-white outline-none focus:border-[#0d2318] resize-none"
+              />
+            </div>
+          </div>
+        </form>
+      )}
+
       {/* Hero card */}
       <div className="bg-white rounded-2xl border border-zinc-200 p-6 mb-5 flex items-start gap-5 flex-wrap">
         <div className="w-16 h-16 rounded-2xl bg-zinc-900 flex items-center justify-center text-white text-xl font-black shrink-0 select-none">
@@ -176,51 +231,6 @@ export default async function BriefDetailPage({ params }: Props) {
         </div>
       )}
 
-      {/* Update status */}
-      {isActionable && (
-        <div className="mt-5">
-          <SectionCard title="Update Status">
-            <form action={handleQualify} className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest block mb-2">New status</label>
-                  <select
-                    name="status"
-                    defaultValue={status}
-                    className="w-full rounded-xl border border-zinc-200 px-4 py-3 text-sm text-zinc-900 bg-white outline-none focus:border-zinc-900 focus:ring-2 focus:ring-zinc-900/10 cursor-pointer"
-                  >
-                    <option value="new">New</option>
-                    <option value="needs_clarification">Needs clarification</option>
-                    <option value="qualified">Qualified ✓</option>
-                    <option value="in_progress">In progress</option>
-                    <option value="completed">Completed</option>
-                    <option value="declined">Declined</option>
-                    <option value="cancelled">Cancelled</option>
-                  </select>
-                </div>
-              </div>
-              <div>
-                <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest block mb-2">
-                  Notes (team only, not shown to client)
-                </label>
-                <textarea
-                  name="adminNotes"
-                  defaultValue={brief.admin_notes ?? ""}
-                  rows={4}
-                  placeholder="Why declined, clarification needed, qualification rationale…"
-                  className="w-full rounded-xl border border-zinc-200 px-4 py-3 text-sm text-zinc-900 bg-white outline-none focus:border-zinc-900 focus:ring-2 focus:ring-zinc-900/10 resize-none"
-                />
-              </div>
-              <button
-                type="submit"
-                className="px-6 py-3 rounded-full bg-zinc-900 text-white text-sm font-bold hover:bg-zinc-700 transition-colors cursor-pointer"
-              >
-                Update status
-              </button>
-            </form>
-          </SectionCard>
-        </div>
-      )}
 
       {/* Existing project link */}
       {existingProject && (
