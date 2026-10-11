@@ -2,9 +2,16 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState, useEffect } from "react";
 
 export default function Navbar() {
   const pathname = usePathname();
+  const [activeHash, setActiveHash] = useState<string | null>(null);
+
+  // Clear hash active state when navigating away from homepage
+  useEffect(() => {
+    if (pathname !== "/") setActiveHash(null);
+  }, [pathname]);
 
   function navClass(href: string) {
     const active = pathname === href || (href !== "/" && pathname.startsWith(href));
@@ -54,12 +61,24 @@ export default function Navbar() {
           {/* Center links */}
           <ul className="hidden md:flex items-center gap-1">
             <li>
-              <a href="/#how-it-works" className="px-4 py-2 rounded-full text-sm text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50 transition-all duration-150">
+              <a
+                href="/#how-it-works"
+                onClick={() => setActiveHash("how-it-works")}
+                className={activeHash === "how-it-works"
+                  ? "px-4 py-2 rounded-full text-sm font-semibold bg-[#0d2318] text-white transition-all duration-150"
+                  : "px-4 py-2 rounded-full text-sm text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50 transition-all duration-150"}
+              >
                 How It Works
               </a>
             </li>
             <li>
-              <a href="/#services" className="px-4 py-2 rounded-full text-sm text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50 transition-all duration-150">
+              <a
+                href="/#services"
+                onClick={() => setActiveHash("services")}
+                className={activeHash === "services"
+                  ? "px-4 py-2 rounded-full text-sm font-semibold bg-[#0d2318] text-white transition-all duration-150"
+                  : "px-4 py-2 rounded-full text-sm text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50 transition-all duration-150"}
+              >
                 Services
               </a>
             </li>
