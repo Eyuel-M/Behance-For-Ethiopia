@@ -41,20 +41,21 @@ export default function Navbar() {
 
           {/* Center links */}
           <ul className="hidden md:flex items-center gap-1">
-            {[
-              { href: "/#how-it-works", label: "How It Works" },
-              { href: "/#services", label: "Services" },
-              { href: "/contact", label: "Contact" },
-            ].map((l) => (
-              <li key={l.href}>
-                <Link
-                  href={l.href}
-                  className="px-4 py-2 rounded-full text-sm text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50 transition-all duration-150"
-                >
-                  {l.label}
-                </Link>
-              </li>
-            ))}
+            <li>
+              <a href="/#how-it-works" className="px-4 py-2 rounded-full text-sm text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50 transition-all duration-150">
+                How It Works
+              </a>
+            </li>
+            <li>
+              <a href="/#services" className="px-4 py-2 rounded-full text-sm text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50 transition-all duration-150">
+                Services
+              </a>
+            </li>
+            <li>
+              <Link href="/contact" className="px-4 py-2 rounded-full text-sm text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50 transition-all duration-150">
+                Contact
+              </Link>
+            </li>
           </ul>
 
           {/* Right CTAs */}
