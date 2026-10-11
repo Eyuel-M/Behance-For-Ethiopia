@@ -28,6 +28,8 @@ export default function HomePage() {
       <Services />
       <HowItWorks />
       <WhyUs />
+      <Testimonials />
+      <ClientsBar />
       <ForProfessionals />
       <ClosingCta />
     </>
@@ -38,8 +40,34 @@ export default function HomePage() {
 
 function Hero() {
   return (
-    <section className="bg-[#0d2318] overflow-hidden">
-      <div className="max-w-6xl mx-auto px-5 sm:px-8 py-20 sm:py-28 grid grid-cols-1 lg:grid-cols-[1fr_0.9fr] gap-12 lg:gap-10 items-center">
+    <section className="bg-[#0d2318] overflow-hidden relative">
+      {/* Abstract organic background — inspired by overlapping botanical shapes */}
+      <svg
+        aria-hidden="true"
+        className="absolute inset-0 w-full h-full pointer-events-none select-none"
+        preserveAspectRatio="xMidYMid slice"
+        viewBox="0 0 1200 640"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        {/* Large rear circle — right upper */}
+        <circle cx="980" cy="120" r="340" fill="#1a3d26" />
+        {/* Mid circle — right centre */}
+        <circle cx="1080" cy="380" r="260" fill="#163322" />
+        {/* Botanical leaf arc — overlapping */}
+        <ellipse cx="820" cy="60" rx="280" ry="300" fill="#204d2e" transform="rotate(20 820 60)" />
+        {/* Foreground accent circle — lower right */}
+        <circle cx="1160" cy="560" r="200" fill="#1f472c" />
+        {/* Small highlight dot — upper right corner */}
+        <circle cx="1190" cy="30" r="80" fill="#255935" />
+        {/* Faint centre radial glow */}
+        <radialGradient id="hglow" cx="70%" cy="55%" r="40%">
+          <stop offset="0%" stopColor="#6dcc46" stopOpacity="0.07" />
+          <stop offset="100%" stopColor="#6dcc46" stopOpacity="0" />
+        </radialGradient>
+        <rect x="0" y="0" width="1200" height="640" fill="url(#hglow)" />
+      </svg>
+
+      <div className="relative max-w-6xl mx-auto px-5 sm:px-8 py-20 sm:py-28 grid grid-cols-1 lg:grid-cols-[1fr_0.9fr] gap-12 lg:gap-10 items-center">
 
         {/* Left — copy */}
         <div>
@@ -585,6 +613,142 @@ function ForProfessionals() {
             </div>
           </div>
 
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── Testimonials ─────────────────────────────────────────────────────────────
+
+function Testimonials() {
+  const reviews = [
+    {
+      quote: "They matched us with exactly the right designer in under 48 hours. The branding we received exceeded anything we'd seen locally — it looked international.",
+      name: "Yonas Tesfaye",
+      role: "Co-founder, Sheba Organic",
+      rating: 5,
+      tag: "Branding & Identity",
+    },
+    {
+      quote: "I was skeptical at first — but the process was completely different from hiring on a marketplace. A real person called us, understood the brief, and only then introduced candidates.",
+      name: "Marta Alemu",
+      role: "Marketing Director, Tsehay Finance",
+      rating: 5,
+      tag: "Web & Digital",
+    },
+    {
+      quote: "Our product packaging went from generic to award-shelf worthy. The managed project option meant I didn't have to chase anyone — it just got done.",
+      name: "Biruk Haile",
+      role: "CEO, Buna Roasters",
+      rating: 5,
+      tag: "Visual Content",
+    },
+    {
+      quote: "Finally a platform that vets talent properly. Every designer we've worked with through Behance Ethiopia has been professional, responsive and genuinely skilled.",
+      name: "Hana Girma",
+      role: "Brand Manager, Addis Blue Label",
+      rating: 5,
+      tag: "Branding & Identity",
+    },
+  ];
+
+  return (
+    <section className="bg-white py-24 sm:py-32 border-t border-zinc-100">
+      <div className="max-w-6xl mx-auto px-5 sm:px-8">
+
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-14">
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#6dcc46]" />
+              <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500">Testimonials</p>
+            </div>
+            <h2
+              className="text-3xl sm:text-5xl font-black text-[#0d2318] leading-tight"
+              style={{ fontFamily: "var(--font-display), sans-serif" }}
+            >
+              Trusted by Ethiopian<br />businesses
+            </h2>
+          </div>
+          <div className="flex items-center gap-3 shrink-0">
+            <span className="text-yellow-400 text-sm tracking-wider">★★★★★</span>
+            <div>
+              <p className="font-black text-2xl text-[#0d2318] leading-none" style={{ fontFamily: "var(--font-display), sans-serif" }}>4.9</p>
+              <p className="text-xs text-zinc-400">average rating</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Cards grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          {reviews.map((r, i) => (
+            <div
+              key={i}
+              className={`rounded-3xl p-7 sm:p-8 flex flex-col gap-5 ${i === 0 ? "bg-[#0d2318]" : i === 2 ? "bg-[#6dcc46]" : "bg-[#f1f0ea]"}`}
+            >
+              {/* Stars */}
+              <div className="flex items-center gap-1">
+                {Array.from({ length: r.rating }).map((_, s) => (
+                  <svg key={s} width="12" height="12" viewBox="0 0 24 24" fill={i === 0 ? "#6dcc46" : i === 2 ? "#0d2318" : "#f59e0b"} aria-hidden="true">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                  </svg>
+                ))}
+              </div>
+
+              {/* Quote */}
+              <p className={`text-sm leading-relaxed flex-1 ${i === 0 ? "text-white/70" : i === 2 ? "text-[#0d2318]/70" : "text-zinc-600"}`}>
+                &ldquo;{r.quote}&rdquo;
+              </p>
+
+              {/* Footer */}
+              <div className={`flex items-center justify-between gap-4 pt-2 border-t ${i === 0 ? "border-white/10" : i === 2 ? "border-[#0d2318]/10" : "border-zinc-200"}`}>
+                <div>
+                  <p className={`text-sm font-bold ${i === 0 ? "text-white" : i === 2 ? "text-[#0d2318]" : "text-zinc-900"}`}>{r.name}</p>
+                  <p className={`text-xs mt-0.5 ${i === 0 ? "text-white/40" : i === 2 ? "text-[#0d2318]/50" : "text-zinc-400"}`}>{r.role}</p>
+                </div>
+                <span className={`px-2.5 py-1 rounded-full text-[10px] font-semibold whitespace-nowrap shrink-0 ${i === 0 ? "bg-white/10 text-white/60" : i === 2 ? "bg-[#0d2318]/10 text-[#0d2318]/60" : "bg-zinc-200 text-zinc-500"}`}>
+                  {r.tag}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── Clients Bar ──────────────────────────────────────────────────────────────
+
+function ClientsBar() {
+  const clients = [
+    { name: "Sheba Organic", sector: "FMCG" },
+    { name: "Tsehay Finance", sector: "Finance" },
+    { name: "Buna Roasters", sector: "Hospitality" },
+    { name: "Addis Blue Label", sector: "Beverage" },
+    { name: "Habesha Homes", sector: "Real Estate" },
+    { name: "Zemen Studios", sector: "Media" },
+    { name: "Nile Creative", sector: "Agency" },
+    { name: "Selam Tech", sector: "Technology" },
+  ];
+
+  return (
+    <section className="bg-[#f1f0ea] py-16 border-t border-zinc-200/60">
+      <div className="max-w-6xl mx-auto px-5 sm:px-8">
+        <p className="text-center text-xs font-semibold uppercase tracking-widest text-zinc-400 mb-10">
+          Businesses we&apos;ve worked with
+        </p>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {clients.map((c) => (
+            <div
+              key={c.name}
+              className="rounded-2xl border border-zinc-200 bg-white px-5 py-4 flex flex-col gap-1 hover:border-[#6dcc46]/40 hover:bg-[#6dcc46]/5 transition-colors duration-150"
+            >
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-300">{c.sector}</span>
+              <span className="text-sm font-bold text-zinc-800 leading-snug">{c.name}</span>
+            </div>
+          ))}
         </div>
       </div>
     </section>
