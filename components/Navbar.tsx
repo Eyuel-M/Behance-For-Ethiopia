@@ -54,12 +54,12 @@ export default function Navbar() {
           {/* Center links */}
           <ul className="hidden md:flex items-center gap-1">
             <li>
-              <a href="/#how-it-works" className={navClass("/")}>
+              <a href="/#how-it-works" className="px-4 py-2 rounded-full text-sm text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50 transition-all duration-150">
                 How It Works
               </a>
             </li>
             <li>
-              <a href="/#services" className={navClass("/")}>
+              <a href="/#services" className="px-4 py-2 rounded-full text-sm text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50 transition-all duration-150">
                 Services
               </a>
             </li>
