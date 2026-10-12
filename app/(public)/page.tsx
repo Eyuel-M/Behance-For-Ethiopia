@@ -432,10 +432,7 @@ function PortfolioTeaser() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-end mb-8">
             <div>
               <div className="flex items-center gap-2 mb-4">
-                {/* Square icon matching reference */}
-                <span className="w-4 h-4 rounded-sm border-2 border-[#6dcc46] flex items-center justify-center">
-                  <span className="w-1.5 h-1.5 rounded-sm bg-[#6dcc46]" />
-                </span>
+                <span className="w-2 h-2 rounded-full bg-[#6dcc46]" />
                 <p className="text-xs font-bold uppercase tracking-widest text-zinc-400">Our Work</p>
               </div>
               <h2
