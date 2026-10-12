@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getPortfolioProjects } from "@/lib/content/store";
 import { deletePortfolioAction } from "@/app/actions/admin-content";
+import ConfirmButton from "@/components/ConfirmButton";
 
 export const dynamic = "force-dynamic";
 
@@ -59,11 +60,9 @@ export default function PortfolioAdminPage() {
               </Link>
               <form action={deletePortfolioAction}>
                 <input type="hidden" name="id" value={project.id} />
-                <button type="submit"
-                  className="px-3 py-1.5 rounded-full text-xs font-semibold border border-red-100 text-red-500 hover:bg-red-50 transition-colors cursor-pointer"
-                  onClick={(e) => { if (!confirm("Delete this project?")) e.preventDefault(); }}>
+                <ConfirmButton type="submit" message="Delete this project?" className="px-3 py-1.5 rounded-full text-xs font-semibold border border-red-100 text-red-500 hover:bg-red-50 transition-colors cursor-pointer">
                   Delete
-                </button>
+                </ConfirmButton>
               </form>
             </div>
           </div>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getInsights } from "@/lib/content/store";
 import { deleteInsightAction, toggleInsightPublished } from "@/app/actions/admin-content";
+import ConfirmButton from "@/components/ConfirmButton";
 
 export const dynamic = "force-dynamic";
 
@@ -65,10 +66,9 @@ export default function InsightsAdminPage() {
               </Link>
               <form action={deleteInsightAction}>
                 <input type="hidden" name="id" value={insight.id} />
-                <button type="submit" className="px-3 py-1.5 rounded-full text-xs font-semibold border border-red-100 text-red-500 hover:bg-red-50 transition-colors cursor-pointer"
-                  onClick={(e) => { if (!confirm("Delete this article permanently?")) e.preventDefault(); }}>
+                <ConfirmButton type="submit" message="Delete this article permanently?" className="px-3 py-1.5 rounded-full text-xs font-semibold border border-red-100 text-red-500 hover:bg-red-50 transition-colors cursor-pointer">
                   Delete
-                </button>
+                </ConfirmButton>
               </form>
             </div>
           </div>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getHomepageContent } from "@/lib/content/store";
 import { updateHomepageAction, upsertTestimonialAction, deleteTestimonialAction } from "@/app/actions/admin-content";
+import ConfirmButton from "@/components/ConfirmButton";
 
 export const dynamic = "force-dynamic";
 
@@ -98,11 +99,9 @@ export default function HomepageAdminPage() {
               </form>
               <form action={deleteTestimonialAction} className="mt-2">
                 <input type="hidden" name="id" value={t.id} />
-                <button type="submit"
-                  className="text-xs text-red-400 hover:text-red-600 transition-colors cursor-pointer"
-                  onClick={(e) => { if (!confirm("Delete this testimonial?")) e.preventDefault(); }}>
+                <ConfirmButton type="submit" message="Delete this testimonial?" className="text-xs text-red-400 hover:text-red-600 transition-colors cursor-pointer">
                   Delete testimonial
-                </button>
+                </ConfirmButton>
               </form>
             </div>
           ))}
