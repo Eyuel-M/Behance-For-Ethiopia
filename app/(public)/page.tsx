@@ -463,18 +463,22 @@ function PortfolioTeaser() {
         <div className="border-t border-dashed border-zinc-200 mb-8" />
 
         {/* Asymmetric grid */}
-        <div
+        <StaggerGrid
           className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:auto-rows-[270px]"
         >
           {PORTFOLIO_CARDS.map((card, i) => (
-            <Link
+            <StaggerItem
               key={card.client}
-              href="/portfolio"
               className={[
-                "group relative rounded-2xl sm:rounded-3xl overflow-hidden",
-                "aspect-[4/3] lg:aspect-auto",
                 i === 2 ? "lg:row-span-2" : "",
                 i === 4 ? "col-span-2 lg:col-span-1" : "",
+              ].filter(Boolean).join(" ") || undefined}
+            >
+            <Link
+              href="/portfolio"
+              className={[
+                "group relative rounded-2xl sm:rounded-3xl overflow-hidden block h-full",
+                "aspect-[4/3] lg:aspect-auto",
               ].filter(Boolean).join(" ")}
               style={{ background: card.gradient }}
             >
@@ -503,8 +507,9 @@ function PortfolioTeaser() {
               {/* Hover shine */}
               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" style={{ background: "rgba(255,255,255,0.04)" }} />
             </Link>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerGrid>
 
       </div>
     </section>
