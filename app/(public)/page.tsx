@@ -385,7 +385,7 @@ function HowItWorks() {
     {
       n: "01",
       title: "Submit a brief",
-      body: "Describe your project, budget, timeline, and choose your service mode. Takes under 5 minutes.",
+      body: "Describe your project, budget, timeline, and choose your service mode. Takes under 5 minutes — no payment, no commitment.",
     },
     {
       n: "02",
@@ -400,7 +400,7 @@ function HowItWorks() {
     {
       n: "04",
       title: "Work begins",
-      body: "Scope agreed, milestones set, kickoff confirmed. We keep everyone accountable to what was agreed.",
+      body: "Scope agreed, milestones set, kickoff confirmed. Payment is only collected once you've approved the proposal — not before.",
     },
   ];
 
