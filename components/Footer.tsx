@@ -65,65 +65,6 @@ export default function Footer() {
   return (
     <footer style={{ backgroundColor: "#071208" }}>
 
-      {/* ── Statement band ── */}
-      <div className="border-b border-white/[0.06]">
-        <div className="max-w-6xl mx-auto px-5 sm:px-8 py-16 sm:py-20">
-          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
-
-            {/* Big headline */}
-            <div className="max-w-xl">
-              <p className="text-xs font-bold uppercase tracking-widest text-[#6dcc46] mb-4">
-                Ethiopia-first · Curated, not crowdsourced
-              </p>
-              <h2
-                className="text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-none tracking-tight"
-                style={{ fontFamily: "var(--font-display), sans-serif" }}
-              >
-                The talent was<br />
-                always{" "}
-                <span
-                  className="relative inline-block"
-                  style={{ color: "#6dcc46" }}
-                >
-                  here.
-                  {/* underline squiggle */}
-                  <svg
-                    className="absolute -bottom-2 left-0 w-full"
-                    viewBox="0 0 120 8"
-                    fill="none"
-                    preserveAspectRatio="none"
-                    aria-hidden="true"
-                  >
-                    <path d="M2 5 Q30 1 60 5 Q90 9 118 5" stroke="#6dcc46" strokeWidth="2.5" strokeLinecap="round" opacity="0.5" />
-                  </svg>
-                </span>
-              </h2>
-            </div>
-
-            {/* CTA cluster */}
-            <div className="flex flex-col sm:flex-row lg:flex-col gap-3 lg:items-end shrink-0">
-              <a
-                href="/get-started/client"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full text-sm font-bold transition-colors"
-                style={{ backgroundColor: "#6dcc46", color: "#0d2318" }}
-              >
-                Submit a Brief
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-                </svg>
-              </a>
-              <a
-                href="/get-started/designer"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full text-sm font-bold border border-white/15 text-white/60 hover:text-white hover:border-white/30 transition-all"
-              >
-                Apply as a Designer
-              </a>
-            </div>
-
-          </div>
-        </div>
-      </div>
-
       {/* ── Links + brand ── */}
       <div className="max-w-6xl mx-auto px-5 sm:px-8 py-14">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-6">

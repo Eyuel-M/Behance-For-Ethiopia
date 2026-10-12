@@ -381,58 +381,133 @@ function Services() {
 
 // ─── Portfolio Teaser ─────────────────────────────────────────────────────────
 
-function PortfolioTeaser() {
-  const previews = [
-    { label: "Branding", gradient: "linear-gradient(135deg, #2d1b00 0%, #8b4513 50%, #d4a056 100%)", client: "Habesha Coffee" },
-    { label: "UI/UX",    gradient: "linear-gradient(135deg, #071208 0%, #1a3e28 50%, #6dcc46 100%)",  client: "Agar Microfinance" },
-    { label: "Arch Viz", gradient: "linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 50%, #6e7bcc 100%)",  client: "Bole Heights" },
-    { label: "Motion",   gradient: "linear-gradient(135deg, #071208 0%, #0d4a3e 50%, #2dccaa 100%)",  client: "Ethio-Tech Hub" },
-    { label: "Web",      gradient: "linear-gradient(135deg, #0d1a08 0%, #2d5a1e 50%, #7ec850 100%)",  client: "Sheba Organic" },
-    { label: "3D",       gradient: "linear-gradient(135deg, #050a1a 0%, #0d2a5c 50%, #4a80d4 100%)",  client: "Selam Airlines" },
-  ];
+const PORTFOLIO_CARDS = [
+  {
+    category: "Branding",
+    client: "Habesha Coffee",
+    title: "Export-Grade Identity",
+    service: "Brand Identity",
+    gradient: "linear-gradient(160deg, #2d1b00 0%, #7a3a10 45%, #c8882a 100%)",
+  },
+  {
+    category: "UI/UX",
+    client: "Agar Microfinance",
+    title: "Fintech App UI",
+    service: "Product Design",
+    gradient: "linear-gradient(160deg, #071208 0%, #12412a 50%, #3fa852 100%)",
+  },
+  {
+    category: "Arch Viz",
+    client: "Bole Heights",
+    title: "Residential Tower",
+    service: "3D Renders",
+    gradient: "linear-gradient(200deg, #080818 0%, #141460 55%, #4a5acc 100%)",
+  },
+  {
+    category: "Motion",
+    client: "Ethio-Tech Hub",
+    title: "Product Launch",
+    service: "Motion Graphics",
+    gradient: "linear-gradient(160deg, #041210 0%, #0a3d34 50%, #1ab89a 100%)",
+  },
+  {
+    category: "Web",
+    client: "Sheba Organic",
+    title: "E-commerce Store",
+    service: "Web Design",
+    gradient: "linear-gradient(160deg, #0a1a07 0%, #235018 50%, #5db83a 100%)",
+  },
+];
 
+function PortfolioTeaser() {
   return (
-    <section className="bg-white py-24 sm:py-32 border-t border-zinc-100">
+    <section className="bg-white py-16 sm:py-24 border-t border-zinc-100">
       <div className="max-w-6xl mx-auto px-5 sm:px-8">
 
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-12">
-          <FadeUp>
-            <div className="flex items-center gap-2 mb-3">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#6dcc46]" />
-              <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500">Our Work</p>
-            </div>
-            <h2
-              className="text-3xl sm:text-4xl font-black text-[#0d2318] leading-tight"
-              style={{ fontFamily: "var(--font-display), sans-serif" }}
-            >
-              Work that speaks<br />for itself.
-            </h2>
-          </FadeUp>
-          <FadeUp delay={0.1}>
-            <Link
-              href="/portfolio"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border-2 border-[#0d2318] text-sm font-bold text-[#0d2318] hover:bg-[#0d2318] hover:text-white transition-all duration-150"
-            >
-              View All Projects
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-              </svg>
-            </Link>
-          </FadeUp>
-        </div>
+        {/* Top dashed rule */}
+        <div className="border-t border-dashed border-zinc-200 mb-8" />
 
-        <StaggerGrid className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-          {previews.map((p) => (
-            <StaggerItem key={p.client}>
-              <Link href="/portfolio" className="group block rounded-2xl overflow-hidden aspect-[4/3]" style={{ background: p.gradient }}>
-                <div className="w-full h-full flex flex-col justify-end p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200" style={{ background: "rgba(0,0,0,0.3)" }}>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-white/60">{p.label}</p>
-                  <p className="text-xs font-extrabold text-white mt-0.5">{p.client}</p>
-                </div>
+        {/* Header */}
+        <FadeUp>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-end mb-8">
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                {/* Square icon matching reference */}
+                <span className="w-4 h-4 rounded-sm border-2 border-[#6dcc46] flex items-center justify-center">
+                  <span className="w-1.5 h-1.5 rounded-sm bg-[#6dcc46]" />
+                </span>
+                <p className="text-xs font-bold uppercase tracking-widest text-zinc-400">Our Work</p>
+              </div>
+              <h2
+                className="text-3xl sm:text-5xl font-black text-[#0d2318] leading-tight"
+                style={{ fontFamily: "var(--font-display), sans-serif" }}
+              >
+                Work that speaks<br />for itself.
+              </h2>
+            </div>
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+              <p className="text-zinc-400 text-sm leading-relaxed max-w-xs">
+                A curated selection of projects completed by vetted designers in our network.
+              </p>
+              <Link
+                href="/portfolio"
+                className="shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-zinc-300 text-sm font-semibold text-zinc-700 hover:border-[#0d2318] hover:text-[#0d2318] transition-all duration-150 whitespace-nowrap"
+              >
+                View All
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                </svg>
               </Link>
-            </StaggerItem>
+            </div>
+          </div>
+        </FadeUp>
+
+        {/* Bottom dashed rule */}
+        <div className="border-t border-dashed border-zinc-200 mb-8" />
+
+        {/* Asymmetric grid */}
+        <div
+          className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:auto-rows-[270px]"
+        >
+          {PORTFOLIO_CARDS.map((card, i) => (
+            <Link
+              key={card.client}
+              href="/portfolio"
+              className={[
+                "group relative rounded-2xl sm:rounded-3xl overflow-hidden",
+                "aspect-[4/3] lg:aspect-auto",
+                i === 2 ? "lg:row-span-2" : "",
+                i === 4 ? "col-span-2 lg:col-span-1" : "",
+              ].filter(Boolean).join(" ")}
+              style={{ background: card.gradient }}
+            >
+              {/* Bottom overlay */}
+              <div
+                className="absolute inset-0 transition-opacity duration-300"
+                style={{ background: "linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.15) 45%, transparent 70%)" }}
+              />
+
+              {/* Category badge — top right */}
+              <div className="absolute top-4 right-4">
+                <span className="bg-white/90 text-zinc-900 text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded">
+                  {card.category}
+                </span>
+              </div>
+
+              {/* Bottom content */}
+              <div className="absolute bottom-0 left-0 right-0 p-5">
+                <p className="font-extrabold text-white text-sm leading-snug mb-0.5">{card.title}</p>
+                <p className="text-white/55 text-xs mb-3">{card.client}</p>
+                <span className="inline-block bg-black/30 border border-white/15 text-white/70 text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded">
+                  {card.service}
+                </span>
+              </div>
+
+              {/* Hover shine */}
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" style={{ background: "rgba(255,255,255,0.04)" }} />
+            </Link>
           ))}
-        </StaggerGrid>
+        </div>
 
       </div>
     </section>
