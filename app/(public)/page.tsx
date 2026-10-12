@@ -47,10 +47,10 @@ function Hero() {
 
       {/* Background photo — replace with your own photos of Ethiopian creative professionals */}
       <Image
-        src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=2000&q=80"
-        alt="Ethiopian creative professional at work"
+        src="https://images.unsplash.com/photo-1531545514256-b1400bc00f31?auto=format&fit=crop&w=2000&q=80"
+        alt="African creative professionals collaborating"
         fill
-        className="object-cover object-[center_20%]"
+        className="object-cover object-center"
         priority
         sizes="100vw"
       />
