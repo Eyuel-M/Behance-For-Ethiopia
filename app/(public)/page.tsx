@@ -45,12 +45,13 @@ function Hero() {
   return (
     <section className="relative min-h-[calc(100dvh-64px)] flex flex-col overflow-hidden">
 
-      {/* Background photo — replace with your own photos of Ethiopian creative professionals */}
+      {/* Background photo */}
       <Image
-        src="https://images.unsplash.com/photo-1531545514256-b1400bc00f31?auto=format&fit=crop&w=2000&q=80"
-        alt="African creative professionals collaborating"
+        src="/hero-bg.avif"
+        alt="Ethiopian creative professional at work"
         fill
         className="object-cover object-center"
+        style={{ transform: "scaleX(-1)" }}
         priority
         sizes="100vw"
       />
