@@ -986,9 +986,9 @@ function scheduleSave(store: DemoStore) {
 class AutoMap<K, V> extends Map<K, V> {
   private _cb: () => void;
   constructor(entries: [K, V][], cb: () => void) { super(entries); this._cb = cb; }
-  set(k: K, v: V): this   { super.set(k, v);    this._cb(); return this; }
-  delete(k: K): boolean    { const r = super.delete(k); this._cb(); return r; }
-  clear(): void            { super.clear();       this._cb(); }
+  set(k: K, v: V): this   { super.set(k, v);    this._cb?.(); return this; }
+  delete(k: K): boolean    { const r = super.delete(k); this._cb?.(); return r; }
+  clear(): void            { super.clear();       this._cb?.(); }
 }
 
 function getDemoStore(): DemoStore {
