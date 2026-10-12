@@ -1,3 +1,5 @@
+import fs from "fs";
+import path from "path";
 import { supabase } from "./server";
 import type {
   ClientBriefRow,
@@ -936,6 +938,7 @@ const MOCK_PROPOSALS: ClientProposalRow[] = [
 
 // Turbopack re-evaluates modules per request, so module-level mutations don't
 // survive to the next request. globalThis is a true process-level singleton.
+// Changes are also written to .demo-data.json so they survive full restarts.
 type OtpRecord = { code: string; expiresAt: number };
 type SessionRecord = { applicationId: string; expiresAt: number };
 type DemoStore = {
@@ -945,21 +948,69 @@ type DemoStore = {
   milestones: Map<string, MilestoneRow>;
   applications: Map<string, DesignerApplicationRow>;
   feedback: Map<string, DesignerFeedbackRow>;
-  otps: Map<string, OtpRecord>;       // key = phone number
-  sessions: Map<string, SessionRecord>; // key = session token
+  otps: Map<string, OtpRecord>;
+  sessions: Map<string, SessionRecord>;
 };
+
+const STORE_FILE = path.join(process.cwd(), ".demo-data.json");
+
+function readDiskStore(): Record<string, [string, unknown][]> | null {
+  try {
+    if (!fs.existsSync(STORE_FILE)) return null;
+    return JSON.parse(fs.readFileSync(STORE_FILE, "utf8"));
+  } catch { return null; }
+}
+
+let _saveTimer: ReturnType<typeof setTimeout> | null = null;
+function scheduleSave(store: DemoStore) {
+  if (_saveTimer) clearTimeout(_saveTimer);
+  _saveTimer = setTimeout(() => {
+    try {
+      fs.writeFileSync(
+        STORE_FILE,
+        JSON.stringify({
+          briefs:       Array.from(store.briefs.entries()),
+          proposals:    Array.from(store.proposals.entries()),
+          projects:     Array.from(store.projects.entries()),
+          milestones:   Array.from(store.milestones.entries()),
+          applications: Array.from(store.applications.entries()),
+          feedback:     Array.from(store.feedback.entries()),
+        }),
+        "utf8"
+      );
+    } catch { /* ignore write errors in edge runtimes */ }
+  }, 150);
+}
+
+// A Map subclass that triggers a disk save on every mutation.
+class AutoMap<K, V> extends Map<K, V> {
+  private _cb: () => void;
+  constructor(entries: [K, V][], cb: () => void) { super(entries); this._cb = cb; }
+  set(k: K, v: V): this   { super.set(k, v);    this._cb(); return this; }
+  delete(k: K): boolean    { const r = super.delete(k); this._cb(); return r; }
+  clear(): void            { super.clear();       this._cb(); }
+}
+
 function getDemoStore(): DemoStore {
   const g = globalThis as typeof globalThis & { __demoStore?: DemoStore };
-  if (!g.__demoStore?.projects || !g.__demoStore?.milestones || !g.__demoStore?.briefs || !g.__demoStore?.applications || !g.__demoStore?.feedback) {
+  if (!g.__demoStore) {
+    const disk = readDiskStore();
+    const save = () => g.__demoStore && scheduleSave(g.__demoStore);
+    const mk = <V>(key: string, fallback: [string, V][]) =>
+      new AutoMap<string, V>(
+        (disk?.[key] as [string, V][] | undefined) ?? fallback,
+        save
+      ) as Map<string, V>;
+
     g.__demoStore = {
-      briefs: g.__demoStore?.briefs ?? new Map(MOCK_BRIEFS.map((b) => [b.id, { ...b }])),
-      proposals: g.__demoStore?.proposals ?? new Map(MOCK_PROPOSALS.map((p) => [p.id, { ...p }])),
-      projects: g.__demoStore?.projects ?? new Map(MOCK_PROJECTS.map((p) => [p.id, { ...p }])),
-      milestones: g.__demoStore?.milestones ?? new Map(MOCK_MILESTONES.map((m) => [m.id, { ...m }])),
-      applications: g.__demoStore?.applications ?? new Map(MOCK_APPLICATIONS.map((a) => [a.id, { ...a }])),
-      feedback: g.__demoStore?.feedback ?? new Map(MOCK_FEEDBACK.map((f) => [f.id, { ...f }])),
-      otps: g.__demoStore?.otps ?? new Map(),
-      sessions: g.__demoStore?.sessions ?? new Map(),
+      briefs:       mk("briefs",       MOCK_BRIEFS.map((b) => [b.id, { ...b }])),
+      proposals:    mk("proposals",    MOCK_PROPOSALS.map((p) => [p.id, { ...p }])),
+      projects:     mk("projects",     MOCK_PROJECTS.map((p) => [p.id, { ...p }])),
+      milestones:   mk("milestones",   MOCK_MILESTONES.map((m) => [m.id, { ...m }])),
+      applications: mk("applications", MOCK_APPLICATIONS.map((a) => [a.id, { ...a }])),
+      feedback:     mk("feedback",     MOCK_FEEDBACK.map((f) => [f.id, { ...f }])),
+      otps:         new Map(),
+      sessions:     new Map(),
     };
   }
   return g.__demoStore;
