@@ -1,15 +1,14 @@
-import { Resend } from "resend";
-
-const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 const FROM = process.env.EMAIL_FROM ?? "Hire Ethiopia's Best <noreply@hireethiopiasbest.com>";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://hireethiopiasbest.com";
 
 async function send(to: string, subject: string, html: string): Promise<boolean> {
-  if (!resend) {
+  if (!process.env.RESEND_API_KEY) {
     console.log(`[EMAIL - no RESEND_API_KEY] To: ${to} | Subject: ${subject}`);
     return false;
   }
   try {
+    const { Resend } = await import("resend");
+    const resend = new Resend(process.env.RESEND_API_KEY);
     const { error } = await resend.emails.send({ from: FROM, to, subject, html });
     if (error) { console.error("[EMAIL error]", error); return false; }
     return true;
