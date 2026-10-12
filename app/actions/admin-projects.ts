@@ -72,14 +72,14 @@ export async function postProjectNote(formData: FormData): Promise<void> {
 export async function changeMilestoneStatus(formData: FormData): Promise<void> {
   const milestoneId = ((formData.get("milestoneId") as string | null) ?? "").trim();
   const projectId = ((formData.get("projectId") as string | null) ?? "").trim();
-  const status = ((formData.get("status") as string | null) ?? "").trim();
+  const status = ((formData.get("status") as string | null) ?? "").trim() as import("@/lib/supabase/project-types").MilestoneStatus;
   await updateMilestoneStatus(milestoneId, status);
   revalidatePath(`/admin/projects/${projectId}`);
 }
 
 export async function changeProjectStatus(formData: FormData): Promise<void> {
   const projectId = ((formData.get("projectId") as string | null) ?? "").trim();
-  const status = ((formData.get("status") as string | null) ?? "").trim();
+  const status = ((formData.get("status") as string | null) ?? "").trim() as import("@/lib/supabase/project-types").ProjectStatus;
   const notes = ((formData.get("notes") as string | null) ?? "").trim() || undefined;
   await updateProjectStatus(projectId, status, notes);
   revalidatePath(`/admin/projects/${projectId}`);

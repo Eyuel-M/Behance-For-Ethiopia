@@ -30,6 +30,7 @@ export default function HomePage() {
       <Hero />
       <ClientsTicker />
       <Services />
+      <PortfolioTeaser />
       <HowItWorks />
       <WhyUs />
       <Testimonials />
@@ -372,6 +373,66 @@ function Services() {
         <FadeUp delay={0.15}>
           <ServicesCarousel />
         </FadeUp>
+
+      </div>
+    </section>
+  );
+}
+
+// ─── Portfolio Teaser ─────────────────────────────────────────────────────────
+
+function PortfolioTeaser() {
+  const previews = [
+    { label: "Branding", gradient: "linear-gradient(135deg, #2d1b00 0%, #8b4513 50%, #d4a056 100%)", client: "Habesha Coffee" },
+    { label: "UI/UX",    gradient: "linear-gradient(135deg, #071208 0%, #1a3e28 50%, #6dcc46 100%)",  client: "Agar Microfinance" },
+    { label: "Arch Viz", gradient: "linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 50%, #6e7bcc 100%)",  client: "Bole Heights" },
+    { label: "Motion",   gradient: "linear-gradient(135deg, #071208 0%, #0d4a3e 50%, #2dccaa 100%)",  client: "Ethio-Tech Hub" },
+    { label: "Web",      gradient: "linear-gradient(135deg, #0d1a08 0%, #2d5a1e 50%, #7ec850 100%)",  client: "Sheba Organic" },
+    { label: "3D",       gradient: "linear-gradient(135deg, #050a1a 0%, #0d2a5c 50%, #4a80d4 100%)",  client: "Selam Airlines" },
+  ];
+
+  return (
+    <section className="bg-white py-24 sm:py-32 border-t border-zinc-100">
+      <div className="max-w-6xl mx-auto px-5 sm:px-8">
+
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-12">
+          <FadeUp>
+            <div className="flex items-center gap-2 mb-3">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#6dcc46]" />
+              <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500">Our Work</p>
+            </div>
+            <h2
+              className="text-3xl sm:text-4xl font-black text-[#0d2318] leading-tight"
+              style={{ fontFamily: "var(--font-display), sans-serif" }}
+            >
+              Work that speaks<br />for itself.
+            </h2>
+          </FadeUp>
+          <FadeUp delay={0.1}>
+            <Link
+              href="/portfolio"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border-2 border-[#0d2318] text-sm font-bold text-[#0d2318] hover:bg-[#0d2318] hover:text-white transition-all duration-150"
+            >
+              View All Projects
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </Link>
+          </FadeUp>
+        </div>
+
+        <StaggerGrid className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+          {previews.map((p) => (
+            <StaggerItem key={p.client}>
+              <Link href="/portfolio" className="group block rounded-2xl overflow-hidden aspect-[4/3]" style={{ background: p.gradient }}>
+                <div className="w-full h-full flex flex-col justify-end p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200" style={{ background: "rgba(0,0,0,0.3)" }}>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-white/60">{p.label}</p>
+                  <p className="text-xs font-extrabold text-white mt-0.5">{p.client}</p>
+                </div>
+              </Link>
+            </StaggerItem>
+          ))}
+        </StaggerGrid>
 
       </div>
     </section>

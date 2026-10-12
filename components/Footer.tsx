@@ -3,12 +3,22 @@ export default function Footer() {
     { label: "Submit a Brief", href: "/get-started/client" },
     { label: "How It Works", href: "/#how-it-works" },
     { label: "Our Services", href: "/#services" },
+    { label: "Portfolio", href: "/portfolio" },
+    { label: "Pricing", href: "/pricing" },
+    { label: "Track Your Brief", href: "/track" },
     { label: "Insights", href: "/insights" },
     { label: "Contact Us", href: "/contact" },
   ];
 
   const proLinks = [
     { label: "Apply to the Network", href: "/get-started/designer" },
+    { label: "Designer Roster", href: "/designers" },
+  ];
+
+  const companyLinks = [
+    { label: "About Us", href: "/about" },
+    { label: "FAQ", href: "/faq" },
+    { label: "Pricing", href: "/pricing" },
   ];
 
   const socialLinks = [
@@ -52,9 +62,9 @@ export default function Footer() {
       <div className="max-w-6xl mx-auto px-5 sm:px-8 pt-16 pb-10">
 
         {/* Main grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 mb-14">
+        <div className="grid grid-cols-1 lg:grid-cols-6 gap-12 mb-14">
 
-          {/* Brand column — spans 2 of 5 */}
+          {/* Brand column — spans 2 of 6 */}
           <div className="lg:col-span-2">
             <a href="/" className="inline-flex items-center gap-2.5 mb-5">
               <span className="w-9 h-9 rounded-xl flex items-center justify-center text-sm font-extrabold select-none" style={{ backgroundColor: "#6dcc46", color: "#0d2318" }}>
@@ -121,6 +131,22 @@ export default function Footer() {
             </p>
             <ul className="space-y-3">
               {proLinks.map((l) => (
+                <li key={l.label}>
+                  <a href={l.href} className="text-sm text-white/45 hover:text-white transition-colors duration-150">
+                    {l.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Company */}
+          <div>
+            <p className="text-xs font-bold uppercase tracking-widest mb-5 text-[#6dcc46]">
+              Company
+            </p>
+            <ul className="space-y-3">
+              {companyLinks.map((l) => (
                 <li key={l.label}>
                   <a href={l.href} className="text-sm text-white/45 hover:text-white transition-colors duration-150">
                     {l.label}

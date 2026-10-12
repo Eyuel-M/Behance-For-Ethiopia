@@ -73,7 +73,7 @@ const MOCK_BRIEFS: ClientBriefRow[] = [
     worked_with_designer: "Yes, multiple times",
     hear_about_us: "Instagram",
     additional_notes: "Deadline is firm — opening is on the 15th. Please confirm availability before accepting.",
-    status: "scoping",
+    status: "in_progress",
     admin_notes: "Tight timeline. Check availability of print designers before assigning.",
     created_at: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
   },
@@ -124,7 +124,7 @@ export async function getClientBrief(id: string): Promise<ClientBriefRow | null>
 
 export async function updateBriefStatus(
   id: string,
-  status: string,
+  status: import("./project-types").BriefStatus,
   adminNotes?: string
 ): Promise<void> {
   if (!supabase) {
@@ -422,7 +422,7 @@ export async function createProject(input: {
 
 export async function updateProjectStatus(
   id: string,
-  status: string,
+  status: import("./project-types").ProjectStatus,
   notes?: string
 ): Promise<void> {
   if (!supabase) {
@@ -542,7 +542,7 @@ export async function addMilestone(input: {
 
 export async function updateMilestoneStatus(
   id: string,
-  status: string
+  status: import("./project-types").MilestoneStatus
 ): Promise<void> {
   if (!supabase) {
     const store = getDemoStore();
@@ -1237,6 +1237,7 @@ export function storeDemoApplicationSubmission(data: {
     id,
     status: "pending",
     reviewer_notes: null,
+    review_requested: false,
     created_at: new Date().toISOString(),
     ...data,
   };

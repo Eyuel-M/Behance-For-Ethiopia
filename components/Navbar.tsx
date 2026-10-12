@@ -71,13 +71,18 @@ export default function Navbar() {
               </a>
             </li>
             <li>
+              <Link href="/portfolio" className={navClass("/portfolio")}>
+                Portfolio
+              </Link>
+            </li>
+            <li>
               <Link href="/insights" className={navClass("/insights")}>
                 Insights
               </Link>
             </li>
             <li>
-              <Link href="/contact" className={navClass("/contact")}>
-                Contact
+              <Link href="/about" className={navClass("/about")}>
+                About
               </Link>
             </li>
           </ul>

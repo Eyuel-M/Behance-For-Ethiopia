@@ -8,10 +8,11 @@ import {
   getClientBrief,
   deleteBriefById,
 } from "@/lib/supabase/admin-queries";
+import type { BriefStatus } from "@/lib/supabase/project-types";
 
 export async function qualifyBrief(
   briefId: string,
-  status: string,
+  status: BriefStatus,
   adminNotes: string
 ): Promise<void> {
   await updateBriefStatus(briefId, status, adminNotes);

@@ -55,7 +55,7 @@ export default async function BriefDetailPage({ params }: Props) {
 
   async function handleQualify(formData: FormData) {
     "use server";
-    const newStatus = formData.get("status") as string;
+    const newStatus = formData.get("status") as import("@/lib/supabase/project-types").BriefStatus;
     const notes = formData.get("adminNotes") as string;
     await qualifyBrief(id, newStatus, notes);
   }
