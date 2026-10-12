@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { FadeUp } from "@/components/Motion";
 import { getPortfolioProjects } from "@/lib/content/store";
-import PortfolioClient from "./PortfolioClient";
+import PortfolioClient from "@/components/PortfolioClient";
 
 export const dynamic = "force-dynamic";
 
-export default function PortfolioPage() {
+export default async function PortfolioPage() {
   const projects = getPortfolioProjects(true);
 
   return (
@@ -32,13 +32,11 @@ export default function PortfolioPage() {
               </p>
             </div>
           </FadeUp>
-
-          {/* Category filter + project grid — client component handles interactivity */}
-          <FadeUp delay={0.1}>
-            <PortfolioClient projects={projects} />
-          </FadeUp>
         </div>
       </div>
+
+      {/* ── Filter + Projects (client component owns both sections) ── */}
+      <PortfolioClient projects={projects} />
 
       {/* ── CTA ── */}
       <div style={{ backgroundColor: "#071208" }}>
