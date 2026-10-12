@@ -99,7 +99,7 @@ export default function AccountLoginPage() {
 
       <p style={{ marginTop: 24, fontSize: 12, color: "#9ca3af", textAlign: "center" }}>
         Not a registered professional?{" "}
-        <a href="/apply" style={{ color: "#3b82f6", fontWeight: 600, textDecoration: "none" }}>Apply here</a>
+        <a href="/get-started/designer" style={{ color: "#3b82f6", fontWeight: 600, textDecoration: "none" }}>Apply here</a>
       </p>
     </div>
   );

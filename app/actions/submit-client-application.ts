@@ -63,6 +63,8 @@ export async function submitClientApplication(
       hear_about_us: data.hearAboutUs,
       additional_notes: data.additionalNotes.trim() || null,
     });
+    const { sendBriefConfirmation } = await import("@/lib/email");
+    await sendBriefConfirmation(data.email.trim(), data.businessName.trim());
     return { success: true };
   }
 
@@ -89,6 +91,9 @@ export async function submitClientApplication(
     console.error("[submitClientApplication]", error.message);
     return { success: false, error: "Something went wrong. Please try again." };
   }
+
+  const { sendBriefConfirmation } = await import("@/lib/email");
+  await sendBriefConfirmation(data.email.trim(), data.businessName.trim());
 
   return { success: true };
 }

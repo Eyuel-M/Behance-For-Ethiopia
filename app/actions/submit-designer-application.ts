@@ -96,6 +96,8 @@ export async function submitDesignerApplication(
       education: education || null, certificates: certificates || null,
       certificate_files: null,
     });
+    const { sendDesignerApplicationReceived } = await import("@/lib/email");
+    await sendDesignerApplicationReceived(email, fullName);
     return { success: true };
   }
 
@@ -167,6 +169,9 @@ export async function submitDesignerApplication(
     console.error("[submitDesignerApplication]", error.message);
     return { success: false, error: "Something went wrong. Please try again." };
   }
+
+  const { sendDesignerApplicationReceived } = await import("@/lib/email");
+  await sendDesignerApplicationReceived(email, fullName);
 
   return { success: true };
 }

@@ -3,126 +3,13 @@
 import Link from "next/link";
 import { useState } from "react";
 import { FadeUp, StaggerGrid, StaggerItem } from "@/components/Motion";
+import { getPortfolioProjects } from "@/lib/content/store";
+import type { PortfolioProject, PortfolioCategory } from "@/lib/content/types";
 
-type Category = "All" | "Branding" | "Web & Digital" | "Visual Content" | "Architecture";
-
-interface Project {
-  id: string;
-  num: string;
-  category: Exclude<Category, "All">;
-  client: string;
-  title: string;
-  description: string;
-  tags: string[];
-  gradient: string;
-  year: string;
-}
-
-const PROJECTS: Project[] = [
-  {
-    id: "1",
-    num: "01",
-    category: "Branding",
-    client: "Habesha Premium Coffee",
-    title: "Export-Grade Brand Identity",
-    description: "Full visual identity for an Addis-based coffee exporter targeting European buyers. Logo, packaging, and brand guidelines.",
-    tags: ["Logo", "Packaging", "Guidelines"],
-    gradient: "linear-gradient(155deg, #1a0c00 0%, #6b3210 40%, #c8802a 80%, #e8b060 100%)",
-    year: "2024",
-  },
-  {
-    id: "2",
-    num: "02",
-    category: "Web & Digital",
-    client: "Agar Microfinance",
-    title: "Fintech App UI — Amharic-First",
-    description: "Mobile app UI for a rural micro-lending platform. Offline-capable, Amharic language support, designed for first-time smartphone users.",
-    tags: ["UI/UX", "Mobile", "Amharic"],
-    gradient: "linear-gradient(155deg, #041008 0%, #0d3018 40%, #2a7040 80%, #6dcc46 100%)",
-    year: "2024",
-  },
-  {
-    id: "3",
-    num: "03",
-    category: "Architecture",
-    client: "Bole Heights Real Estate",
-    title: "Residential Tower Visualisation",
-    description: "Photorealistic renders of a 14-storey mixed-use tower in Bole. Interior walkthroughs, exterior day/night renders, and marketing material.",
-    tags: ["3D Render", "Arch Viz", "Interior"],
-    gradient: "linear-gradient(155deg, #06061a 0%, #101040 40%, #2828a0 80%, #5060d0 100%)",
-    year: "2024",
-  },
-  {
-    id: "4",
-    num: "04",
-    category: "Branding",
-    client: "Abyssinia Kitchen",
-    title: "Restaurant Brand Refresh",
-    description: "Updated visual identity for a 3-location Addis restaurant chain. Social media templates, rollup banners, and menu redesign.",
-    tags: ["Brand Refresh", "Print", "Social"],
-    gradient: "linear-gradient(155deg, #120204 0%, #5c1010 40%, #c03030 80%, #e86060 100%)",
-    year: "2023",
-  },
-  {
-    id: "5",
-    num: "05",
-    category: "Visual Content",
-    client: "Ethio-Tech Hub",
-    title: "Product Launch Motion Package",
-    description: "Animated logo reveal, social media story templates, and an 80-second explainer video for an Addis-based SaaS product launch.",
-    tags: ["Motion", "Animation", "Video"],
-    gradient: "linear-gradient(155deg, #041210 0%, #0a3d34 40%, #1a9080 80%, #30ccb8 100%)",
-    year: "2024",
-  },
-  {
-    id: "6",
-    num: "06",
-    category: "Web & Digital",
-    client: "Sheba Organic",
-    title: "E-commerce & Brand Website",
-    description: "Shopify-powered storefront with custom UI for an organic skincare brand. Mobile-first, Amharic/English bilingual, launched in under 3 weeks.",
-    tags: ["E-commerce", "Shopify", "Bilingual"],
-    gradient: "linear-gradient(155deg, #081404 0%, #204818 40%, #4a9030 80%, #80cc50 100%)",
-    year: "2023",
-  },
-  {
-    id: "7",
-    num: "07",
-    category: "Architecture",
-    client: "Addis Urban Design Office",
-    title: "Mixed-Use Plaza Concept",
-    description: "BIM models and concept renders for a proposed public plaza in the Kazanchis district. Presented to city planners and developers.",
-    tags: ["BIM", "Urban Design", "Concept"],
-    gradient: "linear-gradient(155deg, #0c0c0c 0%, #222222 40%, #555555 80%, #909090 100%)",
-    year: "2023",
-  },
-  {
-    id: "8",
-    num: "08",
-    category: "Branding",
-    client: "Genet Textiles",
-    title: "Heritage Fashion Brand Identity",
-    description: "Identity system for an Ethiopian textile brand blending traditional patterns with contemporary design. Includes swing tags, lookbook, and digital assets.",
-    tags: ["Fashion", "Heritage", "Print"],
-    gradient: "linear-gradient(155deg, #120800 0%, #4a2008 40%, #a06828 80%, #d4a058 100%)",
-    year: "2024",
-  },
-  {
-    id: "9",
-    num: "09",
-    category: "Visual Content",
-    client: "Selam Airlines",
-    title: "3D Fleet & Route Visualisations",
-    description: "Product renders of aircraft livery concepts and animated route maps for a regional airline's investor presentation and marketing materials.",
-    tags: ["3D", "Aviation", "Presentation"],
-    gradient: "linear-gradient(155deg, #04060e 0%, #0a1840 40%, #1838a0 80%, #4070d8 100%)",
-    year: "2023",
-  },
-];
-
+type Category = "All" | PortfolioCategory;
 const CATEGORIES: Category[] = ["All", "Branding", "Web & Digital", "Visual Content", "Architecture"];
 
-function ProjectCard({ project, index }: { project: Project; index: number }) {
+function ProjectCard({ project, index }: { project: PortfolioProject; index: number }) {
   const isFeatured = index === 0;
 
   return (
@@ -192,6 +79,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 export default function PortfolioPage() {
   const [active, setActive] = useState<Category>("All");
 
+  const PROJECTS = getPortfolioProjects(true);
   const filtered = active === "All" ? PROJECTS : PROJECTS.filter((p) => p.category === active);
   const featured = filtered[0];
   const rest = filtered.slice(1);
