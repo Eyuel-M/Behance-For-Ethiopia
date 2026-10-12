@@ -45,12 +45,12 @@ function Hero() {
   return (
     <section className="relative min-h-[calc(100dvh-64px)] flex flex-col overflow-hidden">
 
-      {/* Background photo — replace src with actual photo of Ethiopian creative professionals */}
+      {/* Background photo — replace with your own photos of Ethiopian creative professionals */}
       <Image
-        src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=2000&q=80"
-        alt="Creative professionals collaborating"
+        src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=2000&q=80"
+        alt="Ethiopian creative professional at work"
         fill
-        className="object-cover object-center"
+        className="object-cover object-[center_20%]"
         priority
         sizes="100vw"
       />
