@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { FadeUp, StaggerGrid, StaggerItem } from "@/components/Motion";
+
+export const metadata: Metadata = {
+  title: "Pricing",
+  description: "Transparent pricing for clients and professionals. No placement fee upfront — you only pay after approving the proposal.",
+  alternates: { canonical: "/pricing" },
+};
 
 const CLIENT_INCLUDED = [
   "Submit a brief for free",

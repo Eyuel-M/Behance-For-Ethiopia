@@ -1,7 +1,14 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { FadeUp, StaggerGrid, StaggerItem } from "@/components/Motion";
 import { getInsights } from "@/lib/content/store";
 import type { Insight, InsightCategory } from "@/lib/content/types";
+
+export const metadata: Metadata = {
+  title: "Insights",
+  description: "Design, business, and culture insights from Ethiopia's creative industry — written for Ethiopian businesses and the professionals who serve them.",
+  alternates: { canonical: "/insights" },
+};
 
 export const dynamic = "force-dynamic";
 

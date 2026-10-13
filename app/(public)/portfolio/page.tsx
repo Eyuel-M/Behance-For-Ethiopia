@@ -1,7 +1,14 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { FadeUp } from "@/components/Motion";
 import { getPortfolioProjects } from "@/lib/content/store";
 import PortfolioClient from "@/components/PortfolioClient";
+
+export const metadata: Metadata = {
+  title: "Portfolio",
+  description: "Browse selected work from vetted Ethiopian designers — brand identity, UI/UX, architecture visualization, motion graphics, and web design.",
+  alternates: { canonical: "/portfolio" },
+};
 
 export const dynamic = "force-dynamic";
 

@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { FadeUp, StaggerGrid, StaggerItem } from "@/components/Motion";
+
+export const metadata: Metadata = {
+  title: "About Us",
+  description: "We are Ethiopia's first curated creative marketplace — hand-picking 2–3 vetted designers to pitch on every client brief. No open bidding. No cold searching.",
+  alternates: { canonical: "/about" },
+};
 
 const VALUES = [
   {

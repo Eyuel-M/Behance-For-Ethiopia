@@ -14,9 +14,48 @@ const displayFont = Unbounded({
   weight: ["700", "800", "900"],
 });
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://hireethiopiasbest.com";
+
 export const metadata: Metadata = {
-  title: "Hire Ethiopia's Best — Curated Creative Talent",
-  description: "A curated network matching Ethiopian businesses with vetted creative and digital professionals. Branding, web, and visual content — matched to your brief.",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Hire Ethiopia's Best — Curated Creative Talent",
+    template: "%s | Hire Ethiopia's Best",
+  },
+  description:
+    "Ethiopia's first curated creative talent marketplace. We match businesses with vetted designers, branding studios, and digital professionals — matched to your brief within 48 hours.",
+  keywords: ["Ethiopian designers", "Ethiopian branding", "creative talent Ethiopia", "hire designer Addis Ababa", "Ethiopian creative agency"],
+  authors: [{ name: "Hire Ethiopia's Best", url: SITE_URL }],
+  openGraph: {
+    type: "website",
+    locale: "en_ET",
+    url: SITE_URL,
+    siteName: "Hire Ethiopia's Best",
+    title: "Hire Ethiopia's Best — Curated Creative Talent",
+    description:
+      "Ethiopia's first curated creative talent marketplace. Vetted designers matched to your brief within 48 hours.",
+    images: [
+      {
+        url: "/og-default.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Hire Ethiopia's Best",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Hire Ethiopia's Best — Curated Creative Talent",
+    description: "Ethiopia's first curated creative talent marketplace. Vetted designers matched to your brief within 48 hours.",
+    images: ["/og-default.jpg"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  alternates: {
+    canonical: SITE_URL,
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

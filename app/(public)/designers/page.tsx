@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { FadeUp, StaggerGrid, StaggerItem } from "@/components/Motion";
+
+export const metadata: Metadata = {
+  title: "Our Designers",
+  description: "Meet the vetted Ethiopian creatives in our network — branding, UI/UX, architecture visualization, motion graphics, and more.",
+  alternates: { canonical: "/designers" },
+};
 
 const DESIGNERS = [
   {

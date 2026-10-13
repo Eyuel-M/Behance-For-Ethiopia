@@ -3,6 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { FadeUp, StaggerGrid, StaggerItem } from "@/components/Motion";
 import ServicesCarousel from "@/components/ServicesCarousel";
+import { getHomepageContent, getPortfolioProjects } from "@/lib/content/store";
+import type { HomepageStat, Testimonial, PortfolioProject } from "@/lib/content/types";
+
+export const dynamic = "force-dynamic";
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
 
@@ -24,16 +28,39 @@ function CheckIcon({ dark }: { dark?: boolean }) {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-export default function HomePage() {
+function projectToCard(p: PortfolioProject) {
+  const SERVICE_MAP: Record<string, string> = {
+    "Branding": "Brand Identity",
+    "Web & Digital": "Web Design",
+    "Visual Content": "Visual Content",
+    "Architecture": "3D Renders",
+  };
+  return {
+    id: p.id,
+    category: p.category,
+    client: p.client,
+    title: p.title,
+    service: SERVICE_MAP[p.category] ?? p.category,
+    image: p.coverImage ?? `https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&h=900&q=80&auto=format&fit=crop`,
+  };
+}
+
+export default async function HomePage() {
+  const [content, allProjects] = await Promise.all([
+    Promise.resolve(getHomepageContent()),
+    Promise.resolve(getPortfolioProjects(true)),
+  ]);
+  const portfolioCards = allProjects.slice(0, 5).map(projectToCard);
+
   return (
     <>
-      <Hero />
+      <Hero stats={content.stats} />
       <ClientsTicker />
       <Services />
-      <PortfolioTeaser />
+      <PortfolioTeaser cards={portfolioCards} />
       <HowItWorks />
       <WhyUs />
-      <Testimonials />
+      <Testimonials testimonials={content.testimonials} />
       <ForProfessionals />
       <ClosingCta />
     </>
@@ -42,7 +69,7 @@ export default function HomePage() {
 
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 
-function Hero() {
+function Hero({ stats }: { stats: HomepageStat[] }) {
   return (
     <section className="relative min-h-[calc(100dvh-64px)] flex flex-col overflow-hidden">
 
@@ -139,12 +166,7 @@ function Hero() {
         >
           <div className="max-w-6xl mx-auto px-5 sm:px-8 py-4 sm:py-5">
             <div className="flex items-center gap-5 sm:gap-10 overflow-x-auto" style={{ scrollbarWidth: "none" }}>
-              {[
-                { value: "50+",    label: "Vetted professionals" },
-                { value: "48 hrs", label: "Brief reviewed & matched" },
-                { value: "ETB 0",  label: "Upfront placement fee" },
-                { value: "4.9",    label: "Average client rating" },
-              ].map((stat, i) => (
+              {stats.map((stat, i) => (
                 <React.Fragment key={stat.label}>
                   {i > 0 && <div className="w-px h-5 bg-white/10 shrink-0" />}
                   <div className="shrink-0 flex items-baseline gap-2.5">
@@ -381,48 +403,7 @@ function Services() {
 
 // ─── Portfolio Teaser ─────────────────────────────────────────────────────────
 
-const PORTFOLIO_CARDS = [
-  {
-    id: "1",
-    category: "Branding",
-    client: "Habesha Coffee",
-    title: "Export-Grade Identity",
-    service: "Brand Identity",
-    image: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1600&h=1000&q=80&auto=format&fit=crop",
-  },
-  {
-    id: "2",
-    category: "UI/UX",
-    client: "Agar Microfinance",
-    title: "Fintech App UI",
-    service: "Product Design",
-    image: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=1200&h=900&q=80&auto=format&fit=crop",
-  },
-  {
-    id: "3",
-    category: "Arch Viz",
-    client: "Bole Heights",
-    title: "Residential Tower",
-    service: "3D Renders",
-    image: "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1200&h=1400&q=80&auto=format&fit=crop",
-  },
-  {
-    id: "5",
-    category: "Motion",
-    client: "Ethio-Tech Hub",
-    title: "Product Launch",
-    service: "Motion Graphics",
-    image: "https://images.unsplash.com/photo-1536240478700-b869ad10e128?w=1200&h=900&q=80&auto=format&fit=crop",
-  },
-  {
-    id: "6",
-    category: "Web",
-    client: "Sheba Organic",
-    title: "E-commerce Store",
-    service: "Web Design",
-    image: "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=1600&h=900&q=80&auto=format&fit=crop",
-  },
-];
+type WorkCardData = { id: string; category: string; client: string; title: string; service: string; image: string };
 
 function WorkCard({
   card,
@@ -430,7 +411,7 @@ function WorkCard({
   eager = false,
   className = "",
 }: {
-  card: typeof PORTFOLIO_CARDS[0];
+  card: WorkCardData;
   style?: React.CSSProperties;
   eager?: boolean;
   className?: string;
@@ -486,7 +467,7 @@ function WorkCard({
   );
 }
 
-function PortfolioTeaser() {
+function PortfolioTeaser({ cards }: { cards: WorkCardData[] }) {
   return (
     <section style={{ backgroundColor: "#071208" }} className="border-t border-white/5">
 
@@ -526,7 +507,7 @@ function PortfolioTeaser() {
 
       {/* Mobile / tablet stacked grid */}
       <div className="lg:hidden grid grid-cols-1 sm:grid-cols-2">
-        {PORTFOLIO_CARDS.map((card, i) => (
+        {cards.map((card, i) => (
           <WorkCard
             key={card.id}
             card={card}
@@ -541,32 +522,11 @@ function PortfolioTeaser() {
         className="hidden lg:grid grid-cols-3"
         style={{ gridTemplateRows: "52vh 40vh 34vh" }}
       >
-        {/* Featured: Habesha Coffee — large, left two columns */}
-        <WorkCard
-          card={PORTFOLIO_CARDS[0]}
-          eager
-          style={{ gridColumn: "1 / 3", gridRow: "1" }}
-        />
-        {/* Bole Heights Architecture — tall right column, spans rows 1 & 2 */}
-        <WorkCard
-          card={PORTFOLIO_CARDS[2]}
-          style={{ gridColumn: "3", gridRow: "1 / 3" }}
-        />
-        {/* Agar Microfinance */}
-        <WorkCard
-          card={PORTFOLIO_CARDS[1]}
-          style={{ gridColumn: "1", gridRow: "2" }}
-        />
-        {/* Ethio-Tech Hub */}
-        <WorkCard
-          card={PORTFOLIO_CARDS[3]}
-          style={{ gridColumn: "2", gridRow: "2" }}
-        />
-        {/* Sheba Organic — full-width panoramic strip */}
-        <WorkCard
-          card={PORTFOLIO_CARDS[4]}
-          style={{ gridColumn: "1 / 4", gridRow: "3" }}
-        />
+        <WorkCard card={cards[0] ?? cards[0]} eager style={{ gridColumn: "1 / 3", gridRow: "1" }} />
+        <WorkCard card={cards[2] ?? cards[0]} style={{ gridColumn: "3", gridRow: "1 / 3" }} />
+        <WorkCard card={cards[1] ?? cards[0]} style={{ gridColumn: "1", gridRow: "2" }} />
+        <WorkCard card={cards[3] ?? cards[0]} style={{ gridColumn: "2", gridRow: "2" }} />
+        <WorkCard card={cards[4] ?? cards[0]} style={{ gridColumn: "1 / 4", gridRow: "3" }} />
       </div>
 
       {/* Bottom breathing room */}
@@ -856,37 +816,14 @@ function ForProfessionals() {
 
 // ─── Testimonials ─────────────────────────────────────────────────────────────
 
-function Testimonials() {
-  const reviews = [
-    {
-      quote: "They matched us with exactly the right designer in under 48 hours. The branding we received exceeded anything we'd seen locally — it looked international.",
-      name: "Yonas Tesfaye",
-      role: "Co-founder, Sheba Organic",
-      rating: 5,
-      tag: "Branding & Identity",
-    },
-    {
-      quote: "I was skeptical at first — but the process was completely different from hiring on a marketplace. A real person called us, understood the brief, and only then introduced candidates.",
-      name: "Marta Alemu",
-      role: "Marketing Director, Tsehay Finance",
-      rating: 5,
-      tag: "Web & Digital",
-    },
-    {
-      quote: "Our product packaging went from generic to award-shelf worthy. The managed project option meant I didn't have to chase anyone — it just got done.",
-      name: "Biruk Haile",
-      role: "CEO, Buna Roasters",
-      rating: 5,
-      tag: "Visual Content",
-    },
-    {
-      quote: "Finally a platform that vets talent properly. Every designer we've worked with through Behance Ethiopia has been professional, responsive and genuinely skilled.",
-      name: "Hana Girma",
-      role: "Brand Manager, Addis Blue Label",
-      rating: 5,
-      tag: "Branding & Identity",
-    },
-  ];
+function Testimonials({ testimonials }: { testimonials: Testimonial[] }) {
+  const reviews = testimonials.map((t) => ({
+    quote: t.quote,
+    name: t.author,
+    role: `${t.company}`,
+    rating: 5 as const,
+    tag: t.service,
+  }));
 
   return (
     <section className="bg-white py-24 sm:py-32 border-t border-zinc-100">

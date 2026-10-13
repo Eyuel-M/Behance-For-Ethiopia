@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useTransition } from "react";
+import { sendContactMessage } from "./actions";
 
 function CheckIcon() {
   return (
@@ -47,7 +48,11 @@ export default function ContactPage() {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     startTransition(async () => {
-      await new Promise((r) => setTimeout(r, 600));
+      const fd = new FormData();
+      fd.append("name", form.name);
+      fd.append("email", form.email);
+      fd.append("message", form.message);
+      await sendContactMessage(fd);
       setSent(true);
     });
   }
