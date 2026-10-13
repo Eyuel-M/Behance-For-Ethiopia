@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { FadeUp, StaggerGrid, StaggerItem } from "@/components/Motion";
+import { FadeUp } from "@/components/Motion";
 import { getDesignerApplications } from "@/lib/supabase/admin-queries";
+import DesignersGrid from "@/components/DesignersGrid";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
@@ -11,31 +12,36 @@ export const metadata: Metadata = {
   alternates: { canonical: "/designers" },
 };
 
-// Deterministic avatar colour from name
-const PALETTE = [
-  { bg: "#0d2318", color: "#6dcc46" },
-  { bg: "#071208", color: "#6dcc46" },
-  { bg: "#6dcc46", color: "#0d2318" },
-  { bg: "#1a1a2e", color: "#ffffff" },
-  { bg: "#3d1a4a", color: "#ffffff" },
-  { bg: "#0a1a0a", color: "#6dcc46" },
-  { bg: "#151515", color: "#ffffff" },
-  { bg: "#f5e6c8", color: "#0d2318" },
-];
-
-function avatarStyle(name: string) {
-  let h = 0;
-  for (const c of name) h = (h * 31 + c.charCodeAt(0)) & 0xffffff;
-  return PALETTE[Math.abs(h) % PALETTE.length];
-}
-
-function initials(name: string) {
-  return name.split(" ").filter(Boolean).slice(0, 2).map((p) => p[0]).join("").toUpperCase();
+function shortSpecialty(s: string): string {
+  if (s.toLowerCase().includes("brand")) return "Branding";
+  if (s.toLowerCase().includes("ui") || s.toLowerCase().includes("ux") || s.toLowerCase().includes("product")) return "UI/UX";
+  if (s.toLowerCase().includes("motion") || s.toLowerCase().includes("animation")) return "Motion";
+  if (s.toLowerCase().includes("print") || s.toLowerCase().includes("marketing")) return "Print";
+  if (s.toLowerCase().includes("web") || s.toLowerCase().includes("digital")) return "Web";
+  if (s.toLowerCase().includes("arch") || s.toLowerCase().includes("3d") || s.toLowerCase().includes("render")) return "3D / Arch";
+  if (s.toLowerCase().includes("photo")) return "Photography";
+  if (s.toLowerCase().includes("illus")) return "Illustration";
+  return s.split(/[&·,]/)[0].trim();
 }
 
 export default async function DesignersPage() {
   const applications = await getDesignerApplications();
   const approved = applications.filter((d) => d.status === "approved");
+
+  const specialties = Array.from(
+    new Set(approved.map((d) => shortSpecialty(d.specialty)))
+  ).sort();
+
+  const cards = approved.map((d) => ({
+    id: d.id,
+    full_name: d.full_name,
+    specialty: d.specialty,
+    city: d.city,
+    experience: d.experience,
+    bio: d.bio,
+    skills: d.skills,
+    availability: d.availability,
+  }));
 
   return (
     <div className="min-h-screen bg-white">
@@ -80,53 +86,7 @@ export default async function DesignersPage() {
         {approved.length === 0 ? (
           <p className="text-zinc-400 text-sm text-center py-16">Profiles coming soon.</p>
         ) : (
-          <StaggerGrid className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-            {approved.map((d) => {
-              const { bg, color } = avatarStyle(d.full_name);
-              const inits = initials(d.full_name);
-              const skills = d.skills.split(",").map((s) => s.trim()).filter(Boolean);
-              return (
-                <StaggerItem key={d.id}>
-                  <Link
-                    href={`/designers/${d.id}`}
-                    className="group rounded-2xl border border-zinc-100 bg-white overflow-hidden hover:shadow-md hover:border-zinc-200 transition-all duration-200 flex flex-col h-full"
-                  >
-                    {/* Avatar strip */}
-                    <div className="h-24 flex items-end p-4" style={{ backgroundColor: bg }}>
-                      <span
-                        className="w-12 h-12 rounded-xl flex items-center justify-center font-extrabold text-sm"
-                        style={{ backgroundColor: `${color}20`, color, border: `2px solid ${color}30` }}
-                      >
-                        {inits}
-                      </span>
-                    </div>
-
-                    {/* Content */}
-                    <div className="p-5 flex flex-col flex-1">
-                      <h3 className="font-extrabold text-zinc-900 text-sm leading-snug mb-0.5">{d.full_name}</h3>
-                      <p className="text-xs font-semibold text-[#6dcc46] mb-1">{d.specialty}</p>
-                      <p className="text-xs text-zinc-400 mb-3">{d.city} · {d.experience}</p>
-                      <p className="text-xs text-zinc-500 leading-relaxed mb-4 flex-1 line-clamp-3">{d.bio}</p>
-                      <div className="flex flex-wrap gap-1 mb-4">
-                        {skills.slice(0, 3).map((s) => (
-                          <span key={s} className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-zinc-100 text-zinc-500">{s}</span>
-                        ))}
-                        {skills.length > 3 && (
-                          <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-zinc-100 text-zinc-400">+{skills.length - 3}</span>
-                        )}
-                      </div>
-                      <div className="flex items-center justify-between pt-3 border-t border-zinc-100">
-                        <span className="text-xs text-zinc-400">{d.availability}</span>
-                        <span className="text-xs font-bold text-[#0d2318] group-hover:text-[#6dcc46] transition-colors">
-                          View profile →
-                        </span>
-                      </div>
-                    </div>
-                  </Link>
-                </StaggerItem>
-              );
-            })}
-          </StaggerGrid>
+          <DesignersGrid designers={cards} specialties={specialties} />
         )}
       </div>
 

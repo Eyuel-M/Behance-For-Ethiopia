@@ -1,10 +1,10 @@
 import type { MetadataRoute } from "next";
-import { getPortfolioProjects } from "@/lib/content/store";
-import { getInsights } from "@/lib/content/store";
+import { getPortfolioProjects, getInsights } from "@/lib/content/store";
+import { getDesignerApplications } from "@/lib/supabase/admin-queries";
 
 export const dynamic = "force-dynamic";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = process.env.NEXT_PUBLIC_SITE_URL ?? "https://hireethiopiasbest.com";
   const now = new Date();
 
@@ -13,7 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/about`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${base}/portfolio`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
     { url: `${base}/insights`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
-    { url: `${base}/designers`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${base}/designers`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     { url: `${base}/pricing`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
     { url: `${base}/contact`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
     { url: `${base}/get-started/client`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
@@ -35,5 +35,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [...staticRoutes, ...portfolioRoutes, ...insightRoutes];
+  const applications = await getDesignerApplications();
+  const designerRoutes: MetadataRoute.Sitemap = applications
+    .filter((d) => d.status === "approved")
+    .map((d) => ({
+      url: `${base}/designers/${d.id}`,
+      lastModified: new Date(d.created_at),
+      changeFrequency: "monthly" as const,
+      priority: 0.65,
+    }));
+
+  return [...staticRoutes, ...portfolioRoutes, ...insightRoutes, ...designerRoutes];
 }

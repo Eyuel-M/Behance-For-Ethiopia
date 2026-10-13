@@ -51,4 +51,18 @@ export async function selectDesigner(formData: FormData): Promise<void> {
 
 export async function requestRevision(token: string, note: string): Promise<void> {
   await requestProposalRevision(token, note);
+
+  // Fire-and-forget notification
+  (async () => {
+    const proposal = await getProposalByToken(token);
+    const project = proposal ? await getProject(proposal.project_id) : null;
+    const businessName = project?.client_business ?? project?.client_name ?? "a client";
+    const adminProjectUrl = `${SITE_URL}/admin/projects/${proposal?.project_id ?? ""}`;
+    notifyAdmin(
+      `🔄 <b>Client requested proposal revision</b>\n\n` +
+      `<b>Client:</b> ${businessName}\n` +
+      `<b>Note:</b> ${note || "(no note provided)"}\n\n` +
+      `<a href="${adminProjectUrl}">Open project →</a>`
+    ).catch(() => {});
+  })();
 }
