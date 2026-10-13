@@ -394,7 +394,12 @@ export function deleteInsight(id: string): boolean {
 
 export function getPortfolioProjects(publishedOnly = false): PortfolioProject[] {
   const store = getOrInitStore();
-  const items = [...store.portfolio].sort((a, b) => a.sortOrder - b.sortOrder);
+  const items = [...store.portfolio]
+    .sort((a, b) => a.sortOrder - b.sortOrder)
+    .map((p) => {
+      const def = DEFAULT_PORTFOLIO.find((d) => d.id === p.id);
+      return def ? { ...def, ...p } : p;
+    });
   return publishedOnly ? items.filter(p => p.published) : items;
 }
 

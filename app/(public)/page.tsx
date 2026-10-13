@@ -423,12 +423,13 @@ function WorkCard({
       style={style}
     >
       {/* Photo */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <Image
         src={card.image}
-        alt=""
-        loading={eager ? "eager" : "lazy"}
-        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+        alt={card.title}
+        fill
+        priority={eager}
+        className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 66vw"
       />
 
       {/* Gradient overlay */}
@@ -522,11 +523,11 @@ function PortfolioTeaser({ cards }: { cards: WorkCardData[] }) {
         className="hidden lg:grid grid-cols-3"
         style={{ gridTemplateRows: "52vh 40vh 34vh" }}
       >
-        <WorkCard card={cards[0] ?? cards[0]} eager style={{ gridColumn: "1 / 3", gridRow: "1" }} />
-        <WorkCard card={cards[2] ?? cards[0]} style={{ gridColumn: "3", gridRow: "1 / 3" }} />
-        <WorkCard card={cards[1] ?? cards[0]} style={{ gridColumn: "1", gridRow: "2" }} />
-        <WorkCard card={cards[3] ?? cards[0]} style={{ gridColumn: "2", gridRow: "2" }} />
-        <WorkCard card={cards[4] ?? cards[0]} style={{ gridColumn: "1 / 4", gridRow: "3" }} />
+        {cards[0] && <WorkCard card={cards[0]} eager style={{ gridColumn: "1 / 3", gridRow: "1" }} />}
+        {cards[2] && <WorkCard card={cards[2]} style={{ gridColumn: "3", gridRow: "1 / 3" }} />}
+        {cards[1] && <WorkCard card={cards[1]} style={{ gridColumn: "1", gridRow: "2" }} />}
+        {cards[3] && <WorkCard card={cards[3]} style={{ gridColumn: "2", gridRow: "2" }} />}
+        {cards[4] && <WorkCard card={cards[4]} style={{ gridColumn: "1 / 4", gridRow: "3" }} />}
       </div>
 
       {/* Bottom breathing room */}

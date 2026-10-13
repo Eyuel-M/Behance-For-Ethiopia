@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { StaggerGrid, StaggerItem } from "@/components/Motion";
 import type { PortfolioProject, PortfolioCategory } from "@/lib/content/types";
@@ -21,8 +22,13 @@ function ProjectCard({ project, index }: { project: PortfolioProject; index: num
         style={{ background: project.gradient }}
       >
         {project.coverImage && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={project.coverImage} alt={project.title} className="absolute inset-0 w-full h-full object-cover" />
+          <Image
+            src={project.coverImage}
+            alt={project.title}
+            fill
+            className="object-cover"
+            sizes={isFeatured ? "(max-width: 640px) 100vw, 80vw" : "(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"}
+          />
         )}
         <div
           className="absolute inset-0"
