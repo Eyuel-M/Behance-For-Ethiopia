@@ -64,30 +64,7 @@ const NAV = [
       },
     ],
   },
-  {
-    label: "Content",
-    items: [
-      {
-        href: "/admin/content/insights",
-        label: "Insights",
-        icon: (
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
-          </svg>
-        ),
-      },
 
-      {
-        href: "/admin/content/homepage",
-        label: "Homepage",
-        icon: (
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
-          </svg>
-        ),
-      },
-    ],
-  },
   {
     label: "System",
     items: [
