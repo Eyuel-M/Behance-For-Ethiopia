@@ -48,7 +48,7 @@ const SECTIONS: Section[] = [
     items: [
       {
         q: "Is it free to apply?",
-        a: "Yes, applying is free. If you're accepted into the network, maintaining your profile and receiving brief matches is also free. The 15% fee only applies when you complete a paid project.",
+        a: "Yes, applying is free. If you're accepted into the network, maintaining your profile and receiving brief matches is also free. There are no fees deducted from your earnings — ever. The platform fee is charged to the client, not you.",
       },
       {
         q: "What does the vetting process involve?",
@@ -60,7 +60,7 @@ const SECTIONS: Section[] = [
       },
       {
         q: "When do I get paid?",
-        a: "Payments release on milestone approval. As soon as a client approves your milestone delivery, the payment for that milestone is released to your account minus the 15% platform fee.",
+        a: "Payments release on milestone approval. As soon as a client approves your milestone delivery, the full payment for that milestone is released to your account. Nothing is deducted — you keep 100% of your quoted price.",
       },
       {
         q: "What if a client goes quiet or refuses to pay?",
@@ -77,7 +77,7 @@ const SECTIONS: Section[] = [
       },
       {
         q: "Is the platform fee added on top of the project price?",
-        a: "No. The 15% is deducted from the designer's payout. What the client pays is what was agreed — no surprise platform charges added on top.",
+        a: "Yes. We add a 15% platform fee on top of the designer's quoted price. If a designer quotes ETB 10,000, the client pays ETB 11,500. The designer receives their full ETB 10,000 — nothing is deducted from them.",
       },
       {
         q: "What if a project is cancelled mid-way?",

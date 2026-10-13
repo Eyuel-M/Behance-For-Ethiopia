@@ -98,6 +98,18 @@ export async function submitDesignerApplication(
     });
     const { sendDesignerApplicationReceived } = await import("@/lib/email");
     await sendDesignerApplicationReceived(email, fullName);
+    const { notifyAdmin } = await import("@/lib/telegram");
+    await notifyAdmin(
+      `👤 <b>New Designer Application</b>\n\n` +
+      `<b>Name:</b> ${fullName}\n` +
+      `<b>Email:</b> ${email}\n` +
+      `<b>Phone:</b> ${phone}\n` +
+      `<b>City:</b> ${city}\n` +
+      `<b>Specialty:</b> ${specialty}\n` +
+      `<b>Experience:</b> ${experience}\n` +
+      `<b>Availability:</b> ${availability}\n` +
+      `<b>Portfolio:</b> ${portfolioUrl}`
+    );
     return { success: true };
   }
 
@@ -172,6 +184,18 @@ export async function submitDesignerApplication(
 
   const { sendDesignerApplicationReceived } = await import("@/lib/email");
   await sendDesignerApplicationReceived(email, fullName);
+  const { notifyAdmin } = await import("@/lib/telegram");
+  await notifyAdmin(
+    `👤 <b>New Designer Application</b>\n\n` +
+    `<b>Name:</b> ${fullName}\n` +
+    `<b>Email:</b> ${email}\n` +
+    `<b>Phone:</b> ${phone}\n` +
+    `<b>City:</b> ${city}\n` +
+    `<b>Specialty:</b> ${specialty}\n` +
+    `<b>Experience:</b> ${experience}\n` +
+    `<b>Availability:</b> ${availability}\n` +
+    `<b>Portfolio:</b> ${portfolioUrl}`
+  );
 
   return { success: true };
 }

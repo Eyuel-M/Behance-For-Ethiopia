@@ -14,11 +14,11 @@ const CLIENT_INCLUDED = [
 const DESIGNER_INCLUDED = [
   "Free to apply to the network",
   "Matched to relevant briefs",
+  "Keep 100% of your quoted price",
   "Proposal tools and templates",
   "Client communication support",
   "Milestone-based payment releases",
   "Profile in our designer roster",
-  "Priority for repeat client briefs",
 ];
 
 const FAQ = [
@@ -31,12 +31,12 @@ const FAQ = [
     a: "Payment is held until you approve each milestone. If work doesn't meet the agreed scope, we mediate and withhold payment until it's resolved.",
   },
   {
-    q: "Is the 15% taken from what I pay, or added on top?",
-    a: "It's deducted from the designer's payout. The price you agree with the designer is the price you pay — no hidden platform fees added on top.",
+    q: "Is the 15% platform fee added on top of the designer's quote?",
+    a: "Yes. If a designer quotes ETB 10,000, you pay ETB 11,500. The designer keeps their full ETB 10,000 — the 15% is a service fee charged to you, not deducted from them. It covers vetting, matching, milestone management, and dispute resolution.",
   },
   {
-    q: "Do designers see the platform fee?",
-    a: "Yes, fully. Designers quote knowing the 15% applies. It covers matching, vetting, dispute resolution, and the admin support around every project.",
+    q: "Do designers pay any fees?",
+    a: "No. Designers keep 100% of what they quote. There are no deductions, no listing fees, and no monthly charges. The platform fee is paid entirely by the client.",
   },
   {
     q: "What payment methods are accepted?",
@@ -64,8 +64,8 @@ export default function PricingPage() {
               <span style={{ color: "#6dcc46" }}>No surprises.</span>
             </h1>
             <p className="text-white/50 text-lg max-w-xl leading-relaxed">
-              Businesses post and match for free. Designers keep 85% of every project.
-              Everyone pays only when value is delivered.
+              Businesses post and match for free. Designers keep 100% of what they quote.
+              A 15% platform fee is added to the client's payment — only when value is delivered.
             </p>
           </FadeUp>
         </div>
@@ -122,13 +122,13 @@ export default function PricingPage() {
                 </div>
                 <div className="mt-5 mb-6">
                   <p className="text-5xl font-black text-white" style={{ fontFamily: "var(--font-display), sans-serif" }}>
-                    15%
+                    0%
                   </p>
-                  <p className="text-sm text-white/35 mt-1">platform fee · deducted from payout</p>
+                  <p className="text-sm text-white/35 mt-1">deducted from your earnings · ever</p>
                 </div>
                 <p className="text-white/50 text-sm leading-relaxed mb-8">
-                  Free to apply and maintain a profile. When you win and complete a project,
-                  we take 15% — you keep 85%. No monthly fees, no listing charges.
+                  Free to apply and maintain a profile. Quote your price — you keep all of it.
+                  The platform fee is paid by the client, not you. No monthly fees, no listing charges.
                 </p>
                 <ul className="space-y-3 flex-1 mb-8">
                   {DESIGNER_INCLUDED.map((item) => (
@@ -174,7 +174,7 @@ export default function PricingPage() {
             {[
               { n: "01", title: "Client funds the project", body: "After approving the proposal, the client transfers the full agreed amount. Funds are held — not released to the designer yet." },
               { n: "02", title: "Work completes by milestone", body: "The designer delivers each milestone. The client reviews and approves. Payment for that milestone is released immediately on approval." },
-              { n: "03", title: "Final payout on completion", body: "When the last milestone is approved, the remaining balance releases to the designer minus the 15% platform fee. Done." },
+              { n: "03", title: "Final payout on completion", body: "When the last milestone is approved, the remaining balance releases to the designer in full. The 15% platform fee was already included in what the client paid upfront. Done." },
             ].map((step) => (
               <StaggerItem
                 key={step.n}

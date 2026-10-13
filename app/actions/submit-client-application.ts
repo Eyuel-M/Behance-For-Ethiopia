@@ -65,6 +65,18 @@ export async function submitClientApplication(
     });
     const { sendBriefConfirmation } = await import("@/lib/email");
     await sendBriefConfirmation(data.email.trim(), data.businessName.trim());
+    const { notifyAdmin } = await import("@/lib/telegram");
+    await notifyAdmin(
+      `📋 <b>New Brief Submitted</b>\n\n` +
+      `<b>Business:</b> ${data.businessName.trim()}\n` +
+      `<b>Contact:</b> ${data.contactName.trim()} · ${data.email.trim()}\n` +
+      `<b>Phone:</b> ${data.phone.trim()}\n` +
+      `<b>Category:</b> ${data.category}\n` +
+      `<b>Budget:</b> ${data.budget}\n` +
+      `<b>Timeline:</b> ${data.timeline}\n` +
+      `<b>Service mode:</b> ${data.serviceMode}\n\n` +
+      `<b>Project:</b> ${data.projectDescription.trim().slice(0, 300)}${data.projectDescription.trim().length > 300 ? "…" : ""}`
+    );
     return { success: true };
   }
 
@@ -94,6 +106,18 @@ export async function submitClientApplication(
 
   const { sendBriefConfirmation } = await import("@/lib/email");
   await sendBriefConfirmation(data.email.trim(), data.businessName.trim());
+  const { notifyAdmin } = await import("@/lib/telegram");
+  await notifyAdmin(
+    `📋 <b>New Brief Submitted</b>\n\n` +
+    `<b>Business:</b> ${data.businessName.trim()}\n` +
+    `<b>Contact:</b> ${data.contactName.trim()} · ${data.email.trim()}\n` +
+    `<b>Phone:</b> ${data.phone.trim()}\n` +
+    `<b>Category:</b> ${data.category}\n` +
+    `<b>Budget:</b> ${data.budget}\n` +
+    `<b>Timeline:</b> ${data.timeline}\n` +
+    `<b>Service mode:</b> ${data.serviceMode}\n\n` +
+    `<b>Project:</b> ${data.projectDescription.trim().slice(0, 300)}${data.projectDescription.trim().length > 300 ? "…" : ""}`
+  );
 
   return { success: true };
 }
