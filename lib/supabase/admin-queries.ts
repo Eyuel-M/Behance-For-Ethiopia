@@ -527,6 +527,13 @@ export async function getProjectMilestones(projectId: string): Promise<Milestone
   return data as MilestoneRow[];
 }
 
+export async function getAllMilestones(): Promise<MilestoneRow[]> {
+  if (!supabase) return Array.from(getDemoStore().milestones.values());
+  const { data, error } = await supabase.from("project_milestones").select("*");
+  if (error) return [];
+  return data as MilestoneRow[];
+}
+
 export async function addMilestone(input: {
   projectId: string;
   title: string;

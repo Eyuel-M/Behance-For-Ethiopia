@@ -5,6 +5,23 @@ import { usePathname } from "next/navigation";
 
 const NAV = [
   {
+    label: "Overview",
+    items: [
+      {
+        href: "/admin",
+        label: "Dashboard",
+        icon: (
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.4"/>
+            <rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.4"/>
+            <rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.4"/>
+            <rect x="9" y="9" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.4"/>
+          </svg>
+        ),
+      },
+    ],
+  },
+  {
     label: "Operations",
     items: [
       {
@@ -96,7 +113,9 @@ export default function AdminNav() {
           <div className="space-y-0.5">
             {section.items.map((item) => {
               const isActive =
-                item.href === "/admin/projects/new"
+                item.href === "/admin"
+                  ? pathname === "/admin"
+                  : item.href === "/admin/projects/new"
                   ? pathname === item.href
                   : item.href === "/admin/projects"
                   ? pathname.startsWith("/admin/projects") && pathname !== "/admin/projects/new"
