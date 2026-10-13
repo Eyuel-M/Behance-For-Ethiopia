@@ -300,7 +300,13 @@ export function getPortfolioProjects(publishedOnly = false): PortfolioProject[] 
 }
 
 export function getPortfolioProject(id: string): PortfolioProject | null {
-  return getOrInitStore().portfolio.find(p => p.id === id) ?? null;
+  const stored = getOrInitStore().portfolio.find(p => p.id === id);
+  if (!stored) return null;
+  // Always merge with the current default so new fields (challenge, approach,
+  // outcome, etc.) appear even when the in-memory store was seeded from an older
+  // disk snapshot that predates those fields.
+  const def = DEFAULT_PORTFOLIO.find(d => d.id === id);
+  return def ? { ...def, ...stored } : stored;
 }
 
 export function createPortfolioProject(data: Omit<PortfolioProject, "id">): PortfolioProject {
