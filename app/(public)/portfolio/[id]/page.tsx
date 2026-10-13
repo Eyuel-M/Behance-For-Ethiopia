@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   return { title: `${project.title} — ${project.client}` };
 }
 
-// Decorative SVG geometric overlay for the hero gradient visual
+// Hero / overall decorative overlay
 function GeoOverlay() {
   return (
     <svg className="absolute inset-0 w-full h-full" viewBox="0 0 900 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
@@ -23,6 +23,106 @@ function GeoOverlay() {
       <line x1="0" y1="300" x2="900" y2="300" stroke="rgba(255,255,255,0.03)" strokeWidth="1" />
       <line x1="450" y1="0" x2="450" y2="600" stroke="rgba(255,255,255,0.03)" strokeWidth="1" />
       <rect x="320" y="180" width="260" height="240" rx="4" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="0.8" />
+    </svg>
+  );
+}
+
+// Visual Panel 1 overlay — branding presentation board feel
+function PresentationOverlay() {
+  return (
+    <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1200 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      {/* Main center card */}
+      <rect x="300" y="60" width="600" height="380" rx="12" fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="1" />
+      <rect x="340" y="100" width="520" height="300" rx="6" fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="0.8" />
+      {/* Inner focus box */}
+      <rect x="460" y="170" width="280" height="160" rx="4" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="0.8" />
+      {/* Corner ticks */}
+      <line x1="300" y1="80" x2="300" y2="60" stroke="rgba(255,255,255,0.12)" strokeWidth="1.5" />
+      <line x1="280" y1="60" x2="300" y2="60" stroke="rgba(255,255,255,0.12)" strokeWidth="1.5" />
+      <line x1="900" y1="60" x2="920" y2="60" stroke="rgba(255,255,255,0.12)" strokeWidth="1.5" />
+      <line x1="920" y1="60" x2="920" y2="80" stroke="rgba(255,255,255,0.12)" strokeWidth="1.5" />
+      <line x1="300" y1="420" x2="280" y2="420" stroke="rgba(255,255,255,0.12)" strokeWidth="1.5" />
+      <line x1="280" y1="420" x2="280" y2="440" stroke="rgba(255,255,255,0.12)" strokeWidth="1.5" />
+      <line x1="920" y1="420" x2="920" y2="440" stroke="rgba(255,255,255,0.12)" strokeWidth="1.5" />
+      <line x1="900" y1="440" x2="920" y2="440" stroke="rgba(255,255,255,0.12)" strokeWidth="1.5" />
+      {/* Grid dots */}
+      {[0,1,2,3,4,5].map((col) =>
+        [0,1,2,3].map((row) => (
+          <circle key={`${col}-${row}`} cx={100 + col * 200} cy={80 + row * 120} r="1.5" fill="rgba(255,255,255,0.06)" />
+        ))
+      )}
+      {/* Horizontal rule lines */}
+      <line x1="0" y1="250" x2="1200" y2="250" stroke="rgba(255,255,255,0.02)" strokeWidth="1" />
+    </svg>
+  );
+}
+
+// Visual Panel 2 overlay — interface/screen detail feel (left panel)
+function ScreenOverlayLeft() {
+  return (
+    <svg className="absolute inset-0 w-full h-full" viewBox="0 0 600 460" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      {/* Browser chrome */}
+      <rect x="40" y="30" width="520" height="380" rx="10" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
+      <line x1="40" y1="72" x2="560" y2="72" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
+      <circle cx="68" cy="51" r="6" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
+      <circle cx="92" cy="51" r="6" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
+      <circle cx="116" cy="51" r="6" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
+      {/* Content rows */}
+      <rect x="72" y="100" width="180" height="10" rx="3" fill="rgba(255,255,255,0.04)" />
+      <rect x="72" y="120" width="300" height="7" rx="3" fill="rgba(255,255,255,0.03)" />
+      <rect x="72" y="135" width="240" height="7" rx="3" fill="rgba(255,255,255,0.03)" />
+      <rect x="72" y="165" width="440" height="100" rx="6" fill="rgba(255,255,255,0.03)" />
+      <rect x="72" y="285" width="140" height="8" rx="3" fill="rgba(255,255,255,0.04)" />
+      <rect x="72" y="303" width="300" height="7" rx="3" fill="rgba(255,255,255,0.025)" />
+      <rect x="72" y="318" width="200" height="7" rx="3" fill="rgba(255,255,255,0.025)" />
+    </svg>
+  );
+}
+
+// Visual Panel 2 overlay — interface/screen detail feel (right panel)
+function ScreenOverlayRight() {
+  return (
+    <svg className="absolute inset-0 w-full h-full" viewBox="0 0 600 460" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      {/* Phone frame */}
+      <rect x="190" y="20" width="220" height="400" rx="22" fill="none" stroke="rgba(255,255,255,0.09)" strokeWidth="1.5" />
+      <rect x="200" y="30" width="200" height="380" rx="16" fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="0.8" />
+      {/* Notch */}
+      <rect x="255" y="24" width="90" height="14" rx="7" fill="rgba(0,0,0,0.25)" />
+      {/* Screen content */}
+      <rect x="215" y="60" width="170" height="40" rx="8" fill="rgba(255,255,255,0.04)" />
+      <rect x="215" y="112" width="80" height="8" rx="3" fill="rgba(255,255,255,0.035)" />
+      <rect x="215" y="128" width="170" height="70" rx="8" fill="rgba(255,255,255,0.03)" />
+      <rect x="215" y="210" width="80" height="8" rx="3" fill="rgba(255,255,255,0.035)" />
+      <rect x="215" y="226" width="170" height="50" rx="8" fill="rgba(255,255,255,0.03)" />
+      <rect x="215" y="290" width="170" height="50" rx="8" fill="rgba(255,255,255,0.03)" />
+      <rect x="215" y="356" width="170" height="36" rx="8" fill="rgba(255,255,255,0.05)" />
+      {/* Home bar */}
+      <rect x="265" y="398" width="70" height="4" rx="2" fill="rgba(255,255,255,0.08)" />
+    </svg>
+  );
+}
+
+// Visual Panel 3 overlay — texture/detail/finish feel
+function TextureOverlay() {
+  return (
+    <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1400 340" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      {/* Diagonal ruled lines */}
+      {[-200, -100, 0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500].map((x, i) => (
+        <line key={i} x1={x} y1={0} x2={x + 340} y2={340} stroke="rgba(255,255,255,0.025)" strokeWidth="1" />
+      ))}
+      {/* Large concentric arcs bottom-left */}
+      <path d="M 0 340 Q 400 0 800 340" fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="1" />
+      <path d="M 0 340 Q 300 100 600 340" fill="none" stroke="rgba(255,255,255,0.03)" strokeWidth="1" />
+      <path d="M 0 340 Q 200 200 400 340" fill="none" stroke="rgba(255,255,255,0.02)" strokeWidth="1" />
+      {/* Right arc cluster */}
+      <path d="M 1400 0 Q 900 200 1400 340" fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="1" />
+      <path d="M 1400 0 Q 1000 150 1400 340" fill="none" stroke="rgba(255,255,255,0.03)" strokeWidth="1" />
+      {/* Horizontal marker line */}
+      <line x1="0" y1="170" x2="1400" y2="170" stroke="rgba(255,255,255,0.02)" strokeWidth="1" />
+      {/* Small accent dots */}
+      <circle cx="700" cy="170" r="3" fill="rgba(255,255,255,0.06)" />
+      <circle cx="700" cy="170" r="12" fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="1" />
+      <circle cx="700" cy="170" r="30" fill="none" stroke="rgba(255,255,255,0.025)" strokeWidth="1" />
     </svg>
   );
 }
@@ -43,10 +143,8 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ id: 
       <div className="relative min-h-[92vh] flex flex-col" style={{ background: project.gradient }}>
         <GeoOverlay />
 
-        {/* overlay darkening gradient bottom */}
         <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.3) 100%)" }} />
 
-        {/* Large background number */}
         <div
           className="absolute right-0 top-1/2 -translate-y-1/2 select-none pointer-events-none overflow-hidden"
           style={{ lineHeight: 1, fontSize: "clamp(160px, 28vw, 380px)", fontWeight: 900, color: "rgba(255,255,255,0.04)", fontFamily: "var(--font-display), sans-serif", letterSpacing: "-0.06em", paddingRight: "2vw" }}
@@ -125,7 +223,6 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ id: 
           <FadeUp>
             {project.services && project.services.length > 0 ? (
               <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-12 lg:gap-20">
-                {/* Services */}
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-widest text-[#6dcc46] mb-5">Services Delivered</p>
                   <ul className="space-y-2">
@@ -137,7 +234,6 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ id: 
                     ))}
                   </ul>
                 </div>
-                {/* Description */}
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-widest text-[#6dcc46] mb-5">Overview</p>
                   <p className="text-white/70 text-base sm:text-lg leading-relaxed">{project.description}</p>
@@ -187,23 +283,33 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ id: 
         </div>
       )}
 
-      {/* ── Visual showcase ── */}
-      <div className="relative overflow-hidden" style={{ height: "clamp(320px, 50vw, 560px)" }}>
+      {/* ── Visual Panel 1 — Presentation board ── */}
+      <div className="relative overflow-hidden" style={{ height: "clamp(380px, 55vw, 580px)" }}>
         <div className="absolute inset-0" style={{ background: project.gradient }} />
-        <GeoOverlay />
-        <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.4) 100%)" }} />
+        <PresentationOverlay />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.45) 100%)" }} />
 
-        {/* Category label centred */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center">
-            <p className="text-white/20 text-[10px] uppercase tracking-widest font-bold mb-3">Project Visual</p>
+          <div className="text-center px-6">
             <p
-              className="text-white/10 font-black select-none"
-              style={{ fontSize: "clamp(48px, 10vw, 120px)", fontFamily: "var(--font-display), sans-serif", lineHeight: 1 }}
+              className="text-white/8 font-black select-none pointer-events-none"
+              style={{ fontSize: "clamp(64px, 12vw, 160px)", fontFamily: "var(--font-display), sans-serif", lineHeight: 1, color: "rgba(255,255,255,0.06)" }}
+              aria-hidden="true"
             >
-              {project.client.split(" ")[0]}
+              {project.title.split(" ").slice(0, 2).join(" ")}
             </p>
           </div>
+        </div>
+
+        {/* Bottom-left label */}
+        <div className="absolute bottom-8 left-8 sm:left-12">
+          <p className="text-white/30 text-[9px] uppercase tracking-widest font-bold mb-1">Creative Direction</p>
+          <p className="text-white/50 text-xs font-semibold">{project.client}</p>
+        </div>
+
+        {/* Top-right project number */}
+        <div className="absolute top-8 right-8 sm:right-12">
+          <span className="text-white/20 font-mono text-xs tabular-nums">{project.num} / {project.year}</span>
         </div>
       </div>
 
@@ -227,6 +333,41 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ id: 
         </div>
       )}
 
+      {/* ── Visual Panel 2 — Dual screen mockup ── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2" style={{ minHeight: "clamp(280px, 40vw, 480px)" }}>
+        {/* Left panel — desktop/web */}
+        <div className="relative overflow-hidden" style={{ minHeight: "clamp(240px, 36vw, 440px)" }}>
+          <div className="absolute inset-0" style={{ background: project.gradient }} />
+          <ScreenOverlayLeft />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom right, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.5) 100%)" }} />
+          <div className="absolute bottom-6 left-6">
+            <p className="text-white/25 text-[9px] uppercase tracking-widest font-bold">Web Experience</p>
+          </div>
+          {/* Diagonal label strip */}
+          <div className="absolute top-6 left-6 flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#6dcc46]/60" />
+            <span className="text-white/30 text-[9px] font-mono uppercase tracking-widest">01 — Desktop</span>
+          </div>
+        </div>
+
+        {/* Right panel — mobile */}
+        <div className="relative overflow-hidden" style={{ minHeight: "clamp(240px, 36vw, 440px)" }}>
+          <div
+            className="absolute inset-0"
+            style={{ background: project.gradient, filter: "brightness(0.75) saturate(1.2)" }}
+          />
+          <ScreenOverlayRight />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(to top left, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.5) 100%)" }} />
+          <div className="absolute bottom-6 right-6 text-right">
+            <p className="text-white/25 text-[9px] uppercase tracking-widest font-bold">Mobile Experience</p>
+          </div>
+          <div className="absolute top-6 right-6 flex items-center gap-2">
+            <span className="text-white/30 text-[9px] font-mono uppercase tracking-widest">02 — Mobile</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-[#6dcc46]/60" />
+          </div>
+        </div>
+      </div>
+
       {/* ── Outcome ── */}
       {project.outcome && (
         <div style={{ backgroundColor: "#0d2318" }}>
@@ -246,6 +387,38 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ id: 
           </div>
         </div>
       )}
+
+      {/* ── Visual Panel 3 — Panoramic texture ── */}
+      <div className="relative overflow-hidden" style={{ height: "clamp(240px, 30vw, 360px)" }}>
+        <div className="absolute inset-0" style={{ background: project.gradient }} />
+        <TextureOverlay />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(to right, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.05) 40%, rgba(0,0,0,0.4) 100%)" }} />
+
+        {/* Centred label strip */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
+          <div className="flex items-center gap-3">
+            <div className="h-px w-12 bg-white/20" />
+            <p className="text-white/25 text-[9px] uppercase tracking-widest font-bold">{project.category}</p>
+            <div className="h-px w-12 bg-white/20" />
+          </div>
+          <p
+            className="text-white/[0.04] font-black select-none pointer-events-none"
+            style={{ fontSize: "clamp(48px, 8vw, 100px)", fontFamily: "var(--font-display), sans-serif", lineHeight: 1 }}
+            aria-hidden="true"
+          >
+            {project.client}
+          </p>
+        </div>
+
+        {/* Bottom stat strip */}
+        {project.services && project.services.length > 0 && (
+          <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-8 pb-6">
+            {project.services.slice(0, 4).map((s, i) => (
+              <span key={i} className="text-white/25 text-[9px] uppercase tracking-widest font-bold hidden sm:block">{s}</span>
+            ))}
+          </div>
+        )}
+      </div>
 
       {/* ── Testimonial ── */}
       {project.testimonialQuote && (
@@ -286,7 +459,6 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ id: 
                   href={`/portfolio/${p.id}`}
                   className="group block rounded-2xl overflow-hidden"
                 >
-                  {/* Gradient thumb */}
                   <div
                     className="relative h-44 overflow-hidden"
                     style={{ background: p.gradient }}
@@ -302,7 +474,6 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ id: 
                     <div className="absolute bottom-4 left-4 right-4">
                       <p className="text-white font-extrabold text-sm leading-snug">{p.title}</p>
                     </div>
-                    {/* Hover arrow */}
                     <span
                       className="absolute bottom-4 right-4 w-8 h-8 rounded-full border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200"
                       style={{ backgroundColor: "rgba(255,255,255,0.1)" }}
@@ -312,7 +483,6 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ id: 
                       </svg>
                     </span>
                   </div>
-                  {/* Caption */}
                   <div className="p-4 bg-white border border-t-0 border-zinc-100 rounded-b-2xl">
                     <p className="text-xs text-zinc-400 mb-1">{p.client}</p>
                     <p className="text-xs text-zinc-500 line-clamp-2 leading-relaxed">{p.description}</p>
