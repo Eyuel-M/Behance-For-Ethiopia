@@ -383,135 +383,194 @@ function Services() {
 
 const PORTFOLIO_CARDS = [
   {
+    id: "1",
     category: "Branding",
     client: "Habesha Coffee",
     title: "Export-Grade Identity",
     service: "Brand Identity",
-    gradient: "linear-gradient(160deg, #2d1b00 0%, #7a3a10 45%, #c8882a 100%)",
+    image: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1600&h=1000&q=80&auto=format&fit=crop",
   },
   {
+    id: "2",
     category: "UI/UX",
     client: "Agar Microfinance",
     title: "Fintech App UI",
     service: "Product Design",
-    gradient: "linear-gradient(160deg, #071208 0%, #12412a 50%, #3fa852 100%)",
+    image: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=1200&h=900&q=80&auto=format&fit=crop",
   },
   {
+    id: "3",
     category: "Arch Viz",
     client: "Bole Heights",
     title: "Residential Tower",
     service: "3D Renders",
-    gradient: "linear-gradient(200deg, #080818 0%, #141460 55%, #4a5acc 100%)",
+    image: "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1200&h=1400&q=80&auto=format&fit=crop",
   },
   {
+    id: "5",
     category: "Motion",
     client: "Ethio-Tech Hub",
     title: "Product Launch",
     service: "Motion Graphics",
-    gradient: "linear-gradient(160deg, #041210 0%, #0a3d34 50%, #1ab89a 100%)",
+    image: "https://images.unsplash.com/photo-1536240478700-b869ad10e128?w=1200&h=900&q=80&auto=format&fit=crop",
   },
   {
+    id: "6",
     category: "Web",
     client: "Sheba Organic",
     title: "E-commerce Store",
     service: "Web Design",
-    gradient: "linear-gradient(160deg, #0a1a07 0%, #235018 50%, #5db83a 100%)",
+    image: "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=1600&h=900&q=80&auto=format&fit=crop",
   },
 ];
 
+function WorkCard({
+  card,
+  style,
+  eager = false,
+  className = "",
+}: {
+  card: typeof PORTFOLIO_CARDS[0];
+  style?: React.CSSProperties;
+  eager?: boolean;
+  className?: string;
+}) {
+  return (
+    <Link
+      href={`/portfolio/${card.id}`}
+      className={`group relative block overflow-hidden ${className}`}
+      style={style}
+    >
+      {/* Photo */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={card.image}
+        alt=""
+        loading={eager ? "eager" : "lazy"}
+        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+      />
+
+      {/* Gradient overlay */}
+      <div
+        className="absolute inset-0"
+        style={{ background: "linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.35) 50%, rgba(0,0,0,0.05) 100%)" }}
+      />
+
+      {/* Category badge */}
+      <div className="absolute top-5 right-5 z-10">
+        <span className="bg-white/90 backdrop-blur-sm text-zinc-900 text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-sm">
+          {card.category}
+        </span>
+      </div>
+
+      {/* Bottom content */}
+      <div className="absolute bottom-0 left-0 right-0 p-6 z-10">
+        <p className="text-white/40 text-[10px] font-mono uppercase tracking-widest mb-1.5">{card.service}</p>
+        <div className="flex items-end justify-between gap-4">
+          <div>
+            <p className="text-white font-extrabold text-base sm:text-lg leading-snug mb-0.5">{card.title}</p>
+            <p className="text-white/45 text-xs">{card.client}</p>
+          </div>
+          <span
+            className="shrink-0 w-9 h-9 rounded-full border border-white/25 flex items-center justify-center opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-200"
+            style={{ background: "rgba(255,255,255,0.1)" }}
+            aria-hidden="true"
+          >
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </span>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
 function PortfolioTeaser() {
   return (
-    <section className="bg-white py-16 sm:py-24 border-t border-zinc-100">
-      <div className="max-w-6xl mx-auto px-5 sm:px-8">
+    <section style={{ backgroundColor: "#071208" }} className="border-t border-white/5">
 
-        {/* Top dashed rule */}
-        <div className="border-t border-dashed border-zinc-200 mb-8" />
-
-        {/* Header */}
+      {/* Header */}
+      <div className="max-w-6xl mx-auto px-5 sm:px-8 pt-16 sm:pt-24 pb-10 sm:pb-14">
         <FadeUp>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-end mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <span className="w-2 h-2 rounded-full bg-[#6dcc46]" />
-                <p className="text-xs font-bold uppercase tracking-widest text-zinc-400">Our Work</p>
+                <p className="text-xs font-bold uppercase tracking-widest text-[#6dcc46]/70">Our Work</p>
               </div>
               <h2
-                className="text-3xl sm:text-5xl font-black text-[#0d2318] leading-tight"
+                className="text-4xl sm:text-6xl font-black text-white leading-[1.05] tracking-tight"
                 style={{ fontFamily: "var(--font-display), sans-serif" }}
               >
                 Work that speaks<br />for itself.
               </h2>
             </div>
-            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
-              <p className="text-zinc-400 text-sm leading-relaxed max-w-xs">
-                A curated selection of projects completed by vetted designers in our network.
+            <div className="sm:text-right">
+              <p className="text-white/40 text-sm leading-relaxed mb-4 max-w-xs sm:ml-auto">
+                A curated selection from vetted designers in our network.
               </p>
               <Link
                 href="/portfolio"
-                className="shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-zinc-300 text-sm font-semibold text-zinc-700 hover:border-[#0d2318] hover:text-[#0d2318] transition-all duration-150 whitespace-nowrap"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/15 text-sm font-semibold text-white/60 hover:border-white/40 hover:text-white transition-all duration-150"
               >
-                View All
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                View all work
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
                 </svg>
               </Link>
             </div>
           </div>
         </FadeUp>
-
-        {/* Bottom dashed rule */}
-        <div className="border-t border-dashed border-zinc-200 mb-8" />
-
-        {/* Asymmetric grid */}
-        <StaggerGrid
-          className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:auto-rows-[270px]"
-        >
-          {PORTFOLIO_CARDS.map((card, i) => (
-            <StaggerItem
-              key={card.client}
-              className={[
-                i === 2 ? "lg:row-span-2" : "",
-                i === 4 ? "col-span-2 lg:col-span-1" : "",
-              ].filter(Boolean).join(" ") || undefined}
-            >
-            <Link
-              href="/portfolio"
-              className={[
-                "group relative rounded-2xl sm:rounded-3xl overflow-hidden block h-full",
-                "aspect-[4/3] lg:aspect-auto",
-              ].filter(Boolean).join(" ")}
-              style={{ background: card.gradient }}
-            >
-              {/* Bottom overlay */}
-              <div
-                className="absolute inset-0 transition-opacity duration-300"
-                style={{ background: "linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.15) 45%, transparent 70%)" }}
-              />
-
-              {/* Category badge — top right */}
-              <div className="absolute top-4 right-4">
-                <span className="bg-white/90 text-zinc-900 text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded">
-                  {card.category}
-                </span>
-              </div>
-
-              {/* Bottom content */}
-              <div className="absolute bottom-0 left-0 right-0 p-5">
-                <p className="font-extrabold text-white text-sm leading-snug mb-0.5">{card.title}</p>
-                <p className="text-white/55 text-xs mb-3">{card.client}</p>
-                <span className="inline-block bg-black/30 border border-white/15 text-white/70 text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded">
-                  {card.service}
-                </span>
-              </div>
-
-              {/* Hover shine */}
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" style={{ background: "rgba(255,255,255,0.04)" }} />
-            </Link>
-            </StaggerItem>
-          ))}
-        </StaggerGrid>
-
       </div>
+
+      {/* Mobile / tablet stacked grid */}
+      <div className="lg:hidden grid grid-cols-1 sm:grid-cols-2">
+        {PORTFOLIO_CARDS.map((card, i) => (
+          <WorkCard
+            key={card.id}
+            card={card}
+            eager={i === 0}
+            className="min-h-[300px] sm:min-h-[340px]"
+          />
+        ))}
+      </div>
+
+      {/* Desktop bento grid — full-bleed, 3-column */}
+      <div
+        className="hidden lg:grid grid-cols-3"
+        style={{ gridTemplateRows: "52vh 40vh 34vh" }}
+      >
+        {/* Featured: Habesha Coffee — large, left two columns */}
+        <WorkCard
+          card={PORTFOLIO_CARDS[0]}
+          eager
+          style={{ gridColumn: "1 / 3", gridRow: "1" }}
+        />
+        {/* Bole Heights Architecture — tall right column, spans rows 1 & 2 */}
+        <WorkCard
+          card={PORTFOLIO_CARDS[2]}
+          style={{ gridColumn: "3", gridRow: "1 / 3" }}
+        />
+        {/* Agar Microfinance */}
+        <WorkCard
+          card={PORTFOLIO_CARDS[1]}
+          style={{ gridColumn: "1", gridRow: "2" }}
+        />
+        {/* Ethio-Tech Hub */}
+        <WorkCard
+          card={PORTFOLIO_CARDS[3]}
+          style={{ gridColumn: "2", gridRow: "2" }}
+        />
+        {/* Sheba Organic — full-width panoramic strip */}
+        <WorkCard
+          card={PORTFOLIO_CARDS[4]}
+          style={{ gridColumn: "1 / 4", gridRow: "3" }}
+        />
+      </div>
+
+      {/* Bottom breathing room */}
+      <div className="h-16 sm:h-20" />
     </section>
   );
 }
