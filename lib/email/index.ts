@@ -153,6 +153,40 @@ export async function sendProfessionalPortalLink(
   `));
 }
 
+export async function sendPitchInvitation(
+  to: string,
+  designerName: string,
+  briefCategory: string,
+  businessName: string,
+  pitchUrl: string
+) {
+  return send(to, `You've been shortlisted for a project — Hire Ethiopia's Best`, base(`
+    <h1 style="margin:0 0 8px;font-size:22px;font-weight:900;color:#111827">You&rsquo;ve been shortlisted, ${designerName}.</h1>
+    <p style="margin:0 0 16px;font-size:15px;color:#6b7280;line-height:1.6">
+      A client is looking for a <strong style="color:#111827">${briefCategory}</strong> designer. We&rsquo;ve selected you as one of the professionals to pitch for this project from <strong style="color:#111827">${businessName}</strong>.
+    </p>
+    <p style="margin:0 0 4px;font-size:14px;color:#6b7280">Review the brief and submit your pitch — your price, timeline, and approach:</p>
+    ${btn("Submit your pitch", pitchUrl)}
+    <p style="margin:24px 0 0;font-size:13px;color:#a1a1aa">This link is private to you. Pitch links expire once a proposal is sent to the client, so please submit promptly.</p>
+  `));
+}
+
+export async function sendDesignerChosen(
+  adminEmail: string,
+  businessName: string,
+  designerName: string,
+  proposalUrl: string
+) {
+  return send(adminEmail, `Designer selected — ${businessName}`, base(`
+    <h1 style="margin:0 0 8px;font-size:22px;font-weight:900;color:#111827">A client just selected a designer.</h1>
+    <p style="margin:0 0 8px;font-size:15px;color:#6b7280;line-height:1.6">
+      <strong style="color:#111827">${businessName}</strong> has chosen <strong style="color:#111827">${designerName}</strong> from the proposal.
+    </p>
+    <p style="margin:0 0 4px;font-size:14px;color:#6b7280">Next step: generate the professional portal link and set up the project milestones.</p>
+    ${btn("Open proposal", proposalUrl)}
+  `));
+}
+
 export async function sendPaymentRequest(
   to: string,
   clientName: string,

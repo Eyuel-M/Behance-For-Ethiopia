@@ -12,6 +12,7 @@ import {
   updateBriefStatus,
 } from "@/lib/supabase/admin-queries";
 import { notifyAdmin } from "@/lib/telegram";
+import { sendPitchInvitation } from "@/lib/email";
 
 export async function assignDesigners(formData: FormData): Promise<void> {
   const briefId = (formData.get("briefId") as string | null)?.trim();
@@ -36,6 +37,7 @@ export async function assignDesigners(formData: FormData): Promise<void> {
     if (designer) {
       designerNames.push(designer.full_name);
       const pitchUrl = `${siteUrl}/pitch/${pitch.id}`;
+      sendPitchInvitation(designer.email, designer.full_name, brief.category, brief.business_name, pitchUrl).catch(() => {});
       await notifyAdmin(
         `🎯 <b>Pitch Invitation Sent</b>\n\n` +
         `<b>Designer:</b> ${designer.full_name}\n` +
@@ -43,7 +45,7 @@ export async function assignDesigners(formData: FormData): Promise<void> {
         `<b>Budget:</b> ${brief.budget}\n` +
         `<b>Timeline:</b> ${brief.timeline}\n\n` +
         `<b>Pitch link:</b> <a href="${pitchUrl}">${pitchUrl}</a>\n\n` +
-        `Share this link directly with the designer.`
+        `Invitation email sent to ${designer.email}.`
       );
     }
   }
