@@ -20,6 +20,10 @@ function ProjectCard({ project, index }: { project: PortfolioProject; index: num
         ].join(" ")}
         style={{ background: project.gradient }}
       >
+        {project.coverImage && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={project.coverImage} alt={project.title} className="absolute inset-0 w-full h-full object-cover" />
+        )}
         <div
           className="absolute inset-0"
           style={{ background: "linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.1) 50%, transparent 100%)" }}

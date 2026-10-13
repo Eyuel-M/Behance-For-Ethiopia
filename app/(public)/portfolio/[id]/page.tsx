@@ -141,6 +141,10 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ id: 
 
       {/* ── Hero ── */}
       <div className="relative min-h-[92vh] flex flex-col" style={{ background: project.gradient }}>
+        {project.coverImage && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={project.coverImage} alt={project.title} className="absolute inset-0 w-full h-full object-cover" />
+        )}
         <GeoOverlay />
 
         <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.3) 100%)" }} />
@@ -286,7 +290,12 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ id: 
       {/* ── Visual Panel 1 — Presentation board ── */}
       <div className="relative overflow-hidden" style={{ height: "clamp(380px, 55vw, 580px)" }}>
         <div className="absolute inset-0" style={{ background: project.gradient }} />
-        <PresentationOverlay />
+        {project.images?.[0] ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={project.images[0]} alt="" className="absolute inset-0 w-full h-full object-cover" aria-hidden="true" />
+        ) : (
+          <PresentationOverlay />
+        )}
         <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.45) 100%)" }} />
 
         <div className="absolute inset-0 flex items-center justify-center">
@@ -338,7 +347,12 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ id: 
         {/* Left panel — desktop/web */}
         <div className="relative overflow-hidden" style={{ minHeight: "clamp(240px, 36vw, 440px)" }}>
           <div className="absolute inset-0" style={{ background: project.gradient }} />
-          <ScreenOverlayLeft />
+          {project.images?.[1] ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={project.images[1]} alt="" className="absolute inset-0 w-full h-full object-cover" aria-hidden="true" />
+          ) : (
+            <ScreenOverlayLeft />
+          )}
           <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom right, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.5) 100%)" }} />
           <div className="absolute bottom-6 left-6">
             <p className="text-white/25 text-[9px] uppercase tracking-widest font-bold">Web Experience</p>
@@ -356,7 +370,12 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ id: 
             className="absolute inset-0"
             style={{ background: project.gradient, filter: "brightness(0.75) saturate(1.2)" }}
           />
-          <ScreenOverlayRight />
+          {project.images?.[2] ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={project.images[2]} alt="" className="absolute inset-0 w-full h-full object-cover" aria-hidden="true" />
+          ) : (
+            <ScreenOverlayRight />
+          )}
           <div className="absolute inset-0" style={{ background: "linear-gradient(to top left, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.5) 100%)" }} />
           <div className="absolute bottom-6 right-6 text-right">
             <p className="text-white/25 text-[9px] uppercase tracking-widest font-bold">Mobile Experience</p>
@@ -391,7 +410,15 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ id: 
       {/* ── Visual Panel 3 — Panoramic texture ── */}
       <div className="relative overflow-hidden" style={{ height: "clamp(240px, 30vw, 360px)" }}>
         <div className="absolute inset-0" style={{ background: project.gradient }} />
-        <TextureOverlay />
+        {project.images?.[3] ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={project.images[3]} alt="" className="absolute inset-0 w-full h-full object-cover" aria-hidden="true" />
+        ) : project.images?.[0] ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={project.images[0]} alt="" className="absolute inset-0 w-full h-full object-cover" aria-hidden="true" />
+        ) : (
+          <TextureOverlay />
+        )}
         <div className="absolute inset-0" style={{ background: "linear-gradient(to right, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.05) 40%, rgba(0,0,0,0.4) 100%)" }} />
 
         {/* Centred label strip */}
@@ -463,6 +490,10 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ id: 
                     className="relative h-44 overflow-hidden"
                     style={{ background: p.gradient }}
                   >
+                    {p.coverImage && (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={p.coverImage} alt={p.title} className="absolute inset-0 w-full h-full object-cover" />
+                    )}
                     <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 60%)" }} />
                     <span className="absolute top-4 left-4 text-white/30 text-xs font-mono tabular-nums">{p.num}</span>
                     <span

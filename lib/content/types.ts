@@ -29,6 +29,9 @@ export interface PortfolioProject {
   year: string;
   published: boolean;
   sortOrder: number;
+  // Real project photos (URLs) — cover shown on cards + hero; images used in case study panels
+  coverImage?: string;
+  images?: string[];
   // Case study enrichment (optional — falls back to description)
   challenge?: string;
   approach?: string;
