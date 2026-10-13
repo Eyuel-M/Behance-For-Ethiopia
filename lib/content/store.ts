@@ -221,11 +221,24 @@ const DEFAULT_HOMEPAGE: HomepageContent = {
 function getOrInitStore(): ContentStore {
   const g = globalThis as typeof globalThis & { __contentStore?: ContentStore };
   if (!g.__contentStore) {
-    g.__contentStore = readDiskStore() ?? {
-      insights: DEFAULT_INSIGHTS,
-      portfolio: DEFAULT_PORTFOLIO,
-      homepage: DEFAULT_HOMEPAGE,
-    };
+    const disk = readDiskStore();
+    if (disk) {
+      // Merge defaults INTO disk projects so new fields (challenge, approach, etc.)
+      // are present even when the on-disk JSON was written before they were added.
+      // Disk data wins for every key that already exists there; missing keys fall
+      // back to the default project's values.
+      const portfolio = disk.portfolio.map((p) => {
+        const def = DEFAULT_PORTFOLIO.find((d) => d.id === p.id);
+        return def ? { ...def, ...p } : p;
+      });
+      g.__contentStore = { ...disk, portfolio };
+    } else {
+      g.__contentStore = {
+        insights: DEFAULT_INSIGHTS,
+        portfolio: DEFAULT_PORTFOLIO,
+        homepage: DEFAULT_HOMEPAGE,
+      };
+    }
   }
   return g.__contentStore;
 }

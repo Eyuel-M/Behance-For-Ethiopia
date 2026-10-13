@@ -123,9 +123,9 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ id: 
       <div style={{ backgroundColor: "#071208" }}>
         <div className="max-w-6xl mx-auto px-5 sm:px-8 py-14 sm:py-20">
           <FadeUp>
-            <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-12 lg:gap-20">
-              {/* Services */}
-              {project.services && project.services.length > 0 && (
+            {project.services && project.services.length > 0 ? (
+              <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-12 lg:gap-20">
+                {/* Services */}
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-widest text-[#6dcc46] mb-5">Services Delivered</p>
                   <ul className="space-y-2">
@@ -137,11 +137,23 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ id: 
                     ))}
                   </ul>
                 </div>
-              )}
-              {/* Description */}
-              <div>
+                {/* Description */}
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-[#6dcc46] mb-5">Overview</p>
+                  <p className="text-white/70 text-base sm:text-lg leading-relaxed">{project.description}</p>
+                  <div className="flex flex-wrap gap-2 mt-6">
+                    {project.tags.map((tag) => (
+                      <span key={tag} className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-white/50 border border-white/10">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="max-w-3xl">
                 <p className="text-[10px] font-bold uppercase tracking-widest text-[#6dcc46] mb-5">Overview</p>
-                <p className="text-white/70 text-base sm:text-lg leading-relaxed">{project.description}</p>
+                <p className="text-white/70 text-base sm:text-xl leading-relaxed">{project.description}</p>
                 <div className="flex flex-wrap gap-2 mt-6">
                   {project.tags.map((tag) => (
                     <span key={tag} className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-white/50 border border-white/10">
@@ -150,7 +162,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ id: 
                   ))}
                 </div>
               </div>
-            </div>
+            )}
           </FadeUp>
         </div>
       </div>
