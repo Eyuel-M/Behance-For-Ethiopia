@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { StaggerGrid, StaggerItem } from "@/components/Motion";
 import type { PortfolioProject, PortfolioCategory } from "@/lib/content/types";
@@ -11,7 +12,7 @@ function ProjectCard({ project, index }: { project: PortfolioProject; index: num
   const isFeatured = index === 0;
 
   return (
-    <article className="group cursor-pointer">
+    <Link href={`/portfolio/${project.id}`} className="group block cursor-pointer">
       <div
         className={[
           "relative overflow-hidden rounded-2xl mb-5",
@@ -60,7 +61,7 @@ function ProjectCard({ project, index }: { project: PortfolioProject; index: num
           </div>
         </div>
       </div>
-    </article>
+    </Link>
   );
 }
 

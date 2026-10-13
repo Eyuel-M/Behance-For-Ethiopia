@@ -29,6 +29,14 @@ export interface PortfolioProject {
   year: string;
   published: boolean;
   sortOrder: number;
+  // Case study enrichment (optional — falls back to description)
+  challenge?: string;
+  approach?: string;
+  outcome?: string;
+  duration?: string;
+  services?: string[];
+  testimonialQuote?: string;
+  testimonialAuthor?: string;
 }
 
 export interface HomepageStat {
