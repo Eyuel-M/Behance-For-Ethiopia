@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getFeedbackByToken } from "@/lib/supabase/admin-queries";
+import { getFeedbackByToken, getDesignerApplication } from "@/lib/supabase/admin-queries";
 import { submitFeedback } from "@/app/actions/designer-feedback";
 
 export const dynamic = "force-dynamic";
@@ -32,6 +32,8 @@ export default async function FeedbackPage({ params, searchParams }: Props) {
 
   if (!feedback) notFound();
 
+  const designer = await getDesignerApplication(feedback.designer_application_id);
+
   if (feedback.status === "submitted") {
     return (
       <div className="min-h-screen flex items-center justify-center px-5" style={{ backgroundColor: "#0d2318" }}>
@@ -41,7 +43,7 @@ export default async function FeedbackPage({ params, searchParams }: Props) {
           </div>
           <h1 className="text-2xl font-black text-white mb-3">Already submitted</h1>
           <p className="text-sm text-white/50 leading-relaxed">
-            Feedback for <span className="text-white/70 font-medium">{feedback.project_title}</span> has already been recorded. Thank you!
+            Your feedback{designer ? <> for <span className="text-white/70 font-medium">{designer.full_name}</span></> : feedback.project_title ? <> on <span className="text-white/70 font-medium">{feedback.project_title}</span></> : ""} has already been recorded. Thank you!
           </p>
         </div>
       </div>
@@ -63,13 +65,21 @@ export default async function FeedbackPage({ params, searchParams }: Props) {
           <h1 className="text-3xl font-black text-white leading-tight mb-2">
             How did the project go?
           </h1>
+          {designer && (
+            <p className="text-sm" style={{ color: "rgba(255,255,255,0.55)" }}>
+              Rating for <span className="text-white font-semibold">{designer.full_name}</span>
+              {designer.specialty && (
+                <span style={{ color: "rgba(109,204,70,0.7)" }}> · {designer.specialty}</span>
+              )}
+            </p>
+          )}
           {feedback.project_title && (
-            <p className="text-sm" style={{ color: "rgba(255,255,255,0.45)" }}>
-              Project: <span className="text-white/70 font-medium">{feedback.project_title}</span>
+            <p className="text-sm mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>
+              Project: <span className="text-white/50 font-medium">{feedback.project_title}</span>
             </p>
           )}
           {feedback.client_name && (
-            <p className="text-sm mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>
+            <p className="text-sm mt-0.5" style={{ color: "rgba(255,255,255,0.25)" }}>
               Submitted by {feedback.client_name}
             </p>
           )}

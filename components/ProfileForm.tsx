@@ -113,10 +113,10 @@ export default function ProfileForm({
             defaultValue={app.availability}
             style={{ ...INPUT_STYLE, appearance: "none" as const, cursor: "pointer" }}
           >
-            {AVAILABILITY_OPTIONS.map((o) => (
-              <option key={o} value={o}>{o}</option>
-            ))}
-            <option value={app.availability}>{app.availability}</option>
+            {AVAILABILITY_OPTIONS.includes(app.availability)
+              ? AVAILABILITY_OPTIONS.map((o) => <option key={o} value={o}>{o}</option>)
+              : [...AVAILABILITY_OPTIONS, app.availability].map((o) => <option key={o} value={o}>{o}</option>)
+            }
           </select>
         </Field>
 
