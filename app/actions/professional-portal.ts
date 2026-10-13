@@ -3,8 +3,12 @@
 import { revalidatePath } from "next/cache";
 import { submitMilestoneByPro, updateProjectStatus } from "@/lib/supabase/admin-queries";
 
-export async function submitMilestone(milestoneId: string, token: string): Promise<void> {
-  await submitMilestoneByPro(milestoneId);
+export async function submitMilestone(
+  milestoneId: string,
+  token: string,
+  deliveryUrl?: string
+): Promise<void> {
+  await submitMilestoneByPro(milestoneId, deliveryUrl || undefined);
   revalidatePath(`/professional/${token}`);
 }
 

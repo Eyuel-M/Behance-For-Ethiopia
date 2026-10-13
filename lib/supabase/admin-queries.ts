@@ -456,6 +456,9 @@ const MOCK_MILESTONES: MilestoneRow[] = [
     due_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
     status: "pending",
     payment_condition: "25% on acceptance",
+    payment_status: "pending",
+    delivery_url: null,
+    revision_note: null,
     sort_order: 0,
     created_at: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
   },
@@ -467,6 +470,9 @@ const MOCK_MILESTONES: MilestoneRow[] = [
     due_date: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
     status: "pending",
     payment_condition: null,
+    payment_status: "pending",
+    delivery_url: null,
+    revision_note: null,
     sort_order: 1,
     created_at: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
   },
@@ -478,6 +484,9 @@ const MOCK_MILESTONES: MilestoneRow[] = [
     due_date: new Date(Date.now() + 18 * 24 * 60 * 60 * 1000).toISOString(),
     status: "pending",
     payment_condition: "50% on acceptance",
+    payment_status: "pending",
+    delivery_url: null,
+    revision_note: null,
     sort_order: 2,
     created_at: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
   },
@@ -489,6 +498,9 @@ const MOCK_MILESTONES: MilestoneRow[] = [
     due_date: new Date(Date.now() + 28 * 24 * 60 * 60 * 1000).toISOString(),
     status: "pending",
     payment_condition: "25% on handoff",
+    payment_status: "pending",
+    delivery_url: null,
+    revision_note: null,
     sort_order: 3,
     created_at: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
   },
@@ -523,6 +535,9 @@ export async function addMilestone(input: {
       due_date: input.dueDate ?? null,
       status: "pending",
       payment_condition: input.paymentCondition ?? null,
+      payment_status: "pending",
+      delivery_url: null,
+      revision_note: null,
       sort_order: input.sortOrder ?? 0,
       created_at: new Date().toISOString(),
     };
@@ -536,6 +551,9 @@ export async function addMilestone(input: {
     due_date: input.dueDate || null,
     status: "pending",
     payment_condition: input.paymentCondition || null,
+    payment_status: "pending",
+    delivery_url: null,
+    revision_note: null,
     sort_order: input.sortOrder ?? 0,
   });
   if (error) throw new Error(error.message);
@@ -543,17 +561,43 @@ export async function addMilestone(input: {
 
 export async function updateMilestoneStatus(
   id: string,
-  status: import("./project-types").MilestoneStatus
+  status: import("./project-types").MilestoneStatus,
+  revisionNote?: string
 ): Promise<void> {
   if (!supabase) {
     const store = getDemoStore();
     const m = store.milestones.get(id);
-    if (m) store.milestones.set(id, { ...m, status });
+    if (m) {
+      store.milestones.set(id, {
+        ...m,
+        status,
+        revision_note: revisionNote !== undefined ? revisionNote : m.revision_note,
+      });
+    }
+    return;
+  }
+  const update: Record<string, unknown> = { status };
+  if (revisionNote !== undefined) update.revision_note = revisionNote;
+  const { error } = await supabase
+    .from("project_milestones")
+    .update(update)
+    .eq("id", id);
+  if (error) throw new Error(error.message);
+}
+
+export async function updateMilestonePayment(
+  id: string,
+  paymentStatus: import("./project-types").PaymentStatus
+): Promise<void> {
+  if (!supabase) {
+    const store = getDemoStore();
+    const m = store.milestones.get(id);
+    if (m) store.milestones.set(id, { ...m, payment_status: paymentStatus });
     return;
   }
   const { error } = await supabase
     .from("project_milestones")
-    .update({ status })
+    .update({ payment_status: paymentStatus })
     .eq("id", id);
   if (error) throw new Error(error.message);
 }
@@ -1197,14 +1241,25 @@ export async function getProfessionalProject(token: string): Promise<ProjectRow 
   return data as ProjectRow;
 }
 
-export async function submitMilestoneByPro(milestoneId: string): Promise<void> {
+export async function submitMilestoneByPro(
+  milestoneId: string,
+  deliveryUrl?: string
+): Promise<void> {
   if (!supabase) {
     const store = getDemoStore();
     const m = store.milestones.get(milestoneId);
-    if (m) store.milestones.set(milestoneId, { ...m, status: "submitted" });
+    if (m) {
+      store.milestones.set(milestoneId, {
+        ...m,
+        status: "submitted",
+        delivery_url: deliveryUrl ?? m.delivery_url,
+      });
+    }
     return;
   }
-  await supabase.from("project_milestones").update({ status: "submitted" }).eq("id", milestoneId);
+  const update: Record<string, unknown> = { status: "submitted" };
+  if (deliveryUrl) update.delivery_url = deliveryUrl;
+  await supabase.from("project_milestones").update(update).eq("id", milestoneId);
 }
 
 // ─── Demo form submissions ─────────────────────────────────────────────────────

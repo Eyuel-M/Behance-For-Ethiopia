@@ -8,6 +8,7 @@ import {
   addProjectNote,
   generateProfessionalToken,
   updateMilestoneStatus,
+  updateMilestonePayment,
   updateProjectStatus,
   resendProposal,
 } from "@/lib/supabase/admin-queries";
@@ -73,7 +74,16 @@ export async function changeMilestoneStatus(formData: FormData): Promise<void> {
   const milestoneId = ((formData.get("milestoneId") as string | null) ?? "").trim();
   const projectId = ((formData.get("projectId") as string | null) ?? "").trim();
   const status = ((formData.get("status") as string | null) ?? "").trim() as import("@/lib/supabase/project-types").MilestoneStatus;
-  await updateMilestoneStatus(milestoneId, status);
+  const revisionNote = ((formData.get("revisionNote") as string | null) ?? "").trim() || undefined;
+  await updateMilestoneStatus(milestoneId, status, revisionNote);
+  revalidatePath(`/admin/projects/${projectId}`);
+}
+
+export async function changeMilestonePayment(formData: FormData): Promise<void> {
+  const milestoneId = ((formData.get("milestoneId") as string | null) ?? "").trim();
+  const projectId = ((formData.get("projectId") as string | null) ?? "").trim();
+  const paymentStatus = ((formData.get("paymentStatus") as string | null) ?? "").trim() as import("@/lib/supabase/project-types").PaymentStatus;
+  await updateMilestonePayment(milestoneId, paymentStatus);
   revalidatePath(`/admin/projects/${projectId}`);
 }
 

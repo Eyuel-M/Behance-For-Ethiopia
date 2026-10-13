@@ -270,9 +270,10 @@ export default async function ProfessionalPortalPage({ params }: Props) {
                 const canSubmit = (ms === "pending" || ms === "in_progress") && !isCancelled;
                 const canResubmit = isRevision && !isCancelled;
 
-                async function handleSubmit() {
+                async function handleSubmit(formData: FormData) {
                   "use server";
-                  await submitMilestone(m.id, token);
+                  const url = (formData.get("deliveryUrl") as string | null)?.trim() || undefined;
+                  await submitMilestone(m.id, token, url);
                 }
 
                 return (
@@ -288,12 +289,19 @@ export default async function ProfessionalPortalPage({ params }: Props) {
                   >
                     {/* Revision banner */}
                     {isRevision && (
-                      <div style={{ backgroundColor: "#fff7ed", borderBottom: "1px solid #fed7aa", padding: "8px 18px", display: "flex", alignItems: "center", gap: 8 }}>
-                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ flexShrink: 0 }}>
-                          <path d="M7 2.5v4m0 2.5v.5" stroke="#f97316" strokeWidth="1.8" strokeLinecap="round" />
-                          <circle cx="7" cy="7" r="5.5" stroke="#f97316" strokeWidth="1.2" />
-                        </svg>
-                        <span style={{ fontSize: 12, fontWeight: 700, color: "#c2410c" }}>Revision requested — review the feedback and resubmit</span>
+                      <div style={{ backgroundColor: "#fff7ed", borderBottom: "1px solid #fed7aa", padding: "10px 18px" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: m.revision_note ? 6 : 0 }}>
+                          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ flexShrink: 0 }}>
+                            <path d="M7 2.5v4m0 2.5v.5" stroke="#f97316" strokeWidth="1.8" strokeLinecap="round" />
+                            <circle cx="7" cy="7" r="5.5" stroke="#f97316" strokeWidth="1.2" />
+                          </svg>
+                          <span style={{ fontSize: 12, fontWeight: 700, color: "#c2410c" }}>Revision requested</span>
+                        </div>
+                        {m.revision_note && (
+                          <p style={{ fontSize: 13, color: "#7c2d12", lineHeight: 1.6, fontStyle: "italic", marginLeft: 22 }}>
+                            &ldquo;{m.revision_note}&rdquo;
+                          </p>
+                        )}
                       </div>
                     )}
 
@@ -322,7 +330,7 @@ export default async function ProfessionalPortalPage({ params }: Props) {
                     </div>
 
                     {/* Card footer */}
-                    {(m.due_date || m.payment_condition || canSubmit || canResubmit || isSubmitted) && (
+                    {(m.due_date || m.payment_condition || canSubmit || canResubmit || isSubmitted || isAccepted) && (
                       <div style={{ padding: "0 18px 14px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, flexWrap: "wrap" }}>
                         <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
                           {m.due_date && (
@@ -333,40 +341,77 @@ export default async function ProfessionalPortalPage({ params }: Props) {
                           {m.payment_condition && (
                             <span style={{ fontSize: 11, fontWeight: 700, color: "#d97706" }}>{m.payment_condition}</span>
                           )}
+                          {isAccepted && m.payment_status === "released" && (
+                            <span style={{ fontSize: 11, fontWeight: 700, color: "#16a34a", display: "inline-flex", alignItems: "center", gap: 4 }}>
+                              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                              Payment released
+                            </span>
+                          )}
+                          {isAccepted && m.payment_status === "funded" && (
+                            <span style={{ fontSize: 11, fontWeight: 700, color: "#2563eb" }}>Payment secured</span>
+                          )}
                         </div>
 
                         {(canSubmit || canResubmit) && (
-                          <form action={handleSubmit} style={{ marginLeft: "auto" }}>
-                            <button
-                              type="submit"
-                              style={{
-                                fontSize: 12,
-                                fontWeight: 800,
-                                padding: "7px 16px",
-                                borderRadius: 8,
-                                background: canResubmit ? "linear-gradient(135deg, #f97316, #fb923c)" : "linear-gradient(135deg, #3b82f6, #6366f1)",
-                                color: "#fff",
-                                border: "none",
-                                cursor: "pointer",
-                                letterSpacing: "-0.01em",
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 6,
-                              }}
-                            >
-                              {canResubmit ? "Resubmit for review" : "Submit for review"}
-                              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                                <path d="M2.5 6h7M6.5 3l3 3-3 3" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                              </svg>
-                            </button>
+                          <form action={handleSubmit} style={{ marginLeft: "auto", width: "100%" }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", justifyContent: "flex-end" }}>
+                              <input
+                                name="deliveryUrl"
+                                type="url"
+                                defaultValue={m.delivery_url ?? ""}
+                                placeholder="Delivery link (Figma, Drive, Dropbox…)"
+                                style={{
+                                  flex: "1 1 180px",
+                                  minWidth: 0,
+                                  fontSize: 12,
+                                  padding: "7px 12px",
+                                  borderRadius: 8,
+                                  border: "1px solid #d1d5db",
+                                  outline: "none",
+                                  backgroundColor: "#fff",
+                                  color: "#111827",
+                                }}
+                              />
+                              <button
+                                type="submit"
+                                style={{
+                                  fontSize: 12,
+                                  fontWeight: 800,
+                                  padding: "7px 16px",
+                                  borderRadius: 8,
+                                  background: canResubmit ? "linear-gradient(135deg, #f97316, #fb923c)" : "linear-gradient(135deg, #3b82f6, #6366f1)",
+                                  color: "#fff",
+                                  border: "none",
+                                  cursor: "pointer",
+                                  letterSpacing: "-0.01em",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: 6,
+                                  flexShrink: 0,
+                                }}
+                              >
+                                {canResubmit ? "Resubmit" : "Submit for review"}
+                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                  <path d="M2.5 6h7M6.5 3l3 3-3 3" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                              </button>
+                            </div>
                           </form>
                         )}
 
                         {isSubmitted && (
-                          <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11, fontWeight: 700, color: "#d97706", marginLeft: "auto" }}>
-                            <span style={{ width: 6, height: 6, borderRadius: "50%", backgroundColor: "#f59e0b", flexShrink: 0 }} />
-                            Waiting for admin review
-                          </span>
+                          <div style={{ marginLeft: "auto", display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4 }}>
+                            <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11, fontWeight: 700, color: "#d97706" }}>
+                              <span style={{ width: 6, height: 6, borderRadius: "50%", backgroundColor: "#f59e0b", flexShrink: 0 }} />
+                              Waiting for review
+                            </span>
+                            {m.delivery_url && (
+                              <a href={m.delivery_url} target="_blank" rel="noopener noreferrer"
+                                style={{ fontSize: 11, color: "#6b7280", textDecoration: "underline" }}>
+                                View delivery →
+                              </a>
+                            )}
+                          </div>
                         )}
                       </div>
                     )}

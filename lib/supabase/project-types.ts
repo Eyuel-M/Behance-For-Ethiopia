@@ -224,6 +224,8 @@ export type ProjectRow = {
   updated_at: string;
 };
 
+export type PaymentStatus = "pending" | "funded" | "released";
+
 export type MilestoneRow = {
   id: string;
   project_id: string;
@@ -232,6 +234,9 @@ export type MilestoneRow = {
   due_date: string | null;
   status: MilestoneStatus;
   payment_condition: string | null;
+  payment_status: PaymentStatus;
+  delivery_url: string | null;
+  revision_note: string | null;
   sort_order: number;
   created_at: string;
 };

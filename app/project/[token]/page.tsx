@@ -187,11 +187,23 @@ export default async function ClientProjectPage({ params }: Props) {
                             {MILESTONE_STATUS_LABELS[ms_status]}
                           </span>
                         </div>
-                        {m.due_date && (
-                          <p className="text-xs mt-2" style={{ color: "rgba(255,255,255,0.25)" }}>
-                            Due {new Date(m.due_date).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
-                          </p>
-                        )}
+                        <div className="flex items-center gap-3 mt-2 flex-wrap">
+                          {m.due_date && (
+                            <p className="text-xs" style={{ color: "rgba(255,255,255,0.25)" }}>
+                              Due {new Date(m.due_date).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                            </p>
+                          )}
+                          {m.payment_status === "released" && (
+                            <span className="text-xs font-semibold" style={{ color: "#6dcc46" }}>
+                              ✓ Payment released
+                            </span>
+                          )}
+                          {m.payment_status === "funded" && (
+                            <span className="text-xs font-semibold" style={{ color: "rgba(255,255,255,0.4)" }}>
+                              Payment secured
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </div>
                   );

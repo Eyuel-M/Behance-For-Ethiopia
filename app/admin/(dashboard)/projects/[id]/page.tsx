@@ -23,6 +23,7 @@ import {
 } from "@/app/actions/admin-projects";
 import ProposalDesignerPicker from "@/components/ProposalDesignerPicker";
 import MilestoneStatusSelect from "@/components/MilestoneStatusSelectClient";
+import MilestonePaymentSelect from "@/components/MilestonePaymentSelectClient";
 import ProjectStatusSelect from "@/components/ProjectStatusSelectClient";
 
 export const dynamic = "force-dynamic";
@@ -131,39 +132,68 @@ export default async function ProjectDetailPage({ params, searchParams }: Props)
             {milestones.length === 0 ? (
               <p className="text-xs text-zinc-400 py-1">No milestones yet.</p>
             ) : (
-              <div className="space-y-2 mb-5">
+              <div className="space-y-3 mb-5">
                 {milestones.map((m, i) => {
                   const ms = m.status as MilestoneStatus;
                   const isAccepted = ms === "accepted";
                   const isActive = ms === "in_progress";
+                  const isSubmitted = ms === "submitted";
                   return (
-                    <div key={m.id} className={`flex items-center gap-3 rounded-xl px-4 py-3 border transition-colors ${
-                      isAccepted ? "bg-green-50 border-green-100" : isActive ? "bg-blue-50 border-blue-100" : "bg-zinc-50 border-zinc-100"
+                    <div key={m.id} className={`rounded-xl border overflow-hidden transition-colors ${
+                      isAccepted ? "bg-green-50 border-green-100" : isActive ? "bg-blue-50 border-blue-100" : isSubmitted ? "bg-amber-50 border-amber-100" : "bg-zinc-50 border-zinc-100"
                     }`}>
-                      <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${
-                        isAccepted ? "bg-green-200 text-green-700" : "bg-zinc-200 text-zinc-500"
-                      }`}>{i + 1}</span>
-                      <div className="flex-1 min-w-0">
-                        <p className={`text-sm font-semibold ${isAccepted ? "text-green-900" : "text-zinc-900"}`}>{m.title}</p>
-                        <div className="flex items-center gap-2.5 mt-0.5 flex-wrap">
-                          {m.due_date && (
-                            <span className="text-xs text-zinc-400">
-                              Due {new Date(m.due_date).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}
-                            </span>
-                          )}
-                          {m.payment_condition && (
-                            <span className="text-xs font-medium text-amber-600">{m.payment_condition}</span>
-                          )}
+                      <div className="flex items-center gap-3 px-4 py-3">
+                        <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${
+                          isAccepted ? "bg-green-200 text-green-700" : "bg-zinc-200 text-zinc-500"
+                        }`}>{i + 1}</span>
+                        <div className="flex-1 min-w-0">
+                          <p className={`text-sm font-semibold ${isAccepted ? "text-green-900" : "text-zinc-900"}`}>{m.title}</p>
+                          <div className="flex items-center gap-2.5 mt-0.5 flex-wrap">
+                            {m.due_date && (
+                              <span className="text-xs text-zinc-400">
+                                Due {new Date(m.due_date).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}
+                              </span>
+                            )}
+                            {m.payment_condition && (
+                              <span className="text-xs font-medium text-amber-600">{m.payment_condition}</span>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <MilestonePaymentSelect
+                            milestoneId={m.id}
+                            projectId={id}
+                            currentPaymentStatus={m.payment_status ?? "pending"}
+                          />
+                          <MilestoneStatusSelect
+                            milestoneId={m.id}
+                            projectId={id}
+                            currentStatus={m.status}
+                            className={`text-xs rounded-lg border px-2.5 py-1.5 outline-none cursor-pointer shrink-0 ${
+                              MILESTONE_STATUS_COLORS[ms]
+                            }`}
+                          />
                         </div>
                       </div>
-                      <MilestoneStatusSelect
-                        milestoneId={m.id}
-                        projectId={id}
-                        currentStatus={m.status}
-                        className={`text-xs rounded-lg border px-2.5 py-1.5 outline-none cursor-pointer shrink-0 ${
-                          MILESTONE_STATUS_COLORS[ms]
-                        }`}
-                      />
+                      {/* Delivery URL */}
+                      {m.delivery_url && (
+                        <div className="px-4 py-2 border-t border-amber-100 bg-amber-50/50 flex items-center gap-2">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#d97706" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                          <span className="text-xs text-zinc-500">Delivery:</span>
+                          <a href={m.delivery_url} target="_blank" rel="noopener noreferrer"
+                            className="text-xs font-semibold text-amber-700 hover:text-amber-900 truncate transition-colors">
+                            {m.delivery_url}
+                          </a>
+                        </div>
+                      )}
+                      {/* Revision note */}
+                      {m.revision_note && ms === "revision_requested" && (
+                        <div className="px-4 py-2 border-t border-orange-100 bg-orange-50/50">
+                          <p className="text-xs text-orange-700 leading-relaxed">
+                            <span className="font-bold">Revision note: </span>{m.revision_note}
+                          </p>
+                        </div>
+                      )}
                     </div>
                   );
                 })}
