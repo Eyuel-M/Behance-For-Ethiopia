@@ -38,6 +38,19 @@ export async function submitMilestone(
 
 export async function resubmitProject(projectId: string, token: string): Promise<void> {
   await updateProjectStatus(projectId, "submitted_for_review");
+  const project = await getProfessionalProject(token);
+  if (project) {
+    notifyAdmin(`🔄 <b>Designer resubmitted</b>\nProject: ${project.title}\nClient: ${project.client_name}`).catch(() => {});
+  }
+  revalidatePath(`/professional/${token}`);
+}
+
+export async function startProject(projectId: string, token: string): Promise<void> {
+  await updateProjectStatus(projectId, "in_progress");
+  const project = await getProfessionalProject(token);
+  if (project) {
+    notifyAdmin(`🚀 <b>Designer started work</b>\nProject: ${project.title}\nClient: ${project.client_name}`).catch(() => {});
+  }
   revalidatePath(`/professional/${token}`);
 }
 

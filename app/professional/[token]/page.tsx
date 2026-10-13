@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { getProfessionalProject, getProjectMilestones, getProposalByProject, getProjectMessages, getDesignerApplication } from "@/lib/supabase/admin-queries";
 import type { ProjectStatus, MilestoneStatus } from "@/lib/supabase/project-types";
 import { MILESTONE_STATUS_LABELS } from "@/lib/supabase/project-types";
-import { submitMilestone, resubmitProject, postProfessionalMessage } from "@/app/actions/professional-portal";
+import { submitMilestone, resubmitProject, postProfessionalMessage, startProject } from "@/app/actions/professional-portal";
 import ProjectChat from "@/components/ProjectChat";
 
 export const dynamic = "force-dynamic";
@@ -150,6 +150,24 @@ export default async function ProfessionalPortalPage({ params }: Props) {
             )}
           </div>
         </div>
+
+        {/* Start working banner */}
+        {status === "ready_to_start" && !isCancelled && (
+          <div style={{ marginTop: 24, marginBottom: 0, borderRadius: 14, border: "1px solid #bfdbfe", backgroundColor: "#eff6ff", padding: "18px 20px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
+            <div>
+              <p style={{ fontSize: 13, fontWeight: 800, color: "#1d4ed8", marginBottom: 2 }}>Ready to start</p>
+              <p style={{ fontSize: 12, color: "#3b82f6", lineHeight: 1.5 }}>Click below to confirm you&apos;ve begun work on this project.</p>
+            </div>
+            <form action={async () => { "use server"; await startProject(project.id, token); }}>
+              <button
+                type="submit"
+                style={{ padding: "10px 22px", borderRadius: 999, fontSize: 13, fontWeight: 800, backgroundColor: "#1d4ed8", color: "#ffffff", border: "none", cursor: "pointer" }}
+              >
+                Start working →
+              </button>
+            </form>
+          </div>
+        )}
 
         {/* Progress row */}
         {milestones.length > 0 && !isCancelled && (

@@ -17,7 +17,7 @@ import {
   createFeedbackRequest,
   addProjectMessage,
 } from "@/lib/supabase/admin-queries";
-import { sendFeedbackRequest, sendPaymentRequest } from "@/lib/email";
+import { sendFeedbackRequest, sendPaymentRequest, sendProfessionalPortalLink } from "@/lib/email";
 import { notifyAdmin } from "@/lib/telegram";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://hireethiopiasbest.com";
@@ -178,6 +178,20 @@ export async function resendProposalToClient(formData: FormData): Promise<void> 
 export async function generateProLink(formData: FormData): Promise<void> {
   const projectId = ((formData.get("projectId") as string | null) ?? "").trim();
   const token = await generateProfessionalToken(projectId);
+
+  const project = await getProject(projectId);
+  if (project) {
+    const portalUrl = `${SITE_URL}/professional/${token}`;
+    const designerId = project.assigned_professional_ids?.[0] ?? null;
+    const designer = designerId ? await getDesignerApplication(designerId) : null;
+    if (designer) {
+      sendProfessionalPortalLink(designer.email, designer.full_name, project.title, portalUrl).catch(() => {});
+      notifyAdmin(
+        `🔗 <b>Professional portal link generated</b>\nProject: ${project.title}\nProfessional: ${designer.full_name} (${designer.email})\nLink: ${portalUrl}`
+      ).catch(() => {});
+    }
+  }
+
   revalidatePath(`/admin/projects/${projectId}`);
   redirect(`/admin/projects/${projectId}?proToken=${token}`);
 }

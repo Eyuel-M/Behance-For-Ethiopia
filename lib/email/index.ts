@@ -104,6 +104,55 @@ export async function sendMilestoneUpdate(to: string, clientName: string, projec
   `));
 }
 
+export async function sendDesignerApproved(to: string, name: string) {
+  return send(to, "Welcome to the network — Hire Ethiopia's Best", base(`
+    <h1 style="margin:0 0 8px;font-size:22px;font-weight:900;color:#111827">You&rsquo;re in, ${name}.</h1>
+    <p style="margin:0 0 16px;font-size:15px;color:#6b7280;line-height:1.6">
+      Your application has been reviewed and <strong style="color:#16a34a">approved</strong>. Welcome to Ethiopia&rsquo;s curated creative network.
+    </p>
+    <p style="margin:0 0 16px;font-size:14px;color:#6b7280;line-height:1.6">
+      Here&rsquo;s what happens next:
+    </p>
+    <ul style="margin:0 0 20px;padding-left:20px;color:#6b7280;font-size:14px;line-height:2">
+      <li>We match you to incoming briefs that fit your specialty and availability.</li>
+      <li>When a match is made, you&rsquo;ll receive a private project portal link.</li>
+      <li>You quote your rate, the client approves, and work begins — you keep 100%.</li>
+    </ul>
+    <p style="margin:0 0 4px;font-size:14px;color:#6b7280">Questions? Write to us:</p>
+    <p style="margin:0;font-size:14px"><a href="mailto:info@hireethiopiasbest.com" style="color:#6dcc46;text-decoration:none">info@hireethiopiasbest.com</a></p>
+  `));
+}
+
+export async function sendDesignerRejected(to: string, name: string) {
+  return send(to, "Your application — Hire Ethiopia's Best", base(`
+    <h1 style="margin:0 0 8px;font-size:22px;font-weight:900;color:#111827">Thank you for applying, ${name}.</h1>
+    <p style="margin:0 0 16px;font-size:15px;color:#6b7280;line-height:1.6">
+      After reviewing your application, we&rsquo;re not moving forward at this time. We review every application carefully and only onboard a small number of professionals to keep quality high.
+    </p>
+    <p style="margin:0 0 16px;font-size:14px;color:#6b7280;line-height:1.6">
+      This is not a permanent decision. We&rsquo;d encourage you to apply again in 3–6 months once you have more work to show. The most common reason for passing at this stage is portfolio depth — the more case studies and real client work you can share, the stronger your application.
+    </p>
+    <p style="margin:0;font-size:13px;color:#a1a1aa">Questions? Write to <a href="mailto:info@hireethiopiasbest.com" style="color:#6dcc46;text-decoration:none">info@hireethiopiasbest.com</a>.</p>
+  `));
+}
+
+export async function sendProfessionalPortalLink(
+  to: string,
+  name: string,
+  projectTitle: string,
+  portalUrl: string
+) {
+  return send(to, `Your project portal is ready — ${projectTitle}`, base(`
+    <h1 style="margin:0 0 8px;font-size:22px;font-weight:900;color:#111827">Your project portal is live.</h1>
+    <p style="margin:0 0 16px;font-size:15px;color:#6b7280;line-height:1.6">
+      Hi ${name}, you&rsquo;ve been assigned to <strong style="color:#111827">${projectTitle}</strong>. Your private project portal has all the details: scope, milestones, client brief, and the messaging channel.
+    </p>
+    <p style="margin:0 0 4px;font-size:14px;color:#6b7280">Access your portal here:</p>
+    ${btn("Open project portal", portalUrl)}
+    <p style="margin:24px 0 0;font-size:13px;color:#a1a1aa">This link is private to you — do not share it. If you have questions, reply to this email.</p>
+  `));
+}
+
 export async function sendPaymentRequest(
   to: string,
   clientName: string,
