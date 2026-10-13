@@ -9,6 +9,7 @@ import type {
   MilestoneRow,
   ProjectNoteRow,
   ClientProposalRow,
+  DesignerPitchRow,
 } from "./project-types";
 
 // ─── Client briefs ────────────────────────────────────────────────────────────
@@ -948,6 +949,7 @@ type DemoStore = {
   milestones: Map<string, MilestoneRow>;
   applications: Map<string, DesignerApplicationRow>;
   feedback: Map<string, DesignerFeedbackRow>;
+  pitches: Map<string, DesignerPitchRow>;
   otps: Map<string, OtpRecord>;
   sessions: Map<string, SessionRecord>;
 };
@@ -975,6 +977,7 @@ function scheduleSave(store: DemoStore) {
           milestones:   Array.from(store.milestones.entries()),
           applications: Array.from(store.applications.entries()),
           feedback:     Array.from(store.feedback.entries()),
+          pitches:      Array.from(store.pitches.entries()),
         }),
         "utf8"
       );
@@ -1009,6 +1012,7 @@ function getDemoStore(): DemoStore {
       milestones:   mk("milestones",   MOCK_MILESTONES.map((m) => [m.id, { ...m }])),
       applications: mk("applications", MOCK_APPLICATIONS.map((a) => [a.id, { ...a }])),
       feedback:     mk("feedback",     MOCK_FEEDBACK.map((f) => [f.id, { ...f }])),
+      pitches:      mk("pitches",      []),
       otps:         new Map(),
       sessions:     new Map(),
     };
@@ -1402,4 +1406,94 @@ export async function clearReviewRequest(applicationId: string): Promise<void> {
     .from("designer_applications")
     .update({ review_requested: false })
     .eq("id", applicationId);
+}
+
+// ─── Designer pitches ──────────────────────────────────────────────────────────
+
+export async function assignDesignersToBrief(
+  briefId: string,
+  designerIds: string[]
+): Promise<DesignerPitchRow[]> {
+  const rows: DesignerPitchRow[] = designerIds.map((designerId) => ({
+    id: crypto.randomUUID(),
+    brief_id: briefId,
+    designer_id: designerId,
+    approach: null,
+    timeline: null,
+    price: null,
+    message: null,
+    status: "assigned" as const,
+    created_at: new Date().toISOString(),
+    submitted_at: null,
+  }));
+
+  if (!supabase) {
+    const store = getDemoStore();
+    for (const row of rows) store.pitches.set(row.id, row);
+    return rows;
+  }
+
+  const { error } = await supabase.from("designer_pitches").insert(rows);
+  if (error) throw new Error(error.message);
+  return rows;
+}
+
+export async function getDesignerPitchesByBrief(briefId: string): Promise<DesignerPitchRow[]> {
+  if (!supabase) {
+    return Array.from(getDemoStore().pitches.values())
+      .filter((p) => p.brief_id === briefId)
+      .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+  }
+  const { data, error } = await supabase
+    .from("designer_pitches")
+    .select("*")
+    .eq("brief_id", briefId)
+    .order("created_at", { ascending: true });
+  if (error) { console.error("[getDesignerPitchesByBrief]", error.message); return []; }
+  return data as DesignerPitchRow[];
+}
+
+export async function getDesignerPitchByToken(token: string): Promise<DesignerPitchRow | null> {
+  if (!supabase) return getDemoStore().pitches.get(token) ?? null;
+  const { data, error } = await supabase
+    .from("designer_pitches")
+    .select("*")
+    .eq("id", token)
+    .single();
+  if (error) return null;
+  return data as DesignerPitchRow;
+}
+
+export async function submitDesignerPitch(
+  token: string,
+  data: { approach: string; timeline: string; price: string; message?: string }
+): Promise<void> {
+  if (!supabase) {
+    const store = getDemoStore();
+    const pitch = store.pitches.get(token);
+    if (pitch) {
+      store.pitches.set(token, {
+        ...pitch,
+        approach: data.approach,
+        timeline: data.timeline,
+        price: data.price,
+        message: data.message ?? null,
+        status: "submitted",
+        submitted_at: new Date().toISOString(),
+      });
+    }
+    return;
+  }
+  const { error } = await supabase
+    .from("designer_pitches")
+    .update({
+      approach: data.approach,
+      timeline: data.timeline,
+      price: data.price,
+      message: data.message ?? null,
+      status: "submitted",
+      submitted_at: new Date().toISOString(),
+    })
+    .eq("id", token);
+  if (error) throw new Error(error.message);
 }

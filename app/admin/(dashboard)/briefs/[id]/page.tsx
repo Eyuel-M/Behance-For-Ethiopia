@@ -1,12 +1,18 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getClientBrief, getProjects } from "@/lib/supabase/admin-queries";
+import {
+  getClientBrief,
+  getProjects,
+  getDesignerApplications,
+  getDesignerPitchesByBrief,
+} from "@/lib/supabase/admin-queries";
 import {
   BRIEF_STATUS_LABELS,
   BRIEF_STATUS_COLORS,
   type BriefStatus,
 } from "@/lib/supabase/project-types";
 import { qualifyBrief, createProjectFromBrief, deleteBrief } from "@/app/actions/admin-briefs";
+import { assignDesigners, sendToClient } from "@/app/actions/admin-pitches";
 import ConfirmDeleteButton from "@/components/ConfirmDeleteButtonClient";
 
 export const dynamic = "force-dynamic";
@@ -43,7 +49,12 @@ function SectionCard({ title, children }: { title: string; children: React.React
 
 export default async function BriefDetailPage({ params }: Props) {
   const { id } = await params;
-  const [brief, projects] = await Promise.all([getClientBrief(id), getProjects()]);
+  const [brief, projects, allDesigners, pitches] = await Promise.all([
+    getClientBrief(id),
+    getProjects(),
+    getDesignerApplications(),
+    getDesignerPitchesByBrief(id),
+  ]);
   if (!brief) notFound();
 
   const status = brief.status as BriefStatus;
@@ -52,6 +63,15 @@ export default async function BriefDetailPage({ params }: Props) {
   const isTerminal = ["declined", "cancelled", "completed"].includes(status);
   const isActionable = !isTerminal;
   const canCreateProject = !existingProject && status === "qualified";
+
+  const approvedDesigners = allDesigners.filter((d) => d.status === "approved");
+  const assignedDesignerIds = new Set(pitches.map((p) => p.designer_id));
+  const availableDesigners = approvedDesigners.filter((d) => !assignedDesignerIds.has(d.id));
+  const canAssign = status === "qualified" && !existingProject && pitches.length < 3;
+  const submittedPitches = pitches.filter((p) => p.status === "submitted");
+  const canSendToClient = status === "qualified" && !existingProject && pitches.length > 0;
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
   async function handleQualify(formData: FormData) {
     "use server";
@@ -246,6 +266,165 @@ export default async function BriefDetailPage({ params }: Props) {
           >
             View project →
           </Link>
+        </div>
+      )}
+
+      {/* ── Assign Designers ── */}
+      {canAssign && availableDesigners.length > 0 && (
+        <div className="mt-5">
+          <div className="bg-white rounded-2xl border border-zinc-200 overflow-hidden">
+            <div className="px-6 py-4 border-b border-zinc-100 bg-zinc-50/50 flex items-center justify-between">
+              <h2 className="text-xs font-bold uppercase tracking-widest text-zinc-400">Assign Designers</h2>
+              <span className="text-xs text-zinc-400">{3 - pitches.length} slot{3 - pitches.length !== 1 ? "s" : ""} remaining</span>
+            </div>
+            <div className="p-6">
+              <p className="text-sm text-zinc-500 mb-5">
+                Select up to {3 - pitches.length} approved designer{3 - pitches.length !== 1 ? "s" : ""} to pitch for this brief.
+                Each will receive a unique link to submit their approach, timeline, and price.
+              </p>
+              <form action={assignDesigners} className="space-y-4">
+                <input type="hidden" name="briefId" value={id} />
+                {[0, 1, 2].filter((i) => i < (3 - pitches.length)).map((i) => (
+                  <div key={i}>
+                    <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest block mb-2">
+                      Designer {i + 1 + pitches.length}
+                    </label>
+                    <select
+                      name={`designer_${i}`}
+                      className="w-full rounded-xl border-2 border-zinc-200 px-4 py-3 text-sm font-semibold text-zinc-900 bg-white outline-none focus:border-[#0d2318] cursor-pointer"
+                    >
+                      <option value="">— Not assigned —</option>
+                      {availableDesigners.map((d) => (
+                        <option key={d.id} value={d.id}>
+                          {d.full_name} · {d.specialty} · {d.city}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                ))}
+                <button
+                  type="submit"
+                  className="px-6 py-2.5 rounded-full text-sm font-bold transition-colors cursor-pointer"
+                  style={{ backgroundColor: "#0d2318", color: "white" }}
+                >
+                  Assign & Generate Pitch Links →
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Designer Pitches ── */}
+      {pitches.length > 0 && (
+        <div className="mt-5">
+          <div className="bg-white rounded-2xl border border-zinc-200 overflow-hidden">
+            <div className="px-6 py-4 border-b border-zinc-100 bg-zinc-50/50 flex items-center justify-between">
+              <h2 className="text-xs font-bold uppercase tracking-widest text-zinc-400">Designer Pitches</h2>
+              <span className="text-xs text-zinc-400">{submittedPitches.length}/{pitches.length} submitted</span>
+            </div>
+            <div className="divide-y divide-zinc-100">
+              {pitches.map((pitch) => {
+                const designer = allDesigners.find((d) => d.id === pitch.designer_id);
+                const pitchUrl = `${siteUrl}/pitch/${pitch.id}`;
+                return (
+                  <div key={pitch.id} className="p-6">
+                    <div className="flex items-start justify-between gap-4 mb-3">
+                      <div>
+                        <p className="text-sm font-bold text-zinc-900">{designer?.full_name ?? "Unknown"}</p>
+                        <p className="text-xs text-zinc-400 mt-0.5">{designer?.specialty} · {designer?.city}</p>
+                      </div>
+                      <span className={`inline-flex items-center px-2.5 py-1 rounded-full border text-xs font-bold ${
+                        pitch.status === "submitted"
+                          ? "bg-green-50 text-green-700 border-green-100"
+                          : pitch.status === "declined"
+                          ? "bg-red-50 text-red-700 border-red-100"
+                          : "bg-blue-50 text-blue-700 border-blue-100"
+                      }`}>
+                        {pitch.status === "submitted" ? "Submitted" : pitch.status === "declined" ? "Declined" : "Awaiting pitch"}
+                      </span>
+                    </div>
+
+                    {pitch.status === "assigned" && (
+                      <div className="bg-zinc-50 rounded-xl p-3 border border-zinc-100 flex items-center justify-between gap-3">
+                        <p className="text-xs text-zinc-500 font-mono break-all">{pitchUrl}</p>
+                        <a
+                          href={pitchUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="shrink-0 text-xs font-bold text-[#0d2318] hover:text-[#6dcc46] transition-colors"
+                        >
+                          Open →
+                        </a>
+                      </div>
+                    )}
+
+                    {pitch.status === "submitted" && (
+                      <div className="space-y-3 mt-3">
+                        <div className="grid grid-cols-2 gap-3">
+                          <div className="bg-zinc-50 rounded-xl p-3 border border-zinc-100">
+                            <p className="text-xs text-zinc-400 mb-1">Price quoted</p>
+                            <p className="text-sm font-bold text-zinc-900">{pitch.price}</p>
+                          </div>
+                          <div className="bg-zinc-50 rounded-xl p-3 border border-zinc-100">
+                            <p className="text-xs text-zinc-400 mb-1">Timeline</p>
+                            <p className="text-sm font-bold text-zinc-900">{pitch.timeline}</p>
+                          </div>
+                        </div>
+                        <div className="bg-zinc-50 rounded-xl p-4 border border-zinc-100">
+                          <p className="text-xs text-zinc-400 mb-2">Approach</p>
+                          <p className="text-sm text-zinc-700 leading-relaxed whitespace-pre-wrap">{pitch.approach}</p>
+                        </div>
+                        {pitch.message && (
+                          <div className="bg-zinc-50 rounded-xl p-4 border border-zinc-100">
+                            <p className="text-xs text-zinc-400 mb-2">Additional message</p>
+                            <p className="text-sm text-zinc-700 leading-relaxed">{pitch.message}</p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Send to Client ── */}
+      {canSendToClient && (
+        <div className="mt-5">
+          <div className="rounded-2xl border-2 overflow-hidden" style={{ borderColor: "#0d2318" }}>
+            <div className="px-6 py-4 flex items-center justify-between gap-4 flex-wrap" style={{ backgroundColor: "#0d2318" }}>
+              <div className="flex items-center gap-3">
+                <span className="w-2 h-2 rounded-full bg-[#6dcc46] animate-pulse" />
+                <p className="text-sm font-bold text-white">Ready to Send to Client</p>
+              </div>
+              <span className="text-xs text-white/40">
+                {submittedPitches.length > 0
+                  ? `${submittedPitches.length} pitch${submittedPitches.length !== 1 ? "es" : ""} ready`
+                  : `${pitches.length} designer${pitches.length !== 1 ? "s" : ""} assigned`}
+              </span>
+            </div>
+            <div className="bg-white px-6 py-5">
+              <p className="text-sm text-zinc-500 mb-5">
+                This will create a project, build a proposal with the shortlisted designers, and send {brief.contact_name} at {brief.business_name} a link to review and choose.
+                {submittedPitches.length === 0 && (
+                  <span className="text-amber-600"> No pitches submitted yet — designers will still be presented but without their own content.</span>
+                )}
+              </p>
+              <form action={sendToClient}>
+                <input type="hidden" name="briefId" value={id} />
+                <button
+                  type="submit"
+                  className="px-6 py-3 rounded-full text-sm font-bold transition-colors cursor-pointer"
+                  style={{ backgroundColor: "#6dcc46", color: "#0d2318" }}
+                >
+                  Send Proposal to Client →
+                </button>
+              </form>
+            </div>
+          </div>
         </div>
       )}
 

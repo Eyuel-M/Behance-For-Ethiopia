@@ -37,6 +37,8 @@ export type MilestoneStatus =
   | "revision_requested"
   | "accepted";
 
+export type PitchStatus = "assigned" | "submitted" | "declined";
+
 export const BRIEF_STATUS_LABELS: Record<BriefStatus, string> = {
   new: "New",
   needs_clarification: "Needs clarification",
@@ -241,4 +243,17 @@ export type ProjectNoteRow = {
   content: string;
   is_internal: boolean;
   created_at: string;
+};
+
+export type DesignerPitchRow = {
+  id: string; // UUID — also the magic-link token
+  brief_id: string;
+  designer_id: string; // references designer_applications.id
+  approach: string | null;
+  timeline: string | null;
+  price: string | null;
+  message: string | null;
+  status: PitchStatus;
+  created_at: string;
+  submitted_at: string | null;
 };
