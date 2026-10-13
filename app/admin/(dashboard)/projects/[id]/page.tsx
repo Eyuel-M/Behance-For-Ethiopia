@@ -22,6 +22,7 @@ import {
   generateProLink,
   resendProposalToClient,
   postProjectMessage,
+  requestMilestonePayment,
 } from "@/app/actions/admin-projects";
 import ProposalDesignerPicker from "@/components/ProposalDesignerPicker";
 import MilestoneStatusSelect from "@/components/MilestoneStatusSelectClient";
@@ -161,6 +162,11 @@ export default async function ProjectDetailPage({ params, searchParams }: Props)
                             {m.payment_condition && (
                               <span className="text-xs font-medium text-amber-600">{m.payment_condition}</span>
                             )}
+                            {(m.amount ?? 0) > 0 && (
+                              <span className="text-xs font-bold text-green-700 bg-green-50 border border-green-100 px-2 py-0.5 rounded-full">
+                                ETB {(m.amount ?? 0).toLocaleString()}
+                              </span>
+                            )}
                           </div>
                         </div>
                         <div className="flex items-center gap-2 shrink-0">
@@ -179,6 +185,26 @@ export default async function ProjectDetailPage({ params, searchParams }: Props)
                           />
                         </div>
                       </div>
+                      {/* Request Payment button */}
+                      {m.payment_status === "pending" && (m.amount ?? 0) > 0 && (
+                        <div className="px-4 py-2 border-t border-zinc-100 flex items-center gap-2">
+                          <form action={requestMilestonePayment}>
+                            <input type="hidden" name="projectId" value={id} />
+                            <input type="hidden" name="milestoneId" value={m.id} />
+                            <button type="submit"
+                              className="text-xs font-semibold px-3 py-1.5 rounded-full bg-green-600 text-white hover:bg-green-700 transition-colors cursor-pointer">
+                              Send payment request to client →
+                            </button>
+                          </form>
+                          <span className="text-xs text-zinc-400">Sends email + notifies you on Telegram</span>
+                        </div>
+                      )}
+                      {m.payment_reference && (
+                        <div className="px-4 py-2 border-t border-green-100 bg-green-50/50 flex items-center gap-2">
+                          <span className="text-xs text-green-700 font-mono truncate">{m.payment_reference}</span>
+                          <span className="text-xs font-semibold text-green-600">✓ Chapa ref</span>
+                        </div>
+                      )}
                       {/* Delivery URL */}
                       {m.delivery_url && (
                         <div className="px-4 py-2 border-t border-amber-100 bg-amber-50/50 flex items-center gap-2">
@@ -216,8 +242,12 @@ export default async function ProjectDetailPage({ params, searchParams }: Props)
               </div>
               <input type="text" name="description" placeholder="Description (optional)"
                 className="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm text-zinc-900 bg-white outline-none focus:border-zinc-900 focus:ring-2 focus:ring-zinc-900/10" />
-              <input type="text" name="paymentCondition" placeholder="Payment condition (e.g. 50% on delivery)"
-                className="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm text-zinc-900 bg-white outline-none focus:border-zinc-900 focus:ring-2 focus:ring-zinc-900/10" />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <input type="text" name="paymentCondition" placeholder="Payment condition (e.g. 50% on delivery)"
+                  className="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm text-zinc-900 bg-white outline-none focus:border-zinc-900 focus:ring-2 focus:ring-zinc-900/10" />
+                <input type="number" name="amount" placeholder="Amount in ETB (e.g. 5000)" step="1" min="0"
+                  className="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm text-zinc-900 bg-white outline-none focus:border-zinc-900 focus:ring-2 focus:ring-zinc-900/10" />
+              </div>
               <button type="submit"
                 className="px-4 py-2 rounded-full bg-zinc-900 text-white text-xs font-semibold hover:bg-zinc-700 transition-colors cursor-pointer">
                 + Add milestone

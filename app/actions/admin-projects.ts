@@ -12,11 +12,12 @@ import {
   updateProjectStatus,
   resendProposal,
   getProject,
+  getMilestone,
   getDesignerApplication,
   createFeedbackRequest,
   addProjectMessage,
 } from "@/lib/supabase/admin-queries";
-import { sendFeedbackRequest } from "@/lib/email";
+import { sendFeedbackRequest, sendPaymentRequest } from "@/lib/email";
 import { notifyAdmin } from "@/lib/telegram";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://hireethiopiasbest.com";
@@ -51,6 +52,8 @@ export async function addProjectMilestone(formData: FormData): Promise<void> {
   const get = (k: string) => ((formData.get(k) as string | null) ?? "").trim();
   const projectId = get("projectId");
   const sortOrder = parseInt((formData.get("sortOrder") as string) || "0") || 0;
+  const rawAmount = get("amount");
+  const amount = rawAmount ? parseFloat(rawAmount) || undefined : undefined;
 
   await addMilestone({
     projectId,
@@ -58,8 +61,39 @@ export async function addProjectMilestone(formData: FormData): Promise<void> {
     description: get("description") || undefined,
     dueDate: get("dueDate") || undefined,
     paymentCondition: get("paymentCondition") || undefined,
+    amount,
     sortOrder,
   });
+
+  revalidatePath(`/admin/projects/${projectId}`);
+}
+
+export async function requestMilestonePayment(formData: FormData): Promise<void> {
+  const get = (k: string) => ((formData.get(k) as string | null) ?? "").trim();
+  const projectId = get("projectId");
+  const milestoneId = get("milestoneId");
+
+  const [project, milestone] = await Promise.all([
+    getProject(projectId),
+    getMilestone(milestoneId),
+  ]);
+  if (!project || !milestone) return;
+
+  const clientToken = project.client_token ?? project.id;
+  const projectUrl = `${SITE_URL}/project/${clientToken}`;
+
+  await sendPaymentRequest(
+    project.client_email,
+    project.client_name,
+    project.title,
+    milestone.title,
+    milestone.amount ?? 0,
+    projectUrl
+  ).catch(console.error);
+
+  notifyAdmin(
+    `📬 *Payment request sent*\nProject: ${project.title}\nMilestone: ${milestone.title}\nAmount: ETB ${(milestone.amount ?? 0).toLocaleString()}\nClient: ${project.client_name} <${project.client_email}>`
+  ).catch(() => {});
 
   revalidatePath(`/admin/projects/${projectId}`);
 }

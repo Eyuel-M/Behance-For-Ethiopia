@@ -5,6 +5,7 @@ import { MILESTONE_STATUS_LABELS } from "@/lib/supabase/project-types";
 import ClientReviewForm from "@/components/ClientReviewForm";
 import ProjectChat from "@/components/ProjectChat";
 import { postClientMessage } from "@/app/actions/client-project";
+import { initiateMilestonePayment } from "@/app/actions/client-payment";
 
 const CLIENT_STATUS_LABELS: Record<ProjectStatus, string> = {
   ready_to_start:       "Starting soon",
@@ -20,7 +21,7 @@ const CLIENT_STATUS_LABELS: Record<ProjectStatus, string> = {
 
 export const dynamic = "force-dynamic";
 
-type Props = { params: Promise<{ token: string }> };
+type Props = { params: Promise<{ token: string }>; searchParams: Promise<{ payment?: string }> };
 
 const STATUS_STEP: Record<ProjectStatus, number> = {
   ready_to_start: 0,
@@ -42,8 +43,9 @@ const MILESTONE_DOT: Record<MilestoneStatus, { color: string; label: string }> =
   accepted:           { color: "#6dcc46",               label: "Done" },
 };
 
-export default async function ClientProjectPage({ params }: Props) {
+export default async function ClientProjectPage({ params, searchParams }: Props) {
   const { token } = await params;
+  const { payment } = await searchParams;
   const [project] = await Promise.all([
     getProjectByClientToken(token),
     Promise.resolve(null),
@@ -110,6 +112,22 @@ export default async function ClientProjectPage({ params }: Props) {
             </span>
           )}
         </div>
+
+        {/* Payment banners */}
+        {payment === "success" && (
+          <div className="mb-6 rounded-xl px-5 py-4 flex items-start gap-3" style={{ backgroundColor: "rgba(109,204,70,0.1)", border: "1px solid rgba(109,204,70,0.3)" }}>
+            <span className="text-lg mt-0.5" style={{ color: "#6dcc46" }}>✓</span>
+            <div>
+              <p className="text-sm font-bold" style={{ color: "#6dcc46" }}>Payment received — thank you!</p>
+              <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.45)" }}>The milestone has been funded. Work will begin shortly.</p>
+            </div>
+          </div>
+        )}
+        {payment === "error" && (
+          <div className="mb-6 rounded-xl px-5 py-4" style={{ backgroundColor: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)" }}>
+            <p className="text-sm font-semibold" style={{ color: "#f87171" }}>Payment could not be processed. Please try again or contact us.</p>
+          </div>
+        )}
 
         {/* Progress bar (only shown when there are milestones) */}
         {ms.length > 0 && !isCancelled && (
@@ -209,6 +227,23 @@ export default async function ClientProjectPage({ params }: Props) {
                             </span>
                           )}
                         </div>
+                        {/* Fund Milestone CTA */}
+                        {m.payment_status === "pending" && (m.amount ?? 0) > 0 && !isCancelled && ms_status !== "accepted" && (
+                          <form action={initiateMilestonePayment} className="mt-3">
+                            <input type="hidden" name="milestoneId" value={m.id} />
+                            <input type="hidden" name="token" value={token} />
+                            <button
+                              type="submit"
+                              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-opacity hover:opacity-90 cursor-pointer"
+                              style={{ backgroundColor: "#6dcc46", color: "#0d2318" }}
+                            >
+                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                <rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/>
+                              </svg>
+                              Fund Milestone — ETB {(m.amount ?? 0).toLocaleString()}
+                            </button>
+                          </form>
+                        )}
                       </div>
                     </div>
                   );

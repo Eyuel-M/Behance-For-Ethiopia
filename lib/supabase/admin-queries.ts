@@ -459,6 +459,8 @@ const MOCK_MILESTONES: MilestoneRow[] = [
     status: "pending",
     payment_condition: "25% on acceptance",
     payment_status: "pending",
+    amount: 5000,
+    payment_reference: null,
     delivery_url: null,
     revision_note: null,
     sort_order: 0,
@@ -473,6 +475,8 @@ const MOCK_MILESTONES: MilestoneRow[] = [
     status: "pending",
     payment_condition: null,
     payment_status: "pending",
+    amount: 8000,
+    payment_reference: null,
     delivery_url: null,
     revision_note: null,
     sort_order: 1,
@@ -487,6 +491,8 @@ const MOCK_MILESTONES: MilestoneRow[] = [
     status: "pending",
     payment_condition: "50% on acceptance",
     payment_status: "pending",
+    amount: 15000,
+    payment_reference: null,
     delivery_url: null,
     revision_note: null,
     sort_order: 2,
@@ -501,6 +507,8 @@ const MOCK_MILESTONES: MilestoneRow[] = [
     status: "pending",
     payment_condition: "25% on handoff",
     payment_status: "pending",
+    amount: 7000,
+    payment_reference: null,
     delivery_url: null,
     revision_note: null,
     sort_order: 3,
@@ -525,6 +533,7 @@ export async function addMilestone(input: {
   description?: string;
   dueDate?: string;
   paymentCondition?: string;
+  amount?: number;
   sortOrder?: number;
 }): Promise<void> {
   if (!supabase) {
@@ -538,6 +547,8 @@ export async function addMilestone(input: {
       status: "pending",
       payment_condition: input.paymentCondition ?? null,
       payment_status: "pending",
+      amount: input.amount ?? null,
+      payment_reference: null,
       delivery_url: null,
       revision_note: null,
       sort_order: input.sortOrder ?? 0,
@@ -554,10 +565,26 @@ export async function addMilestone(input: {
     status: "pending",
     payment_condition: input.paymentCondition || null,
     payment_status: "pending",
+    amount: input.amount ?? null,
+    payment_reference: null,
     delivery_url: null,
     revision_note: null,
     sort_order: input.sortOrder ?? 0,
   });
+  if (error) throw new Error(error.message);
+}
+
+export async function markMilestoneFunded(milestoneId: string, txRef: string): Promise<void> {
+  if (!supabase) {
+    const store = getDemoStore();
+    const m = store.milestones.get(milestoneId);
+    if (m) store.milestones.set(milestoneId, { ...m, payment_status: "funded", payment_reference: txRef });
+    return;
+  }
+  const { error } = await supabase
+    .from("project_milestones")
+    .update({ payment_status: "funded", payment_reference: txRef })
+    .eq("id", milestoneId);
   if (error) throw new Error(error.message);
 }
 

@@ -235,6 +235,8 @@ export type MilestoneRow = {
   status: MilestoneStatus;
   payment_condition: string | null;
   payment_status: PaymentStatus;
+  amount: number | null;
+  payment_reference: string | null;
   delivery_url: string | null;
   revision_note: string | null;
   sort_order: number;

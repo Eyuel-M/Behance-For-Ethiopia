@@ -84,9 +84,46 @@ create table if not exists project_milestones (
   title text not null,
   description text,
   due_date date,
-  status text not null default 'pending',
+  status text not null default 'pending'
+    check (status in ('pending','in_progress','submitted','revision_requested','accepted')),
   payment_condition text,
+  payment_status text not null default 'pending'
+    check (payment_status in ('pending','funded','released')),
+  amount decimal(10,2),
+  payment_reference text,
+  delivery_url text,
+  revision_note text,
   sort_order integer not null default 0,
+  created_at timestamptz not null default now()
+);
+
+-- ─── Designer feedback (client reviews of completed projects) ─────────────────
+
+create table if not exists designer_feedback (
+  id uuid primary key default gen_random_uuid(),
+  designer_application_id uuid references designer_applications(id) on delete set null,
+  project_id uuid references projects(id) on delete set null,
+  project_title text,
+  client_name text,
+  client_email text,
+  quality_rating integer check (quality_rating between 1 and 5),
+  communication_rating integer check (communication_rating between 1 and 5),
+  delivery_rating integer check (delivery_rating between 1 and 5),
+  would_rehire text check (would_rehire in ('yes','maybe','no')),
+  comments text,
+  status text not null default 'pending' check (status in ('pending','submitted')),
+  created_at timestamptz not null default now(),
+  submitted_at timestamptz
+);
+
+-- ─── Project messages (in-platform chat) ─────────────────────────────────────
+
+create table if not exists project_messages (
+  id uuid primary key default gen_random_uuid(),
+  project_id uuid not null references projects(id) on delete cascade,
+  author text not null check (author in ('admin','client','professional')),
+  author_name text not null,
+  content text not null,
   created_at timestamptz not null default now()
 );
 
@@ -110,6 +147,8 @@ alter table designer_applications enable row level security;
 alter table projects enable row level security;
 alter table project_milestones enable row level security;
 alter table project_notes enable row level security;
+alter table designer_feedback enable row level security;
+alter table project_messages enable row level security;
 
 -- Allow service role full access (used by the Next.js server actions)
 create policy "service_role_full_access" on client_applications
@@ -125,4 +164,10 @@ create policy "service_role_full_access" on project_milestones
   for all using (true) with check (true);
 
 create policy "service_role_full_access" on project_notes
+  for all using (true) with check (true);
+
+create policy "service_role_full_access" on designer_feedback
+  for all using (true) with check (true);
+
+create policy "service_role_full_access" on project_messages
   for all using (true) with check (true);

@@ -103,3 +103,24 @@ export async function sendMilestoneUpdate(to: string, clientName: string, projec
     ${btn("View project", projectUrl)}
   `));
 }
+
+export async function sendPaymentRequest(
+  to: string,
+  clientName: string,
+  projectTitle: string,
+  milestoneName: string,
+  amount: number,
+  projectUrl: string
+) {
+  const amountFormatted = `ETB ${amount.toLocaleString()}`;
+  return send(to, `Payment ready: ${milestoneName} — Hire Ethiopia's Best`, base(`
+    <h1 style="margin:0 0 8px;font-size:22px;font-weight:900;color:#111827">Milestone payment ready</h1>
+    <p style="margin:0 0 16px;font-size:15px;color:#6b7280;line-height:1.6">
+      Hi ${clientName}, the milestone <strong style="color:#111827">${milestoneName}</strong> on your project <strong style="color:#111827">${projectTitle}</strong> is ready to be funded.
+    </p>
+    <p style="margin:0 0 24px;font-size:32px;font-weight:900;color:#0d2318;letter-spacing:-0.02em">${amountFormatted}</p>
+    <p style="margin:0 0 4px;font-size:14px;color:#6b7280">Payment is processed securely via Chapa. Click below to fund this milestone:</p>
+    ${btn("Fund Milestone", projectUrl)}
+    <p style="margin:24px 0 0;font-size:13px;color:#a1a1aa">Questions? Reply to this email or write to <a href="mailto:info@hireethiopiasbest.com" style="color:#6dcc46;text-decoration:none">info@hireethiopiasbest.com</a>.</p>
+  `));
+}
