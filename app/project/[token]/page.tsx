@@ -1,8 +1,10 @@
 import { notFound } from "next/navigation";
-import { getProjectByClientToken, getProjectMilestones, getFeedbackByProject } from "@/lib/supabase/admin-queries";
+import { getProjectByClientToken, getProjectMilestones, getFeedbackByProject, getProjectMessages } from "@/lib/supabase/admin-queries";
 import type { ProjectStatus, MilestoneStatus } from "@/lib/supabase/project-types";
 import { MILESTONE_STATUS_LABELS } from "@/lib/supabase/project-types";
 import ClientReviewForm from "@/components/ClientReviewForm";
+import ProjectChat from "@/components/ProjectChat";
+import { postClientMessage } from "@/app/actions/client-project";
 
 const CLIENT_STATUS_LABELS: Record<ProjectStatus, string> = {
   ready_to_start:       "Starting soon",
@@ -42,14 +44,17 @@ const MILESTONE_DOT: Record<MilestoneStatus, { color: string; label: string }> =
 
 export default async function ClientProjectPage({ params }: Props) {
   const { token } = await params;
-  const [project, milestones] = await Promise.all([
+  const [project] = await Promise.all([
     getProjectByClientToken(token),
     Promise.resolve(null),
   ]);
   if (!project) notFound();
 
-  const ms = await getProjectMilestones(project.id);
-  const existingReview = await getFeedbackByProject(project.id);
+  const [ms, existingReview, messages] = await Promise.all([
+    getProjectMilestones(project.id),
+    getFeedbackByProject(project.id),
+    getProjectMessages(project.id),
+  ]);
 
   const status = project.status as ProjectStatus;
   const step = STATUS_STEP[status] ?? 0;
@@ -291,9 +296,25 @@ export default async function ClientProjectPage({ params }: Props) {
           )}
         </div>
 
+        {/* ── Chat ──────────────────────────────────────────── */}
+        <div className="mb-8">
+          <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: "rgba(255,255,255,0.3)" }}>
+            Messages
+          </p>
+          <ProjectChat
+            projectId={project.id}
+            viewerRole="client"
+            viewerName={project.client_name}
+            initialMessages={messages}
+            sendAction={postClientMessage}
+            extraFields={{ token }}
+            dark={true}
+          />
+        </div>
+
         {/* Footer note */}
         <p className="text-xs text-center mt-8" style={{ color: "rgba(255,255,255,0.2)" }}>
-          Questions? Reply to the email you received from our team.
+          Questions? Use the chat above or reply to the email you received from our team.
         </p>
       </div>
     </div>

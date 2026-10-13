@@ -7,6 +7,7 @@ import {
   getDesignerApplications,
   getProposalByProject,
   getProposalByToken,
+  getProjectMessages,
 } from "@/lib/supabase/admin-queries";
 import {
   PROJECT_STATUS_LABELS,
@@ -20,11 +21,13 @@ import {
   postProjectNote,
   generateProLink,
   resendProposalToClient,
+  postProjectMessage,
 } from "@/app/actions/admin-projects";
 import ProposalDesignerPicker from "@/components/ProposalDesignerPicker";
 import MilestoneStatusSelect from "@/components/MilestoneStatusSelectClient";
 import MilestonePaymentSelect from "@/components/MilestonePaymentSelectClient";
 import ProjectStatusSelect from "@/components/ProjectStatusSelectClient";
+import ProjectChat from "@/components/ProjectChat";
 
 export const dynamic = "force-dynamic";
 
@@ -33,13 +36,14 @@ type Props = { params: Promise<{ id: string }>; searchParams: Promise<{ proposal
 export default async function ProjectDetailPage({ params, searchParams }: Props) {
   const { id } = await params;
   const { proposalToken, proToken } = await searchParams;
-  const [project, milestones, notes, allDesigners, existingProposal, tokenProposal] = await Promise.all([
+  const [project, milestones, notes, allDesigners, existingProposal, tokenProposal, messages] = await Promise.all([
     getProject(id),
     getProjectMilestones(id),
     getProjectNotes(id),
     getDesignerApplications(),
     getProposalByProject(id),
     proposalToken ? getProposalByToken(proposalToken) : Promise.resolve(null),
+    getProjectMessages(id),
   ]);
   if (!project) notFound();
 
@@ -444,6 +448,23 @@ export default async function ProjectDetailPage({ params, searchParams }: Props)
           {!activeProposal && approvedDesigners.length > 0 && (
             <ProposalDesignerPicker projectId={id} designers={approvedDesigners} />
           )}
+        </Card>
+      </div>
+
+      {/* ── Project chat ─────────────────────────────────────── */}
+      <div className="mt-5 mb-2">
+        <Card title="Project chat">
+          <p className="text-xs text-zinc-500 mb-4 leading-relaxed">
+            Messages are visible to the team, client, and designer. All parties are notified via email.
+          </p>
+          <ProjectChat
+            projectId={id}
+            viewerRole="admin"
+            viewerName="Team"
+            initialMessages={messages}
+            sendAction={postProjectMessage}
+            dark={false}
+          />
         </Card>
       </div>
     </div>

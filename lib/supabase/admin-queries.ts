@@ -10,6 +10,8 @@ import type {
   ProjectNoteRow,
   ClientProposalRow,
   DesignerPitchRow,
+  ProjectMessageRow,
+  MessageAuthor,
 } from "./project-types";
 
 // ─── Client briefs ────────────────────────────────────────────────────────────
@@ -994,6 +996,7 @@ type DemoStore = {
   applications: Map<string, DesignerApplicationRow>;
   feedback: Map<string, DesignerFeedbackRow>;
   pitches: Map<string, DesignerPitchRow>;
+  messages: Map<string, ProjectMessageRow>;
   otps: Map<string, OtpRecord>;
   sessions: Map<string, SessionRecord>;
 };
@@ -1022,6 +1025,7 @@ function scheduleSave(store: DemoStore) {
           applications: Array.from(store.applications.entries()),
           feedback:     Array.from(store.feedback.entries()),
           pitches:      Array.from(store.pitches.entries()),
+          messages:     Array.from(store.messages.entries()),
         }),
         "utf8"
       );
@@ -1057,6 +1061,7 @@ function getDemoStore(): DemoStore {
       applications: mk("applications", MOCK_APPLICATIONS.map((a) => [a.id, { ...a }])),
       feedback:     mk("feedback",     MOCK_FEEDBACK.map((f) => [f.id, { ...f }])),
       pitches:      mk("pitches",      []),
+      messages:     mk("messages",     []),
       otps:         new Map(),
       sessions:     new Map(),
     };
@@ -1551,4 +1556,56 @@ export async function submitDesignerPitch(
     })
     .eq("id", token);
   if (error) throw new Error(error.message);
+}
+
+// ─── Project messages (in-platform chat) ─────────────────────────────────────
+
+export async function getProjectMessages(projectId: string): Promise<ProjectMessageRow[]> {
+  if (!supabase) {
+    return Array.from(getDemoStore().messages.values())
+      .filter((m) => m.project_id === projectId)
+      .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+  }
+  const { data, error } = await supabase
+    .from("project_messages")
+    .select("*")
+    .eq("project_id", projectId)
+    .order("created_at", { ascending: true });
+  if (error) { console.error("[getProjectMessages]", error.message); return []; }
+  return data as ProjectMessageRow[];
+}
+
+export async function addProjectMessage(input: {
+  projectId: string;
+  author: MessageAuthor;
+  authorName: string;
+  content: string;
+}): Promise<ProjectMessageRow> {
+  const id = crypto.randomUUID();
+  const row: ProjectMessageRow = {
+    id,
+    project_id: input.projectId,
+    author: input.author,
+    author_name: input.authorName,
+    content: input.content,
+    created_at: new Date().toISOString(),
+  };
+  if (!supabase) {
+    getDemoStore().messages.set(id, row);
+    return row;
+  }
+  const { error } = await supabase.from("project_messages").insert(row);
+  if (error) throw new Error(error.message);
+  return row;
+}
+
+export async function getMilestone(id: string): Promise<MilestoneRow | null> {
+  if (!supabase) return getDemoStore().milestones.get(id) ?? null;
+  const { data, error } = await supabase
+    .from("project_milestones")
+    .select("*")
+    .eq("id", id)
+    .single();
+  if (error) return null;
+  return data as MilestoneRow;
 }

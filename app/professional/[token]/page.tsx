@@ -1,8 +1,9 @@
 import { notFound } from "next/navigation";
-import { getProfessionalProject, getProjectMilestones, getProposalByProject } from "@/lib/supabase/admin-queries";
+import { getProfessionalProject, getProjectMilestones, getProposalByProject, getProjectMessages, getDesignerApplication } from "@/lib/supabase/admin-queries";
 import type { ProjectStatus, MilestoneStatus } from "@/lib/supabase/project-types";
 import { MILESTONE_STATUS_LABELS } from "@/lib/supabase/project-types";
-import { submitMilestone, resubmitProject } from "@/app/actions/professional-portal";
+import { submitMilestone, resubmitProject, postProfessionalMessage } from "@/app/actions/professional-portal";
+import ProjectChat from "@/components/ProjectChat";
 
 export const dynamic = "force-dynamic";
 
@@ -89,9 +90,12 @@ export default async function ProfessionalPortalPage({ params }: Props) {
   const project = await getProfessionalProject(token);
   if (!project) notFound();
 
-  const [milestones, proposal] = await Promise.all([
+  const designerId = project.assigned_professional_ids?.[0] ?? null;
+  const [milestones, proposal, messages, designer] = await Promise.all([
     getProjectMilestones(project.id),
     getProposalByProject(project.id),
+    getProjectMessages(project.id),
+    designerId ? getDesignerApplication(designerId) : Promise.resolve(null),
   ]);
   const status = project.status as ProjectStatus;
   const isCancelled = status === "cancelled";
@@ -437,9 +441,25 @@ export default async function ProfessionalPortalPage({ params }: Props) {
           </div>
         )}
 
+        {/* Chat */}
+        <div style={{ marginBottom: 32 }}>
+          <p style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "#9ca3af", marginBottom: 12 }}>
+            Messages
+          </p>
+          <ProjectChat
+            projectId={project.id}
+            viewerRole="professional"
+            viewerName={designer?.full_name ?? "Designer"}
+            initialMessages={messages}
+            sendAction={postProfessionalMessage}
+            extraFields={{ token, projectId: project.id }}
+            dark={false}
+          />
+        </div>
+
         {/* Footer */}
         <p style={{ fontSize: 11, textAlign: "center", color: "#9ca3af", marginTop: 48, lineHeight: 1.7 }}>
-          Questions about your project? Reply to the email you received from our team.<br />
+          Questions? Use the chat above or reply to the email you received from our team.<br />
           <span style={{ color: "#d1d5db" }}>Hire Ethiopia&apos;s Best</span>
         </p>
       </div>

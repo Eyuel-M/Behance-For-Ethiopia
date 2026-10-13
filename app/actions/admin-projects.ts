@@ -11,7 +11,15 @@ import {
   updateMilestonePayment,
   updateProjectStatus,
   resendProposal,
+  getProject,
+  getDesignerApplication,
+  createFeedbackRequest,
+  addProjectMessage,
 } from "@/lib/supabase/admin-queries";
+import { sendFeedbackRequest } from "@/lib/email";
+import { notifyAdmin } from "@/lib/telegram";
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://hireethiopiasbest.com";
 
 export async function createProjectFromScratch(formData: FormData): Promise<void> {
   const get = (k: string) => ((formData.get(k) as string | null) ?? "").trim();
@@ -92,6 +100,37 @@ export async function changeProjectStatus(formData: FormData): Promise<void> {
   const status = ((formData.get("status") as string | null) ?? "").trim() as import("@/lib/supabase/project-types").ProjectStatus;
   const notes = ((formData.get("notes") as string | null) ?? "").trim() || undefined;
   await updateProjectStatus(projectId, status, notes);
+
+  if (status === "completed") {
+    const project = await getProject(projectId);
+    if (project) {
+      const designerId = project.assigned_professional_ids?.[0] ?? null;
+      const designer = designerId ? await getDesignerApplication(designerId) : null;
+      const designerName = designer?.full_name ?? "your designer";
+      const token = await createFeedbackRequest({
+        designerApplicationId: designerId ?? "unknown",
+        projectTitle: project.title,
+        clientName: project.client_name,
+        clientEmail: project.client_email,
+      });
+      const feedbackUrl = `${SITE_URL}/feedback/${token}`;
+      sendFeedbackRequest(project.client_email, designerName, feedbackUrl).catch(() => {});
+      notifyAdmin(
+        `✅ <b>Project completed</b>\nProject: ${project.title}\nClient: ${project.client_name}\nFeedback link sent to ${project.client_email}`
+      ).catch(() => {});
+    }
+  }
+
+  revalidatePath(`/admin/projects/${projectId}`);
+}
+
+export async function postProjectMessage(formData: FormData): Promise<void> {
+  const projectId = ((formData.get("projectId") as string | null) ?? "").trim();
+  const content = ((formData.get("content") as string | null) ?? "").trim();
+  const authorName = ((formData.get("authorName") as string | null) ?? "Admin").trim();
+  if (!content) return;
+  await addProjectMessage({ projectId, author: "admin", authorName, content });
+  notifyAdmin(`💬 <b>Admin message</b>\nProject ID: ${projectId}\n${authorName}: ${content}`).catch(() => {});
   revalidatePath(`/admin/projects/${projectId}`);
 }
 

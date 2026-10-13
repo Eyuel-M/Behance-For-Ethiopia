@@ -262,3 +262,14 @@ export type DesignerPitchRow = {
   created_at: string;
   submitted_at: string | null;
 };
+
+export type MessageAuthor = "admin" | "client" | "professional";
+
+export type ProjectMessageRow = {
+  id: string;
+  project_id: string;
+  author: MessageAuthor;
+  author_name: string;
+  content: string;
+  created_at: string;
+};
