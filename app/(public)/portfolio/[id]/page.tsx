@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getPortfolioProject, getPortfolioProjects } from "@/lib/content/store";
 import { FadeUp } from "@/components/Motion";
@@ -142,8 +143,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ id: 
       {/* ── Hero ── */}
       <div className="relative min-h-[92vh] flex flex-col" style={{ background: project.gradient }}>
         {project.coverImage && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={project.coverImage} alt={project.title} className="absolute inset-0 w-full h-full object-cover" />
+          <Image src={project.coverImage} alt={project.title} fill priority className="object-cover" sizes="100vw" />
         )}
         <GeoOverlay />
 
@@ -291,8 +291,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ id: 
       <div className="relative overflow-hidden" style={{ height: "clamp(380px, 55vw, 580px)" }}>
         <div className="absolute inset-0" style={{ background: project.gradient }} />
         {project.images?.[0] ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={project.images[0]} alt="" className="absolute inset-0 w-full h-full object-cover" aria-hidden="true" />
+          <Image src={project.images[0]} alt="" fill className="object-cover" sizes="100vw" aria-hidden="true" />
         ) : (
           <PresentationOverlay />
         )}
@@ -348,8 +347,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ id: 
         <div className="relative overflow-hidden" style={{ minHeight: "clamp(240px, 36vw, 440px)" }}>
           <div className="absolute inset-0" style={{ background: project.gradient }} />
           {project.images?.[1] ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={project.images[1]} alt="" className="absolute inset-0 w-full h-full object-cover" aria-hidden="true" />
+            <Image src={project.images[1]} alt="" fill className="object-cover" sizes="50vw" aria-hidden="true" />
           ) : (
             <ScreenOverlayLeft />
           )}
@@ -371,8 +369,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ id: 
             style={{ background: project.gradient, filter: "brightness(0.75) saturate(1.2)" }}
           />
           {project.images?.[2] ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={project.images[2]} alt="" className="absolute inset-0 w-full h-full object-cover" aria-hidden="true" />
+            <Image src={project.images[2]} alt="" fill className="object-cover" sizes="50vw" aria-hidden="true" />
           ) : (
             <ScreenOverlayRight />
           )}
@@ -411,11 +408,9 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ id: 
       <div className="relative overflow-hidden" style={{ height: "clamp(240px, 30vw, 360px)" }}>
         <div className="absolute inset-0" style={{ background: project.gradient }} />
         {project.images?.[3] ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={project.images[3]} alt="" className="absolute inset-0 w-full h-full object-cover" aria-hidden="true" />
+          <Image src={project.images[3]} alt="" fill className="object-cover" sizes="100vw" aria-hidden="true" />
         ) : project.images?.[0] ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={project.images[0]} alt="" className="absolute inset-0 w-full h-full object-cover" aria-hidden="true" />
+          <Image src={project.images[0]} alt="" fill className="object-cover" sizes="100vw" aria-hidden="true" />
         ) : (
           <TextureOverlay />
         )}
@@ -491,8 +486,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ id: 
                     style={{ background: p.gradient }}
                   >
                     {p.coverImage && (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={p.coverImage} alt={p.title} className="absolute inset-0 w-full h-full object-cover" />
+                      <Image src={p.coverImage} alt={p.title} fill className="object-cover" sizes="(max-width: 640px) 100vw, 33vw" />
                     )}
                     <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 60%)" }} />
                     <span className="absolute top-4 left-4 text-white/30 text-xs font-mono tabular-nums">{p.num}</span>

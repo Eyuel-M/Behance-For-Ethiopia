@@ -235,12 +235,12 @@ const DEFAULT_PORTFOLIO: PortfolioProject[] = [
     tags: ["Motion", "Animation", "Video"],
     gradient: "linear-gradient(155deg, #041210 0%, #0a3d34 40%, #1a9080 80%, #30ccb8 100%)",
     year: "2024", published: true, sortOrder: 5,
-    coverImage: "https://images.unsplash.com/photo-1536240478700-b869ad10e128?w=1600&h=900&q=80&auto=format&fit=crop",
+    coverImage: "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=1600&h=900&q=80&auto=format&fit=crop",
     images: [
-      "https://images.unsplash.com/photo-1551503766-ac63dfa6401c?w=1600&h=900&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1574717024453-354b755973d0?w=1600&h=900&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=1600&h=900&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1626785774573-4b799315345d?w=1600&h=900&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1535016120720-40c646be5580?w=1600&h=900&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=1600&h=900&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=1600&h=900&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=1600&h=900&q=80&auto=format&fit=crop",
     ],
   },
   {
