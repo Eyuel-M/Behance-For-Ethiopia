@@ -83,43 +83,13 @@ export default function ProjectChat({
 
     return (
       <div style={{
-        borderRadius: 16,
-        border: "1px solid #e5e7eb",
+        border: "none",
         backgroundColor: "#ffffff",
-        boxShadow: "0 4px 24px rgba(0,0,0,0.07)",
         overflow: "hidden",
         display: "flex",
         flexDirection: "column",
-        height: 560,
+        height: "100%",
       }}>
-        {/* Header */}
-        <div style={{
-          padding: "14px 20px",
-          borderBottom: "1px solid #f0f0f0",
-          backgroundColor: "#fafafa",
-          display: "flex",
-          alignItems: "center",
-          gap: 12,
-          flexShrink: 0,
-        }}>
-          <div style={{
-            width: 38, height: 38, borderRadius: "50%",
-            backgroundColor: accentLight,
-            display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 14, fontWeight: 800, color: accentText, flexShrink: 0,
-          }}>
-            {getInitials(viewerName)}
-          </div>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <p style={{ fontSize: 14, fontWeight: 700, color: "#111827", margin: 0 }}>{viewerName}</p>
-            <p style={{ fontSize: 11, color: "#9ca3af", margin: 0 }}>Project conversation</p>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
-            <span style={{ width: 7, height: 7, borderRadius: "50%", backgroundColor: "#22c55e", display: "inline-block" }} />
-            <span style={{ fontSize: 11, color: "#6b7280", fontWeight: 500 }}>Live</span>
-          </div>
-        </div>
-
         {/* Message list */}
         <div style={{ flex: 1, overflowY: "auto", padding: "20px 24px" }}>
           {initialMessages.length === 0 ? (

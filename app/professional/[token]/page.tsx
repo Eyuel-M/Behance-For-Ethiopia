@@ -108,11 +108,11 @@ export default async function ProfessionalPortalPage({ params }: Props) {
   const changeNote = proposal?.client_note ?? null;
 
   return (
-    <div style={{ minHeight: "100vh", backgroundColor: "#f8fafc", fontFamily: "inherit" }}>
+    <div style={{ height: "100dvh", display: "flex", flexDirection: "column", backgroundColor: "#f8fafc", fontFamily: "inherit", overflow: "hidden" }}>
 
       {/* Top nav */}
-      <nav style={{ backgroundColor: "#ffffff", borderBottom: "1px solid #e5e7eb", position: "sticky", top: 0, zIndex: 10 }}>
-        <div style={{ maxWidth: 700, margin: "0 auto", padding: "0 20px", height: 54, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+      <nav style={{ backgroundColor: "#ffffff", borderBottom: "1px solid #e5e7eb", flexShrink: 0, zIndex: 10 }}>
+        <div style={{ padding: "0 24px", height: 54, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <div style={{ width: 22, height: 22, borderRadius: 6, background: "linear-gradient(135deg, #3b82f6, #6366f1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
               <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
@@ -125,7 +125,11 @@ export default async function ProfessionalPortalPage({ params }: Props) {
         </div>
       </nav>
 
-      <div style={{ maxWidth: 700, margin: "0 auto", padding: "0 20px 48px" }}>
+      {/* Two-column body */}
+      <div style={{ flex: 1, display: "flex", overflow: "hidden" }}>
+
+      {/* ── Left sidebar: project info ── */}
+      <div style={{ width: 400, minWidth: 300, flexShrink: 0, overflowY: "auto", borderRight: "1px solid #e5e7eb", backgroundColor: "#ffffff", padding: "28px 24px 40px" }}>
 
         {/* Hero */}
         <div style={{ paddingTop: 40, paddingBottom: 32, borderBottom: "1px solid #e5e7eb" }}>
@@ -459,24 +463,34 @@ export default async function ProfessionalPortalPage({ params }: Props) {
           </div>
         )}
 
+        {/* Sidebar footer */}
+        <p style={{ fontSize: 11, color: "#d1d5db", marginTop: 40, lineHeight: 1.7, textAlign: "center" }}>
+          Hire Ethiopia&apos;s Best · Professional Portal
+        </p>
       </div>
 
-      {/* ── Chat section — full-width, prominent ── */}
-      <div style={{ borderTop: "1px solid #e5e7eb", backgroundColor: "#f0f6ff" }}>
-        <div style={{ maxWidth: 960, margin: "0 auto", padding: "36px 24px 56px" }}>
-          {/* Section header */}
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
-            <div style={{ width: 32, height: 32, borderRadius: 10, background: "linear-gradient(135deg, #3b82f6, #6366f1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-              </svg>
-            </div>
-            <div>
-              <p style={{ fontSize: 16, fontWeight: 800, color: "#111827", margin: 0, letterSpacing: "-0.01em" }}>Project Messages</p>
-              <p style={{ fontSize: 12, color: "#6b7280", margin: 0 }}>Communicate with the client and our team</p>
-            </div>
-          </div>
+      {/* ── Right panel: full-height chat ── */}
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden", backgroundColor: "#f0f6ff" }}>
 
+        {/* Chat panel header */}
+        <div style={{ padding: "14px 24px", borderBottom: "1px solid #e0eaff", backgroundColor: "#eaf2ff", display: "flex", alignItems: "center", gap: 12, flexShrink: 0 }}>
+          <div style={{ width: 30, height: 30, borderRadius: 9, background: "linear-gradient(135deg, #3b82f6, #6366f1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            </svg>
+          </div>
+          <div>
+            <p style={{ fontSize: 14, fontWeight: 800, color: "#1e40af", margin: 0 }}>Project Messages</p>
+            <p style={{ fontSize: 11, color: "#6b7280", margin: 0 }}>Communicate with the client and our team</p>
+          </div>
+          <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 6 }}>
+            <span style={{ width: 7, height: 7, borderRadius: "50%", backgroundColor: "#22c55e", display: "inline-block" }} />
+            <span style={{ fontSize: 11, color: "#6b7280", fontWeight: 500 }}>Live · updates every 15s</span>
+          </div>
+        </div>
+
+        {/* Chat fills remaining height */}
+        <div style={{ flex: 1, overflow: "hidden" }}>
           <ProjectChat
             projectId={project.id}
             viewerRole="professional"
@@ -490,13 +504,7 @@ export default async function ProfessionalPortalPage({ params }: Props) {
         </div>
       </div>
 
-      {/* Footer */}
-      <div style={{ maxWidth: 700, margin: "0 auto", padding: "0 20px 48px" }}>
-        <p style={{ fontSize: 11, textAlign: "center", color: "#9ca3af", marginTop: 32, lineHeight: 1.7 }}>
-          Questions? Use the chat above or reply to the email you received from our team.<br />
-          <span style={{ color: "#d1d5db" }}>Hire Ethiopia&apos;s Best</span>
-        </p>
-      </div>
+      </div>{/* end two-column body */}
     </div>
   );
 }
