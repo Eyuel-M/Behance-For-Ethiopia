@@ -274,4 +274,8 @@ export type ProjectMessageRow = {
   author_name: string;
   content: string;
   created_at: string;
+  attachment_url: string | null;
+  attachment_name: string | null;
+  attachment_size: number | null;
+  attachment_type: string | null;
 };

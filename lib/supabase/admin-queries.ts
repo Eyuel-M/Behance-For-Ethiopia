@@ -1614,6 +1614,10 @@ export async function addProjectMessage(input: {
   author: MessageAuthor;
   authorName: string;
   content: string;
+  attachmentUrl?: string | null;
+  attachmentName?: string | null;
+  attachmentSize?: number | null;
+  attachmentType?: string | null;
 }): Promise<ProjectMessageRow> {
   const id = crypto.randomUUID();
   const row: ProjectMessageRow = {
@@ -1623,6 +1627,10 @@ export async function addProjectMessage(input: {
     author_name: input.authorName,
     content: input.content,
     created_at: new Date().toISOString(),
+    attachment_url: input.attachmentUrl ?? null,
+    attachment_name: input.attachmentName ?? null,
+    attachment_size: input.attachmentSize ?? null,
+    attachment_type: input.attachmentType ?? null,
   };
   if (!supabase) {
     getDemoStore().messages.set(id, row);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import type { ProjectMessageRow, MessageAuthor } from "@/lib/supabase/project-types";
 
@@ -27,8 +27,169 @@ const ROLE_LABELS: Record<MessageAuthor, string> = {
   professional: "Designer",
 };
 
+// Accepted file types
+const ACCEPTED_TYPES = [
+  // Design source
+  ".ai", ".psd", ".xd", ".sketch", ".fig", ".eps", ".svg",
+  ".indd", ".cdr", ".afdesign", ".afpub", ".afphoto",
+  // Images
+  ".png", ".jpg", ".jpeg", ".gif", ".webp", ".tiff", ".bmp", ".heic", ".avif",
+  // PDF
+  ".pdf",
+  // Archives
+  ".zip", ".rar", ".7z",
+].join(",");
+
+const MAX_FILE_SIZE = 25 * 1024 * 1024; // 25 MB
+
+function formatBytes(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+function getFileIcon(type: string | null, name: string | null): string {
+  const ext = (name ?? "").split(".").pop()?.toLowerCase() ?? "";
+  if (type?.startsWith("image/")) return "🖼";
+  if (type === "application/pdf" || ext === "pdf") return "📄";
+  if (["zip", "rar", "7z"].includes(ext)) return "🗜";
+  if (["ai", "psd", "xd", "sketch", "fig", "indd", "cdr", "afdesign", "afpub", "afphoto"].includes(ext)) return "🎨";
+  if (["svg", "eps"].includes(ext)) return "✏";
+  return "📎";
+}
+
+function isImage(type: string | null, name: string | null): boolean {
+  if (type?.startsWith("image/")) return true;
+  const ext = (name ?? "").split(".").pop()?.toLowerCase() ?? "";
+  return ["png", "jpg", "jpeg", "gif", "webp", "tiff", "bmp", "heic", "avif"].includes(ext);
+}
+
 function getInitials(name: string) {
   return name.split(" ").map((n) => n[0]).slice(0, 2).join("").toUpperCase();
+}
+
+// ── Attachment preview in message bubble ──────────────────────────────────────
+function AttachmentBubble({ url, name, size, type, accentColor }: {
+  url: string | null;
+  name: string | null;
+  size: number | null;
+  type: string | null;
+  accentColor: string;
+}) {
+  if (!name) return null;
+  const img = isImage(type, name) && url;
+
+  if (img) {
+    return (
+      <a href={url!} target="_blank" rel="noopener noreferrer" style={{ display: "block", marginTop: 6 }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={url!}
+          alt={name}
+          style={{
+            maxWidth: 240,
+            maxHeight: 180,
+            borderRadius: 8,
+            display: "block",
+            border: "1px solid rgba(0,0,0,0.08)",
+            objectFit: "cover",
+          }}
+        />
+        <p style={{ margin: "4px 0 0", fontSize: 11, color: "#9ca3af" }}>{name} · {size ? formatBytes(size) : ""}</p>
+      </a>
+    );
+  }
+
+  return (
+    <div style={{
+      display: "flex",
+      alignItems: "center",
+      gap: 8,
+      marginTop: 6,
+      padding: "8px 12px",
+      borderRadius: 10,
+      backgroundColor: "rgba(0,0,0,0.04)",
+      border: "1px solid rgba(0,0,0,0.08)",
+      maxWidth: 280,
+    }}>
+      <span style={{ fontSize: 22, flexShrink: 0 }}>{getFileIcon(type, name)}</span>
+      <div style={{ minWidth: 0 }}>
+        <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: "#111827", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{name}</p>
+        <p style={{ margin: 0, fontSize: 11, color: "#9ca3af" }}>{size ? formatBytes(size) : "—"}</p>
+      </div>
+      {url && (
+        <a
+          href={url}
+          download={name}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            marginLeft: "auto",
+            flexShrink: 0,
+            color: accentColor,
+            display: "flex",
+            alignItems: "center",
+          }}
+          title="Download"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+        </a>
+      )}
+    </div>
+  );
+}
+
+// ── File preview chip (before sending) ───────────────────────────────────────
+function FileChip({ file, onRemove, accentColor }: { file: File; onRemove: () => void; accentColor: string }) {
+  const preview = isImage(file.type, file.name) ? URL.createObjectURL(file) : null;
+  return (
+    <div style={{
+      display: "flex",
+      alignItems: "center",
+      gap: 8,
+      padding: "6px 10px 6px 8px",
+      borderRadius: 8,
+      backgroundColor: "#f3f4f6",
+      border: "1px solid #e5e7eb",
+      maxWidth: "100%",
+      overflow: "hidden",
+    }}>
+      {preview
+        ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={preview} alt="" style={{ width: 32, height: 32, borderRadius: 4, objectFit: "cover", flexShrink: 0 }} />
+        )
+        : (
+          <span style={{ fontSize: 22, flexShrink: 0 }}>{getFileIcon(file.type, file.name)}</span>
+        )
+      }
+      <div style={{ minWidth: 0, flex: 1 }}>
+        <p style={{ margin: 0, fontSize: 12, fontWeight: 600, color: "#111827", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{file.name}</p>
+        <p style={{ margin: 0, fontSize: 11, color: "#9ca3af" }}>{formatBytes(file.size)}</p>
+      </div>
+      <button
+        type="button"
+        onClick={onRemove}
+        style={{
+          flexShrink: 0,
+          background: "none",
+          border: "none",
+          padding: 2,
+          cursor: "pointer",
+          color: "#9ca3af",
+          display: "flex",
+          alignItems: "center",
+        }}
+        title="Remove file"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+  );
 }
 
 export default function ProjectChat({
@@ -44,7 +205,11 @@ export default function ProjectChat({
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [text, setText] = useState("");
+  const [pendingFile, setPendingFile] = useState<File | null>(null);
+  const [fileError, setFileError] = useState<string | null>(null);
+  const [dragOver, setDragOver] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -55,41 +220,115 @@ export default function ProjectChat({
     return () => clearInterval(id);
   }, [router]);
 
+  const validateAndSetFile = useCallback((file: File) => {
+    setFileError(null);
+    if (file.size > MAX_FILE_SIZE) {
+      setFileError(`File too large — maximum 25 MB (this file is ${formatBytes(file.size)})`);
+      return;
+    }
+    const ext = "." + (file.name.split(".").pop()?.toLowerCase() ?? "");
+    const allowed = ACCEPTED_TYPES.split(",");
+    if (!file.type.startsWith("image/") && !file.type.startsWith("application/") && !allowed.includes(ext)) {
+      setFileError(`File type not supported. Allowed: images, PDFs, design source files (.ai, .psd, .fig…), archives (.zip, .rar)`);
+      return;
+    }
+    setPendingFile(file);
+  }, []);
+
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const f = e.target.files?.[0];
+    if (f) validateAndSetFile(f);
+    e.target.value = "";
+  }
+
+  function handleDrop(e: React.DragEvent) {
+    e.preventDefault();
+    setDragOver(false);
+    const f = e.dataTransfer.files?.[0];
+    if (f) validateAndSetFile(f);
+  }
+
+  function handleDragOver(e: React.DragEvent) {
+    e.preventDefault();
+    setDragOver(true);
+  }
+
+  function handleDragLeave(e: React.DragEvent) {
+    if (!e.currentTarget.contains(e.relatedTarget as Node)) setDragOver(false);
+  }
+
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const trimmed = text.trim();
-    if (!trimmed) return;
+    if (!trimmed && !pendingFile) return;
+
     const fd = new FormData();
     fd.set("projectId", projectId);
     fd.set("content", trimmed);
     fd.set("authorName", viewerName);
+    if (pendingFile) fd.set("file", pendingFile);
     if (extraFields) {
       for (const [k, v] of Object.entries(extraFields)) fd.set(k, v);
     }
+
     setText("");
+    setPendingFile(null);
+    setFileError(null);
     startTransition(async () => {
       await sendAction(fd);
       router.refresh();
     });
   }
 
-  // ── Fiverr variant ─────────────────────────────────────────────────────────
+  // ── Fiverr variant ────────────────────────────────────────────────────────
   if (variant === "fiverr") {
     const accentColor = ROLE_COLORS[viewerRole];
     const accentLight = viewerRole === "professional" ? "#dbeafe" : "#dcfce7";
     const accentText = viewerRole === "professional" ? "#1d4ed8" : "#15803d";
-    const sendBtnBg = isPending || !text.trim() ? (viewerRole === "professional" ? "#bfdbfe" : "#bbf7d0") : accentColor;
+    const sendBtnBg = isPending || (!text.trim() && !pendingFile)
+      ? (viewerRole === "professional" ? "#bfdbfe" : "#bbf7d0")
+      : accentColor;
     const sendBtnColor = viewerRole === "professional" ? "#1e40af" : "#064e3b";
 
     return (
-      <div style={{
-        border: "none",
-        backgroundColor: "#ffffff",
-        overflow: "hidden",
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-      }}>
+      <div
+        style={{
+          border: "none",
+          backgroundColor: "#ffffff",
+          overflow: "hidden",
+          display: "flex",
+          flexDirection: "column",
+          height: "100%",
+          position: "relative",
+        }}
+        onDrop={handleDrop}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+      >
+        {/* Drag-over overlay */}
+        {dragOver && (
+          <div style={{
+            position: "absolute",
+            inset: 0,
+            zIndex: 50,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "rgba(255,255,255,0.9)",
+            border: `2px dashed ${accentColor}`,
+            borderRadius: 4,
+            pointerEvents: "none",
+            gap: 10,
+          }}>
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke={accentColor} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+            <p style={{ margin: 0, fontSize: 15, fontWeight: 700, color: accentColor }}>Drop file to attach</p>
+            <p style={{ margin: 0, fontSize: 12, color: "#6b7280" }}>Max 25 MB · Images, PDFs, design files, archives</p>
+          </div>
+        )}
+
         {/* Message list */}
         <div style={{ flex: 1, overflowY: "auto", padding: "20px 24px" }}>
           {initialMessages.length === 0 ? (
@@ -132,14 +371,25 @@ export default function ProjectChat({
                         </span>
                       </div>
                       <div style={{
-                        padding: "10px 14px",
+                        padding: msg.content ? "10px 14px" : "8px 12px",
                         borderRadius: isMine ? "16px 4px 16px 16px" : "4px 16px 16px 16px",
                         backgroundColor: isMine ? accentLight : "#f3f4f6",
                         border: isMine ? `1px solid ${roleColor}30` : "1px solid #e5e7eb",
                       }}>
-                        <p style={{ margin: 0, fontSize: 14, color: "#1f2937", lineHeight: 1.6, whiteSpace: "pre-wrap" }}>
-                          {msg.content}
-                        </p>
+                        {msg.content && (
+                          <p style={{ margin: 0, fontSize: 14, color: "#1f2937", lineHeight: 1.6, whiteSpace: "pre-wrap" }}>
+                            {msg.content}
+                          </p>
+                        )}
+                        {msg.attachment_name && (
+                          <AttachmentBubble
+                            url={msg.attachment_url}
+                            name={msg.attachment_name}
+                            size={msg.attachment_size}
+                            type={msg.attachment_type}
+                            accentColor={roleColor}
+                          />
+                        )}
                       </div>
                     </div>
                   </div>
@@ -150,17 +400,61 @@ export default function ProjectChat({
           <div ref={bottomRef} />
         </div>
 
-        {/* Input */}
-        <div style={{ borderTop: "1px solid #f0f0f0", backgroundColor: "#fafafa", padding: "14px 20px", flexShrink: 0 }}>
+        {/* Input area */}
+        <div style={{ borderTop: "1px solid #f0f0f0", backgroundColor: "#fafafa", padding: "12px 20px 14px", flexShrink: 0 }}>
+          {/* File attachment preview */}
+          {pendingFile && (
+            <div style={{ marginBottom: 8 }}>
+              <FileChip file={pendingFile} onRemove={() => setPendingFile(null)} accentColor={accentColor} />
+            </div>
+          )}
+          {fileError && (
+            <p style={{ margin: "0 0 8px", fontSize: 12, color: "#ef4444", fontWeight: 500 }}>{fileError}</p>
+          )}
+
           <form onSubmit={handleSubmit}>
-            <div style={{ display: "flex", gap: 10, alignItems: "flex-end" }}>
+            <div style={{ display: "flex", gap: 8, alignItems: "flex-end" }}>
+              {/* Hidden file input */}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept={ACCEPTED_TYPES}
+                onChange={handleFileChange}
+                style={{ display: "none" }}
+              />
+
+              {/* Attach button */}
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                title="Attach file (max 25 MB)"
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: 10,
+                  border: "1px solid #e5e7eb",
+                  backgroundColor: pendingFile ? accentLight : "#ffffff",
+                  color: pendingFile ? accentColor : "#6b7280",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexShrink: 0,
+                  transition: "background 150ms, color 150ms",
+                }}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+                </svg>
+              </button>
+
               <textarea
                 value={text}
                 onChange={(e) => setText(e.target.value)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); e.currentTarget.form?.requestSubmit(); }
                 }}
-                placeholder="Type a message… (Enter to send)"
+                placeholder={pendingFile ? "Add a message (optional)… (Enter to send)" : "Type a message… (Enter to send)"}
                 disabled={isPending}
                 rows={2}
                 style={{
@@ -179,7 +473,7 @@ export default function ProjectChat({
               />
               <button
                 type="submit"
-                disabled={isPending || !text.trim()}
+                disabled={isPending || (!text.trim() && !pendingFile)}
                 style={{
                   padding: "10px 20px",
                   borderRadius: 12,
@@ -188,7 +482,7 @@ export default function ProjectChat({
                   color: sendBtnColor,
                   fontWeight: 800,
                   fontSize: 13,
-                  cursor: isPending || !text.trim() ? "not-allowed" : "pointer",
+                  cursor: isPending || (!text.trim() && !pendingFile) ? "not-allowed" : "pointer",
                   transition: "background 150ms",
                   flexShrink: 0,
                   height: 46,
@@ -208,12 +502,17 @@ export default function ProjectChat({
               </button>
             </div>
           </form>
+
+          {/* File type hint */}
+          <p style={{ margin: "6px 0 0 48px", fontSize: 11, color: "#d1d5db" }}>
+            Attach images, PDFs, .ai .psd .fig .xd .sketch .zip and more · Max 25 MB
+          </p>
         </div>
       </div>
     );
   }
 
-  // ── Compact variant (default) ───────────────────────────────────────────────
+  // ── Compact variant (default) ──────────────────────────────────────────────
   const bg = dark ? "rgba(255,255,255,0.04)" : "#f9f9f9";
   const border = dark ? "1px solid rgba(255,255,255,0.08)" : "1px solid #e4e4e7";
   const labelColor = dark ? "rgba(255,255,255,0.3)" : "#71717a";
@@ -256,9 +555,20 @@ export default function ProjectChat({
                       <span style={{ color: ROLE_COLORS[msg.author], marginRight: 4 }}>●</span>
                       {msg.author_name} · {ROLE_LABELS[msg.author]}
                     </p>
-                    <p style={{ margin: 0, fontSize: 14, color: dark ? "rgba(255,255,255,0.85)" : "#111827", lineHeight: 1.5 }}>
-                      {msg.content}
-                    </p>
+                    {msg.content && (
+                      <p style={{ margin: 0, fontSize: 14, color: dark ? "rgba(255,255,255,0.85)" : "#111827", lineHeight: 1.5 }}>
+                        {msg.content}
+                      </p>
+                    )}
+                    {msg.attachment_name && (
+                      <AttachmentBubble
+                        url={msg.attachment_url}
+                        name={msg.attachment_name}
+                        size={msg.attachment_size}
+                        type={msg.attachment_type}
+                        accentColor={ROLE_COLORS[msg.author]}
+                      />
+                    )}
                     <p style={{ margin: "4px 0 0", fontSize: 11, color: labelColor }}>
                       {new Date(msg.created_at).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}
                       {" · "}
