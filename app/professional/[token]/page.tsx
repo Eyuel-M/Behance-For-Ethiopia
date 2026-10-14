@@ -125,7 +125,7 @@ export default async function ProfessionalPortalPage({ params }: Props) {
         </div>
       </nav>
 
-      <div style={{ maxWidth: 700, margin: "0 auto", padding: "0 20px 80px" }}>
+      <div style={{ maxWidth: 700, margin: "0 auto", padding: "0 20px 48px" }}>
 
         {/* Hero */}
         <div style={{ paddingTop: 40, paddingBottom: 32, borderBottom: "1px solid #e5e7eb" }}>
@@ -459,11 +459,24 @@ export default async function ProfessionalPortalPage({ params }: Props) {
           </div>
         )}
 
-        {/* Chat */}
-        <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "#9ca3af", marginBottom: 12 }}>
-            Messages
-          </p>
+      </div>
+
+      {/* ── Chat section — full-width, prominent ── */}
+      <div style={{ borderTop: "1px solid #e5e7eb", backgroundColor: "#f0f6ff" }}>
+        <div style={{ maxWidth: 960, margin: "0 auto", padding: "36px 24px 56px" }}>
+          {/* Section header */}
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
+            <div style={{ width: 32, height: 32, borderRadius: 10, background: "linear-gradient(135deg, #3b82f6, #6366f1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+              </svg>
+            </div>
+            <div>
+              <p style={{ fontSize: 16, fontWeight: 800, color: "#111827", margin: 0, letterSpacing: "-0.01em" }}>Project Messages</p>
+              <p style={{ fontSize: 12, color: "#6b7280", margin: 0 }}>Communicate with the client and our team</p>
+            </div>
+          </div>
+
           <ProjectChat
             projectId={project.id}
             viewerRole="professional"
@@ -472,11 +485,14 @@ export default async function ProfessionalPortalPage({ params }: Props) {
             sendAction={postProfessionalMessage}
             extraFields={{ token, projectId: project.id }}
             dark={false}
+            variant="fiverr"
           />
         </div>
+      </div>
 
-        {/* Footer */}
-        <p style={{ fontSize: 11, textAlign: "center", color: "#9ca3af", marginTop: 48, lineHeight: 1.7 }}>
+      {/* Footer */}
+      <div style={{ maxWidth: 700, margin: "0 auto", padding: "0 20px 48px" }}>
+        <p style={{ fontSize: 11, textAlign: "center", color: "#9ca3af", marginTop: 32, lineHeight: 1.7 }}>
           Questions? Use the chat above or reply to the email you received from our team.<br />
           <span style={{ color: "#d1d5db" }}>Hire Ethiopia&apos;s Best</span>
         </p>
