@@ -34,122 +34,74 @@ export default function CollapsibleChatLayout({
   accentLight,
   accentText,
 }: Props) {
-  const [open, setOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   return (
     <div style={{ flex: 1, display: "flex", overflow: "hidden" }}>
 
-      {/* ── Sidebar ── */}
+      {/* ── Sidebar (collapses to 0) ── */}
       <div style={{
         flexShrink: 0,
-        width: open ? 400 : "100%",
-        minWidth: open ? 300 : "unset",
-        transition: "width 300ms cubic-bezier(0.4, 0, 0.2, 1)",
-        borderRight: open ? `1px solid ${sidebarBorder}` : "none",
+        maxWidth: sidebarOpen ? 480 : 0,
+        width: sidebarOpen ? 400 : 0,
+        overflow: "hidden",
+        transition: "width 300ms cubic-bezier(0.4, 0, 0.2, 1), max-width 300ms cubic-bezier(0.4, 0, 0.2, 1)",
+        borderRight: sidebarOpen ? `1px solid ${sidebarBorder}` : "none",
         backgroundColor: sidebarBg,
         display: "flex",
         flexDirection: "column",
-        overflow: "hidden",
       }}>
-        {/* Sticky toggle bar at top of sidebar */}
-        <div style={{
-          position: "sticky",
-          top: 0,
-          zIndex: 2,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "flex-end",
-          padding: "10px 16px",
-          backgroundColor: sidebarBg,
-          borderBottom: `1px solid ${sidebarBorder}`,
-          flexShrink: 0,
-        }}>
-          <button
-            onClick={() => setOpen((o) => !o)}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-              padding: "6px 12px",
-              borderRadius: 999,
-              border: "none",
-              backgroundColor: open ? accentLight : accent,
-              color: open ? accentText : (accent === "#6dcc46" ? "#0d2318" : "#ffffff"),
-              fontSize: 12,
-              fontWeight: 700,
-              cursor: "pointer",
-              transition: "background 150ms, color 150ms",
-            }}
-          >
-            {open ? (
-              <>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M15 18l-6-6 6-6" />
-                </svg>
-                Hide chat
-              </>
-            ) : (
-              <>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                </svg>
-                Messages
-              </>
-            )}
-          </button>
-        </div>
-
-        {/* Scrollable sidebar content */}
-        <div style={{ overflowY: "auto", flex: 1, padding: sidebarPadding }}>
+        <div style={{ overflowY: "auto", flex: 1, padding: sidebarPadding, minWidth: 300 }}>
           {sidebar}
         </div>
       </div>
 
-      {/* ── Chat panel (collapses to 0) ── */}
+      {/* ── Chat panel (always flex: 1) ── */}
       <div style={{
         flex: 1,
         minWidth: 0,
-        maxWidth: open ? "9999px" : 0,
-        overflow: "hidden",
-        transition: "max-width 300ms cubic-bezier(0.4, 0, 0.2, 1)",
         backgroundColor: chatPanelBg,
         display: "flex",
         flexDirection: "column",
+        overflow: "hidden",
       }}>
-        {/* Chat header */}
+        {/* Chat header with sidebar toggle */}
         <div style={{
-          padding: "14px 24px",
+          padding: "14px 16px 14px 12px",
           borderBottom: `1px solid ${chatHeaderBorder}`,
           backgroundColor: chatHeaderBg,
           display: "flex",
           alignItems: "center",
-          gap: 12,
+          gap: 10,
           flexShrink: 0,
         }}>
-          {chatHeaderContent}
-          {/* Collapse button */}
+          {/* Sidebar toggle button */}
           <button
-            onClick={() => setOpen(false)}
-            title="Hide chat"
+            onClick={() => setSidebarOpen((o) => !o)}
+            title={sidebarOpen ? "Hide project info" : "Show project info"}
             style={{
-              marginLeft: "auto",
-              width: 30,
-              height: 30,
+              width: 32,
+              height: 32,
               borderRadius: 8,
               border: "none",
-              backgroundColor: "transparent",
+              backgroundColor: sidebarOpen ? accentLight : accent,
+              color: sidebarOpen ? accentText : (accent === "#6dcc46" ? "#0d2318" : "#ffffff"),
               cursor: "pointer",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: "#9ca3af",
               flexShrink: 0,
+              transition: "background 150ms, color 150ms",
             }}
           >
+            {/* Sidebar layout icon */}
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M18 6L6 18M6 6l12 12" />
+              <rect x="3" y="3" width="18" height="18" rx="2" />
+              <path d="M9 3v18" />
             </svg>
           </button>
+
+          {chatHeaderContent}
         </div>
 
         {/* Chat fills remaining height */}
