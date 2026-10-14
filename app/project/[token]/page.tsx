@@ -67,17 +67,21 @@ export default async function ClientProjectPage({ params, searchParams }: Props)
   const progressPct = ms.length > 0 ? Math.round((acceptedCount / ms.length) * 100) : 0;
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#0d2318" }}>
+    <div style={{ height: "100dvh", display: "flex", flexDirection: "column", backgroundColor: "#0d2318", fontFamily: "inherit", overflow: "hidden" }}>
 
       {/* Top bar */}
-      <div style={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
-        <div className="max-w-2xl mx-auto px-5 py-4 flex items-center justify-between">
-          <span className="text-sm font-black" style={{ color: "#6dcc46" }}>Hire Ethiopia&apos;s Best</span>
-          <span className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>Project update</span>
+      <div style={{ borderBottom: "1px solid rgba(255,255,255,0.08)", flexShrink: 0 }}>
+        <div style={{ padding: "0 24px", height: 54, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <span style={{ fontSize: 13, fontWeight: 800, color: "#6dcc46" }}>Hire Ethiopia&apos;s Best</span>
+          <span style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.3)", textTransform: "uppercase" as const, letterSpacing: "0.08em" }}>Client Portal</span>
         </div>
       </div>
 
-      <div className="max-w-2xl mx-auto px-5 pt-12 pb-20">
+      {/* Two-column body */}
+      <div style={{ flex: 1, display: "flex", overflow: "hidden" }}>
+
+      {/* ── Left sidebar: project info ── */}
+      <div style={{ width: 400, minWidth: 300, flexShrink: 0, overflowY: "auto", borderRight: "1px solid rgba(255,255,255,0.08)", backgroundColor: "#071208", padding: "28px 24px 40px" }}>
 
         {/* Header */}
         <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "rgba(109,204,70,0.7)" }}>
@@ -331,11 +335,34 @@ export default async function ClientProjectPage({ params, searchParams }: Props)
           )}
         </div>
 
-        {/* ── Chat ──────────────────────────────────────────── */}
-        <div className="mb-8">
-          <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: "rgba(255,255,255,0.3)" }}>
-            Messages
-          </p>
+        {/* Sidebar footer */}
+        <p style={{ fontSize: 11, color: "rgba(255,255,255,0.15)", marginTop: 40, lineHeight: 1.7, textAlign: "center" }}>
+          Hire Ethiopia&apos;s Best · Client Portal
+        </p>
+      </div>
+
+      {/* ── Right panel: full-height chat ── */}
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden", backgroundColor: "#f0fdf4" }}>
+
+        {/* Chat panel header */}
+        <div style={{ padding: "14px 24px", borderBottom: "1px solid #bbf7d0", backgroundColor: "#dcfce7", display: "flex", alignItems: "center", gap: 12, flexShrink: 0 }}>
+          <div style={{ width: 30, height: 30, borderRadius: 9, background: "linear-gradient(135deg, #16a34a, #6dcc46)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            </svg>
+          </div>
+          <div>
+            <p style={{ fontSize: 14, fontWeight: 800, color: "#14532d", margin: 0 }}>Project Messages</p>
+            <p style={{ fontSize: 11, color: "#6b7280", margin: 0 }}>Communicate with your designer and our team</p>
+          </div>
+          <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 6 }}>
+            <span style={{ width: 7, height: 7, borderRadius: "50%", backgroundColor: "#22c55e", display: "inline-block" }} />
+            <span style={{ fontSize: 11, color: "#6b7280", fontWeight: 500 }}>Live · updates every 15s</span>
+          </div>
+        </div>
+
+        {/* Chat fills remaining height */}
+        <div style={{ flex: 1, overflow: "hidden" }}>
           <ProjectChat
             projectId={project.id}
             viewerRole="client"
@@ -343,15 +370,13 @@ export default async function ClientProjectPage({ params, searchParams }: Props)
             initialMessages={messages}
             sendAction={postClientMessage}
             extraFields={{ token }}
-            dark={true}
+            dark={false}
+            variant="fiverr"
           />
         </div>
-
-        {/* Footer note */}
-        <p className="text-xs text-center mt-8" style={{ color: "rgba(255,255,255,0.2)" }}>
-          Questions? Use the chat above or reply to the email you received from our team.
-        </p>
       </div>
+
+      </div>{/* end two-column body */}
     </div>
   );
 }
