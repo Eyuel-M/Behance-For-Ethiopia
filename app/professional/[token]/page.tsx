@@ -109,10 +109,10 @@ export default async function ProfessionalPortalPage({ params }: Props) {
   const changeNote = proposal?.client_note ?? null;
 
   return (
-    <div style={{ height: "100dvh", display: "flex", flexDirection: "column", backgroundColor: "#f8fafc", fontFamily: "inherit", overflow: "hidden" }}>
+    <div style={{ height: "100dvh", display: "flex", flexDirection: "column", backgroundColor: "#0c1a2e", fontFamily: "inherit", overflow: "hidden" }}>
 
       {/* Top nav */}
-      <nav style={{ backgroundColor: "#ffffff", borderBottom: "1px solid #e5e7eb", flexShrink: 0, zIndex: 10 }}>
+      <nav style={{ backgroundColor: "#0c1a2e", borderBottom: "1px solid rgba(59,130,246,0.15)", flexShrink: 0, zIndex: 10 }}>
         <div style={{ padding: "0 24px", height: 54, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <div style={{ width: 22, height: 22, borderRadius: 6, background: "linear-gradient(135deg, #3b82f6, #6366f1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
@@ -120,18 +120,18 @@ export default async function ProfessionalPortalPage({ params }: Props) {
                 <path d="M1.5 5h7M5 2l3 3-3 3" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
-            <span style={{ fontSize: 13, fontWeight: 800, color: "#111827", letterSpacing: "-0.01em" }}>Hire Ethiopia&apos;s Best</span>
+            <span style={{ fontSize: 13, fontWeight: 800, color: "#60a5fa", letterSpacing: "-0.01em" }}>Hire Ethiopia&apos;s Best</span>
           </div>
-          <span style={{ fontSize: 11, fontWeight: 600, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.08em" }}>Professional Portal</span>
+          <span style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.08em" }}>Professional Portal</span>
         </div>
       </nav>
 
       <CollapsibleChatLayout
         accent="#3b82f6"
-        accentLight="#dbeafe"
-        accentText="#1d4ed8"
-        sidebarBg="#ffffff"
-        sidebarBorder="#e5e7eb"
+        accentLight="rgba(59,130,246,0.18)"
+        accentText="#93c5fd"
+        sidebarBg="#0c1a2e"
+        sidebarBorder="rgba(59,130,246,0.15)"
         chatPanelBg="#f0f6ff"
         chatHeaderBg="#eaf2ff"
         chatHeaderBorder="#e0eaff"
@@ -167,23 +167,23 @@ export default async function ProfessionalPortalPage({ params }: Props) {
         sidebar={<>
 
         {/* Hero */}
-        <div style={{ paddingTop: 40, paddingBottom: 32, borderBottom: "1px solid #e5e7eb" }}>
-          <p style={{ fontSize: 11, fontWeight: 700, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 10 }}>
+        <div style={{ paddingTop: 40, paddingBottom: 32, borderBottom: "1px solid rgba(59,130,246,0.15)" }}>
+          <p style={{ fontSize: 11, fontWeight: 700, color: "rgba(96,165,250,0.6)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 10 }}>
             {project.client_business}
           </p>
-          <h1 style={{ fontSize: "clamp(22px, 5vw, 32px)", fontWeight: 900, lineHeight: 1.2, letterSpacing: "-0.02em", color: "#111827", marginBottom: 14 }}>
+          <h1 style={{ fontSize: "clamp(20px, 4vw, 28px)", fontWeight: 900, lineHeight: 1.2, letterSpacing: "-0.02em", color: "#ffffff", marginBottom: 14 }}>
             {project.title}
           </h1>
           <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 12px", borderRadius: 999, fontSize: 12, fontWeight: 700, backgroundColor: `${dotColor}15`, border: `1px solid ${dotColor}30`, color: dotColor }}>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 12px", borderRadius: 999, fontSize: 12, fontWeight: 700, backgroundColor: `${dotColor}20`, border: `1px solid ${dotColor}40`, color: dotColor }}>
               <span style={{ width: 6, height: 6, borderRadius: "50%", backgroundColor: dotColor, flexShrink: 0 }} />
               {STATUS_LABEL[status]}
             </span>
-            <span style={{ fontSize: 12, color: "#9ca3af" }}>
+            <span style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>
               {project.category} · {project.service_mode}
             </span>
             {project.deadline && !isCancelled && (
-              <span style={{ fontSize: 12, color: "#9ca3af" }}>
+              <span style={{ fontSize: 12, color: "rgba(255,255,255,0.3)" }}>
                 Due {new Date(project.deadline).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
               </span>
             )}
@@ -210,25 +210,25 @@ export default async function ProfessionalPortalPage({ params }: Props) {
 
         {/* Progress row */}
         {milestones.length > 0 && !isCancelled && (
-          <div style={{ padding: "24px 0", borderBottom: "1px solid #e5e7eb", display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap" }}>
+          <div style={{ padding: "24px 0", borderBottom: "1px solid rgba(59,130,246,0.15)", display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap" }}>
             <div style={{ minWidth: 72 }}>
-              <p style={{ fontSize: 36, fontWeight: 900, lineHeight: 1, color: isDone ? "#16a34a" : "#3b82f6", letterSpacing: "-0.03em" }}>{progressPct}%</p>
-              <p style={{ fontSize: 11, color: "#9ca3af", marginTop: 3, fontWeight: 600 }}>Complete</p>
+              <p style={{ fontSize: 36, fontWeight: 900, lineHeight: 1, color: isDone ? "#4ade80" : "#60a5fa", letterSpacing: "-0.03em" }}>{progressPct}%</p>
+              <p style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", marginTop: 3, fontWeight: 600 }}>Complete</p>
             </div>
             <div style={{ flex: 1, minWidth: 160 }}>
-              <div style={{ height: 6, borderRadius: 999, overflow: "hidden", backgroundColor: "#e5e7eb", marginBottom: 10 }}>
+              <div style={{ height: 6, borderRadius: 999, overflow: "hidden", backgroundColor: "rgba(255,255,255,0.08)", marginBottom: 10 }}>
                 <div style={{ height: "100%", borderRadius: 999, width: `${progressPct}%`, background: isDone ? "linear-gradient(90deg, #16a34a, #22c55e)" : "linear-gradient(90deg, #3b82f6, #6366f1)", transition: "width 0.6s ease" }} />
               </div>
               <div style={{ display: "flex", gap: 16 }}>
-                <span style={{ fontSize: 11, color: "#6b7280", fontWeight: 600 }}>
-                  <span style={{ color: "#16a34a", marginRight: 3 }}>{acceptedCount}</span> accepted
+                <span style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", fontWeight: 600 }}>
+                  <span style={{ color: "#4ade80", marginRight: 3 }}>{acceptedCount}</span> accepted
                 </span>
                 {submittedCount > 0 && (
-                  <span style={{ fontSize: 11, color: "#6b7280", fontWeight: 600 }}>
-                    <span style={{ color: "#d97706", marginRight: 3 }}>{submittedCount}</span> awaiting review
+                  <span style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", fontWeight: 600 }}>
+                    <span style={{ color: "#fbbf24", marginRight: 3 }}>{submittedCount}</span> awaiting review
                   </span>
                 )}
-                <span style={{ fontSize: 11, color: "#9ca3af", fontWeight: 600 }}>{milestones.length} total</span>
+                <span style={{ fontSize: 11, color: "rgba(255,255,255,0.25)", fontWeight: 600 }}>{milestones.length} total</span>
               </div>
             </div>
           </div>
@@ -279,33 +279,33 @@ export default async function ProfessionalPortalPage({ params }: Props) {
 
         {/* Project scope */}
         <div style={{ marginTop: 28, marginBottom: 28 }}>
-          <p style={{ fontSize: 11, fontWeight: 700, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 14 }}>Project scope</p>
-          <div style={{ backgroundColor: "#ffffff", borderRadius: 14, border: "1px solid #e5e7eb", boxShadow: "0 1px 3px rgba(0,0,0,0.04)", overflow: "hidden" }}>
+          <p style={{ fontSize: 11, fontWeight: 700, color: "rgba(96,165,250,0.6)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 14 }}>Project scope</p>
+          <div style={{ backgroundColor: "rgba(255,255,255,0.04)", borderRadius: 14, border: "1px solid rgba(59,130,246,0.15)", overflow: "hidden" }}>
             <div style={{ padding: "16px 20px 0", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-              <div style={{ backgroundColor: "#f8fafc", borderRadius: 10, padding: "10px 14px", border: "1px solid #e5e7eb" }}>
-                <p style={{ fontSize: 10, color: "#9ca3af", marginBottom: 3, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>Budget</p>
-                <p style={{ fontSize: 15, fontWeight: 800, color: "#111827" }}>{project.budget}</p>
+              <div style={{ backgroundColor: "rgba(59,130,246,0.08)", borderRadius: 10, padding: "10px 14px", border: "1px solid rgba(59,130,246,0.15)" }}>
+                <p style={{ fontSize: 10, color: "rgba(255,255,255,0.35)", marginBottom: 3, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>Budget</p>
+                <p style={{ fontSize: 15, fontWeight: 800, color: "#ffffff" }}>{project.budget}</p>
               </div>
-              <div style={{ backgroundColor: "#f8fafc", borderRadius: 10, padding: "10px 14px", border: "1px solid #e5e7eb" }}>
-                <p style={{ fontSize: 10, color: "#9ca3af", marginBottom: 3, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>Revisions</p>
-                <p style={{ fontSize: 15, fontWeight: 800, color: "#111827" }}>Up to {project.revision_limit}</p>
+              <div style={{ backgroundColor: "rgba(59,130,246,0.08)", borderRadius: 10, padding: "10px 14px", border: "1px solid rgba(59,130,246,0.15)" }}>
+                <p style={{ fontSize: 10, color: "rgba(255,255,255,0.35)", marginBottom: 3, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>Revisions</p>
+                <p style={{ fontSize: 15, fontWeight: 800, color: "#ffffff" }}>Up to {project.revision_limit}</p>
               </div>
             </div>
             <div style={{ padding: 20, display: "flex", flexDirection: "column", gap: 16 }}>
               <div>
-                <p style={{ fontSize: 11, color: "#6b7280", marginBottom: 5, fontWeight: 600 }}>Deliverables</p>
-                <p style={{ fontSize: 14, color: "#1f2937", lineHeight: 1.7, whiteSpace: "pre-wrap" }}>{project.deliverables}</p>
+                <p style={{ fontSize: 11, color: "rgba(96,165,250,0.7)", marginBottom: 5, fontWeight: 600 }}>Deliverables</p>
+                <p style={{ fontSize: 14, color: "rgba(255,255,255,0.75)", lineHeight: 1.7, whiteSpace: "pre-wrap" }}>{project.deliverables}</p>
               </div>
               {project.exclusions && (
                 <div>
-                  <p style={{ fontSize: 11, color: "#6b7280", marginBottom: 5, fontWeight: 600 }}>Not included</p>
-                  <p style={{ fontSize: 14, color: "#4b5563", lineHeight: 1.7 }}>{project.exclusions}</p>
+                  <p style={{ fontSize: 11, color: "rgba(96,165,250,0.7)", marginBottom: 5, fontWeight: 600 }}>Not included</p>
+                  <p style={{ fontSize: 14, color: "rgba(255,255,255,0.55)", lineHeight: 1.7 }}>{project.exclusions}</p>
                 </div>
               )}
               {project.acceptance_criteria && (
                 <div>
-                  <p style={{ fontSize: 11, color: "#6b7280", marginBottom: 5, fontWeight: 600 }}>Done when</p>
-                  <p style={{ fontSize: 14, color: "#4b5563", lineHeight: 1.7 }}>{project.acceptance_criteria}</p>
+                  <p style={{ fontSize: 11, color: "rgba(96,165,250,0.7)", marginBottom: 5, fontWeight: 600 }}>Done when</p>
+                  <p style={{ fontSize: 14, color: "rgba(255,255,255,0.55)", lineHeight: 1.7 }}>{project.acceptance_criteria}</p>
                 </div>
               )}
             </div>
@@ -316,8 +316,8 @@ export default async function ProfessionalPortalPage({ params }: Props) {
         {milestones.length > 0 && (
           <div>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
-              <p style={{ fontSize: 11, fontWeight: 700, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.1em" }}>Milestones</p>
-              <span style={{ fontSize: 11, color: "#9ca3af", fontWeight: 600 }}>
+              <p style={{ fontSize: 11, fontWeight: 700, color: "rgba(96,165,250,0.6)", textTransform: "uppercase", letterSpacing: "0.1em" }}>Milestones</p>
+              <span style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", fontWeight: 600 }}>
                 {milestones.length} deliverable{milestones.length !== 1 ? "s" : ""}
               </span>
             </div>
@@ -484,21 +484,21 @@ export default async function ProfessionalPortalPage({ params }: Props) {
         )}
 
         {milestones.length === 0 && (
-          <div style={{ borderRadius: 14, border: "1px solid #e5e7eb", backgroundColor: "#ffffff", padding: "40px 24px", textAlign: "center", boxShadow: "0 1px 3px rgba(0,0,0,0.04)" }}>
-            <div style={{ width: 44, height: 44, borderRadius: 12, backgroundColor: "#f3f4f6", margin: "0 auto 14px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ borderRadius: 14, border: "1px solid rgba(59,130,246,0.15)", backgroundColor: "rgba(255,255,255,0.04)", padding: "40px 24px", textAlign: "center" }}>
+            <div style={{ width: 44, height: 44, borderRadius: 12, backgroundColor: "rgba(59,130,246,0.1)", margin: "0 auto 14px", display: "flex", alignItems: "center", justifyContent: "center" }}>
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <rect x="3" y="4" width="14" height="12" rx="2" stroke="#9ca3af" strokeWidth="1.5" />
-                <path d="M7 8h6M7 12h4" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round" />
+                <rect x="3" y="4" width="14" height="12" rx="2" stroke="rgba(96,165,250,0.6)" strokeWidth="1.5" />
+                <path d="M7 8h6M7 12h4" stroke="rgba(96,165,250,0.6)" strokeWidth="1.5" strokeLinecap="round" />
               </svg>
             </div>
-            <p style={{ fontSize: 14, fontWeight: 600, color: "#6b7280", marginBottom: 6 }}>No milestones yet</p>
-            <p style={{ fontSize: 13, color: "#9ca3af", lineHeight: 1.6 }}>
+            <p style={{ fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.6)", marginBottom: 6 }}>No milestones yet</p>
+            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.3)", lineHeight: 1.6 }}>
               Your project milestones will appear here once the plan is confirmed by our team.
             </p>
           </div>
         )}
 
-        <p style={{ fontSize: 11, color: "#d1d5db", marginTop: 40, lineHeight: 1.7, textAlign: "center" }}>
+        <p style={{ fontSize: 11, color: "rgba(96,165,250,0.25)", marginTop: 40, lineHeight: 1.7, textAlign: "center" }}>
           Hire Ethiopia&apos;s Best · Professional Portal
         </p>
         </>}
