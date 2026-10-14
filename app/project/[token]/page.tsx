@@ -4,6 +4,7 @@ import type { ProjectStatus, MilestoneStatus } from "@/lib/supabase/project-type
 import { MILESTONE_STATUS_LABELS } from "@/lib/supabase/project-types";
 import ClientReviewForm from "@/components/ClientReviewForm";
 import ProjectChat from "@/components/ProjectChat";
+import CollapsibleChatLayout from "@/components/CollapsibleChatLayout";
 import { postClientMessage } from "@/app/actions/client-project";
 import { initiateMilestonePayment } from "@/app/actions/client-payment";
 
@@ -77,11 +78,45 @@ export default async function ClientProjectPage({ params, searchParams }: Props)
         </div>
       </div>
 
-      {/* Two-column body */}
-      <div style={{ flex: 1, display: "flex", overflow: "hidden" }}>
-
-      {/* ── Left sidebar: project info ── */}
-      <div style={{ width: 400, minWidth: 300, flexShrink: 0, overflowY: "auto", borderRight: "1px solid rgba(255,255,255,0.08)", backgroundColor: "#071208", padding: "28px 24px 40px" }}>
+      <CollapsibleChatLayout
+        accent="#6dcc46"
+        accentLight="rgba(109,204,70,0.15)"
+        accentText="#166534"
+        sidebarBg="#071208"
+        sidebarBorder="rgba(255,255,255,0.08)"
+        chatPanelBg="#f0fdf4"
+        chatHeaderBg="#dcfce7"
+        chatHeaderBorder="#bbf7d0"
+        chatHeaderContent={
+          <>
+            <div style={{ width: 30, height: 30, borderRadius: 9, background: "linear-gradient(135deg, #16a34a, #6dcc46)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+              </svg>
+            </div>
+            <div>
+              <p style={{ fontSize: 14, fontWeight: 800, color: "#14532d", margin: 0 }}>Project Messages</p>
+              <p style={{ fontSize: 11, color: "#6b7280", margin: 0 }}>Communicate with your designer and our team</p>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <span style={{ width: 7, height: 7, borderRadius: "50%", backgroundColor: "#22c55e", display: "inline-block" }} />
+              <span style={{ fontSize: 11, color: "#6b7280", fontWeight: 500 }}>Live</span>
+            </div>
+          </>
+        }
+        chat={
+          <ProjectChat
+            projectId={project.id}
+            viewerRole="client"
+            viewerName={project.client_name}
+            initialMessages={messages}
+            sendAction={postClientMessage}
+            extraFields={{ token }}
+            dark={false}
+            variant="fiverr"
+          />
+        }
+        sidebar={<>
 
         {/* Header */}
         <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "rgba(109,204,70,0.7)" }}>
@@ -335,48 +370,11 @@ export default async function ClientProjectPage({ params, searchParams }: Props)
           )}
         </div>
 
-        {/* Sidebar footer */}
         <p style={{ fontSize: 11, color: "rgba(255,255,255,0.15)", marginTop: 40, lineHeight: 1.7, textAlign: "center" }}>
           Hire Ethiopia&apos;s Best · Client Portal
         </p>
-      </div>
-
-      {/* ── Right panel: full-height chat ── */}
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden", backgroundColor: "#f0fdf4" }}>
-
-        {/* Chat panel header */}
-        <div style={{ padding: "14px 24px", borderBottom: "1px solid #bbf7d0", backgroundColor: "#dcfce7", display: "flex", alignItems: "center", gap: 12, flexShrink: 0 }}>
-          <div style={{ width: 30, height: 30, borderRadius: 9, background: "linear-gradient(135deg, #16a34a, #6dcc46)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-            </svg>
-          </div>
-          <div>
-            <p style={{ fontSize: 14, fontWeight: 800, color: "#14532d", margin: 0 }}>Project Messages</p>
-            <p style={{ fontSize: 11, color: "#6b7280", margin: 0 }}>Communicate with your designer and our team</p>
-          </div>
-          <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 6 }}>
-            <span style={{ width: 7, height: 7, borderRadius: "50%", backgroundColor: "#22c55e", display: "inline-block" }} />
-            <span style={{ fontSize: 11, color: "#6b7280", fontWeight: 500 }}>Live · updates every 15s</span>
-          </div>
-        </div>
-
-        {/* Chat fills remaining height */}
-        <div style={{ flex: 1, overflow: "hidden" }}>
-          <ProjectChat
-            projectId={project.id}
-            viewerRole="client"
-            viewerName={project.client_name}
-            initialMessages={messages}
-            sendAction={postClientMessage}
-            extraFields={{ token }}
-            dark={false}
-            variant="fiverr"
-          />
-        </div>
-      </div>
-
-      </div>{/* end two-column body */}
+        </>}
+      />
     </div>
   );
 }

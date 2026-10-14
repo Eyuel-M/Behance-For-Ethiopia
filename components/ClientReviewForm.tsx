@@ -17,11 +17,22 @@ function StarPicker({ name, label }: { name: string; label: string }) {
   const active = hovered || selected;
 
   return (
-    <div>
-      <p className="text-xs font-semibold mb-3" style={{ color: "rgba(255,255,255,0.5)" }}>{label}</p>
-      <div className="flex gap-1" onMouseLeave={() => setHovered(0)}>
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+      {/* Label + rating word */}
+      <div style={{ minWidth: 0 }}>
+        <p style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.55)", margin: 0, lineHeight: 1.3 }}>{label}</p>
+        <p style={{
+          fontSize: 11, fontWeight: 600, marginTop: 2,
+          color: active >= 4 ? "#6dcc46" : active >= 3 ? "#f59e0b" : "rgba(255,255,255,0.2)",
+          minHeight: 14,
+        }}>
+          {active > 0 ? RATING_LABELS[active] : "—"}
+        </p>
+      </div>
+      {/* Stars */}
+      <div style={{ display: "flex", gap: 2, flexShrink: 0 }} onMouseLeave={() => setHovered(0)}>
         {[1, 2, 3, 4, 5].map((n) => {
-          const filled = n <= (hovered || selected);
+          const filled = n <= active;
           return (
             <button
               key={n}
@@ -30,15 +41,12 @@ function StarPicker({ name, label }: { name: string; label: string }) {
               onClick={() => setSelected(n)}
               aria-label={`${n} star${n !== 1 ? "s" : ""}`}
               style={{
-                background: "none",
-                border: "none",
-                padding: "2px",
-                cursor: "pointer",
+                background: "none", border: "none", padding: "1px", cursor: "pointer",
                 transition: "transform 0.1s ease",
-                transform: hovered === n ? "scale(1.2)" : "scale(1)",
+                transform: hovered === n ? "scale(1.25)" : "scale(1)",
               }}
             >
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
                 <path
                   d="M12 2l2.9 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l7.1-1.01L12 2z"
                   fill={filled ? "#f59e0b" : "none"}
@@ -51,12 +59,6 @@ function StarPicker({ name, label }: { name: string; label: string }) {
           );
         })}
       </div>
-      {active > 0 && (
-        <p className="text-xs font-semibold mt-1.5" style={{ color: active >= 4 ? "#6dcc46" : active >= 3 ? "#f59e0b" : "rgba(255,255,255,0.4)" }}>
-          {RATING_LABELS[active]}
-        </p>
-      )}
-      {active === 0 && <p className="text-xs mt-1.5" style={{ color: "rgba(255,255,255,0.18)" }}>Tap to rate</p>}
       <input type="hidden" name={name} value={selected || ""} />
     </div>
   );
@@ -119,10 +121,12 @@ export default function ClientReviewForm({ clientToken }: { clientToken: string 
 
         {/* Star ratings */}
         <div>
-          <p className="text-xs font-bold uppercase tracking-widest mb-5" style={{ color: "rgba(255,255,255,0.25)" }}>Rate your experience</p>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: "rgba(255,255,255,0.25)" }}>Rate your experience</p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
             <StarPicker name="quality" label="Quality of work" />
+            <div style={{ height: 1, backgroundColor: "rgba(255,255,255,0.05)" }} />
             <StarPicker name="communication" label="Communication" />
+            <div style={{ height: 1, backgroundColor: "rgba(255,255,255,0.05)" }} />
             <StarPicker name="delivery" label="On-time delivery" />
           </div>
         </div>

@@ -4,6 +4,7 @@ import type { ProjectStatus, MilestoneStatus } from "@/lib/supabase/project-type
 import { MILESTONE_STATUS_LABELS } from "@/lib/supabase/project-types";
 import { submitMilestone, resubmitProject, postProfessionalMessage, startProject } from "@/app/actions/professional-portal";
 import ProjectChat from "@/components/ProjectChat";
+import CollapsibleChatLayout from "@/components/CollapsibleChatLayout";
 
 export const dynamic = "force-dynamic";
 
@@ -125,11 +126,45 @@ export default async function ProfessionalPortalPage({ params }: Props) {
         </div>
       </nav>
 
-      {/* Two-column body */}
-      <div style={{ flex: 1, display: "flex", overflow: "hidden" }}>
-
-      {/* ── Left sidebar: project info ── */}
-      <div style={{ width: 400, minWidth: 300, flexShrink: 0, overflowY: "auto", borderRight: "1px solid #e5e7eb", backgroundColor: "#ffffff", padding: "28px 24px 40px" }}>
+      <CollapsibleChatLayout
+        accent="#3b82f6"
+        accentLight="#dbeafe"
+        accentText="#1d4ed8"
+        sidebarBg="#ffffff"
+        sidebarBorder="#e5e7eb"
+        chatPanelBg="#f0f6ff"
+        chatHeaderBg="#eaf2ff"
+        chatHeaderBorder="#e0eaff"
+        chatHeaderContent={
+          <>
+            <div style={{ width: 30, height: 30, borderRadius: 9, background: "linear-gradient(135deg, #3b82f6, #6366f1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+              </svg>
+            </div>
+            <div>
+              <p style={{ fontSize: 14, fontWeight: 800, color: "#1e40af", margin: 0 }}>Project Messages</p>
+              <p style={{ fontSize: 11, color: "#6b7280", margin: 0 }}>Communicate with the client and our team</p>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <span style={{ width: 7, height: 7, borderRadius: "50%", backgroundColor: "#22c55e", display: "inline-block" }} />
+              <span style={{ fontSize: 11, color: "#6b7280", fontWeight: 500 }}>Live</span>
+            </div>
+          </>
+        }
+        chat={
+          <ProjectChat
+            projectId={project.id}
+            viewerRole="professional"
+            viewerName={designer?.full_name ?? "Designer"}
+            initialMessages={messages}
+            sendAction={postProfessionalMessage}
+            extraFields={{ token, projectId: project.id }}
+            dark={false}
+            variant="fiverr"
+          />
+        }
+        sidebar={<>
 
         {/* Hero */}
         <div style={{ paddingTop: 40, paddingBottom: 32, borderBottom: "1px solid #e5e7eb" }}>
@@ -463,48 +498,11 @@ export default async function ProfessionalPortalPage({ params }: Props) {
           </div>
         )}
 
-        {/* Sidebar footer */}
         <p style={{ fontSize: 11, color: "#d1d5db", marginTop: 40, lineHeight: 1.7, textAlign: "center" }}>
           Hire Ethiopia&apos;s Best · Professional Portal
         </p>
-      </div>
-
-      {/* ── Right panel: full-height chat ── */}
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden", backgroundColor: "#f0f6ff" }}>
-
-        {/* Chat panel header */}
-        <div style={{ padding: "14px 24px", borderBottom: "1px solid #e0eaff", backgroundColor: "#eaf2ff", display: "flex", alignItems: "center", gap: 12, flexShrink: 0 }}>
-          <div style={{ width: 30, height: 30, borderRadius: 9, background: "linear-gradient(135deg, #3b82f6, #6366f1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-            </svg>
-          </div>
-          <div>
-            <p style={{ fontSize: 14, fontWeight: 800, color: "#1e40af", margin: 0 }}>Project Messages</p>
-            <p style={{ fontSize: 11, color: "#6b7280", margin: 0 }}>Communicate with the client and our team</p>
-          </div>
-          <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 6 }}>
-            <span style={{ width: 7, height: 7, borderRadius: "50%", backgroundColor: "#22c55e", display: "inline-block" }} />
-            <span style={{ fontSize: 11, color: "#6b7280", fontWeight: 500 }}>Live · updates every 15s</span>
-          </div>
-        </div>
-
-        {/* Chat fills remaining height */}
-        <div style={{ flex: 1, overflow: "hidden" }}>
-          <ProjectChat
-            projectId={project.id}
-            viewerRole="professional"
-            viewerName={designer?.full_name ?? "Designer"}
-            initialMessages={messages}
-            sendAction={postProfessionalMessage}
-            extraFields={{ token, projectId: project.id }}
-            dark={false}
-            variant="fiverr"
-          />
-        </div>
-      </div>
-
-      </div>{/* end two-column body */}
+        </>}
+      />
     </div>
   );
 }
