@@ -259,11 +259,11 @@ export default async function DesignerProfilePage({ params }: { params: Promise<
           )}
         </div>
 
-        {/* Right / sidebar */}
-        <div className="space-y-6">
+        {/* Right / sidebar — first on mobile, last column on desktop */}
+        <div className="space-y-6 order-first lg:order-none">
 
           {/* CTA card */}
-          <div className="rounded-2xl border border-zinc-100 bg-white p-6 sticky top-6">
+          <div className="rounded-2xl border border-zinc-100 bg-white p-6 lg:sticky lg:top-6">
             <h3 className="font-extrabold text-zinc-900 text-base mb-1">Work with {designer.full_name.split(" ")[0]}</h3>
             <p className="text-xs text-zinc-400 leading-relaxed mb-5">
               We'll match you with the right talent for your project — free consultation, no commitment.

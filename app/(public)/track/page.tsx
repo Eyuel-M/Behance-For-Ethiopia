@@ -65,7 +65,7 @@ export default function TrackPage() {
       <div className="max-w-2xl mx-auto px-5 sm:px-8 py-14 sm:py-20">
 
         <FadeUp>
-          <form onSubmit={handleSubmit} className="flex items-center gap-3 mb-10">
+          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-10">
             <input
               type="email"
               required

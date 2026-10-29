@@ -228,18 +228,20 @@ export default function ServicesCarousel() {
           </button>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
           {Array.from({ length: maxIndex + 1 }, (_, i) => (
             <button
               key={i}
               onClick={() => setCurrent(i)}
               aria-label={`Go to position ${i + 1}`}
-              className={`rounded-full transition-all duration-300 ${
+              className="flex items-center justify-center min-w-[44px] min-h-[44px]"
+            >
+              <span className={`rounded-full transition-all duration-300 block ${
                 i === current
                   ? "w-7 h-2.5 bg-[#0d2318]"
                   : "w-2.5 h-2.5 bg-zinc-400 hover:bg-zinc-600"
-              }`}
-            />
+              }`} />
+            </button>
           ))}
         </div>
       </div>

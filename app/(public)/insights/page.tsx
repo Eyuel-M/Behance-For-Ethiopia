@@ -113,7 +113,7 @@ export default function InsightsPage() {
                 Design, industry, and the craft of matching great work to the right people.
               </p>
             </div>
-            <div className="flex items-center gap-6 text-xs text-white/30 shrink-0">
+            <div className="flex items-center gap-6 text-xs text-white/30 flex-wrap">
               <div className="text-center">
                 <p className="text-2xl font-black text-white">{posts.length}</p>
                 <p className="mt-0.5">Articles</p>
@@ -149,17 +149,17 @@ export default function InsightsPage() {
           </StaggerGrid>
         )}
 
-        <div className="rounded-3xl p-10 sm:p-14 flex flex-col sm:flex-row items-center justify-between gap-8" style={{ backgroundColor: "#0d2318" }}>
+        <div className="rounded-3xl p-6 sm:p-10 lg:p-14 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8" style={{ backgroundColor: "#0d2318" }}>
           <div>
             <p className="text-xs font-bold uppercase tracking-widest text-[#6dcc46] mb-2">Stay in the loop</p>
             <h2 className="text-2xl sm:text-3xl font-black text-white leading-tight">
               New posts, straight<br />to your inbox.
             </h2>
           </div>
-          <form className="flex items-center gap-2 w-full sm:w-auto">
+          <form className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
             <input type="email" placeholder="your@email.com"
-              className="flex-1 sm:w-64 px-4 py-3 rounded-full text-sm bg-white/10 text-white placeholder-white/30 border border-white/15 focus:outline-none focus:border-[#6dcc46] transition-colors" />
-            <button type="submit" className="shrink-0 px-5 py-3 rounded-full text-sm font-bold transition-colors" style={{ backgroundColor: "#6dcc46", color: "#0d2318" }}>
+              className="w-full sm:w-64 px-4 py-3 rounded-full text-sm bg-white/10 text-white placeholder-white/30 border border-white/15 focus:outline-none focus:border-[#6dcc46] transition-colors" />
+            <button type="submit" className="px-5 py-3 rounded-full text-sm font-bold transition-colors" style={{ backgroundColor: "#6dcc46", color: "#0d2318" }}>
               Subscribe
             </button>
           </form>

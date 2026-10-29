@@ -94,7 +94,7 @@ export default function DesignersGrid({
               <button
                 key={s}
                 onClick={() => setActiveSpecialty(s)}
-                className="px-3 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer"
+                className="px-3 py-2.5 min-h-[40px] rounded-full text-xs font-semibold transition-all cursor-pointer"
                 style={
                   activeSpecialty === s
                     ? { backgroundColor: "#0d2318", color: "#ffffff", border: "1.5px solid #0d2318" }
@@ -116,7 +116,7 @@ export default function DesignersGrid({
                 <button
                   key={a}
                   onClick={() => setActiveAvailability(a)}
-                  className="px-3 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer"
+                  className="px-3 py-2.5 min-h-[40px] rounded-full text-xs font-semibold transition-all cursor-pointer"
                   style={
                     activeAvailability === a
                       ? { backgroundColor: "#6dcc46", color: "#0d2318", border: "1.5px solid #6dcc46" }

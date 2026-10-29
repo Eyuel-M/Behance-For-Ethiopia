@@ -977,7 +977,7 @@ function ClosingCta() {
 
         {/* Trust stats */}
         <FadeUp delay={0.34}>
-          <div className="flex items-center justify-center gap-6 sm:gap-10 pt-10 border-t border-white/[0.08]">
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-4 sm:gap-x-10 pt-10 border-t border-white/[0.08]">
             <div className="text-center">
               <p className="text-2xl sm:text-3xl font-black text-white leading-none" style={{ fontFamily: "var(--font-display), sans-serif" }}>50+</p>
               <p className="text-[11px] text-white/35 font-medium mt-1.5 uppercase tracking-widest">Vetted pros</p>
